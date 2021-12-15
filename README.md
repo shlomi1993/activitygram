@@ -1,1 +1,1 @@
-# Activitigram
+# Activitygram
