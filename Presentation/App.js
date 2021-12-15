@@ -3,7 +3,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Block, Text, Input, theme } from 'galio-framework';
 
-
+// IMPLEMENT NOTIFICATIONS: https://www.youtube.com/watch?v=z6DEJXYQpP4&ab_channel=AdrianTwarog
 export default function App() {
   return (
     // <View style={styles.container}>
@@ -20,7 +20,7 @@ export default function App() {
         console.log("post sent")
 
         // Set IP to your local IPv4.
-        fetch('http://10.0.0.11:8080/TEST', {
+        fetch('http://172.16.28.12:8080/TEST', {
           method: 'POST',
           headers: {
             Accept: 'application/json',
