@@ -1,36 +1,6 @@
-// import { StatusBar } from 'expo-status-bar';
-// import React from 'react';
-// import { StyleSheet, View } from 'react-native';
-// import { Button, Block, Text, Input, theme } from 'galio-framework';
-// import CreateEvent from './Home/CreateEvent/CreateEvent';
-// import HomeScreen from './Home/HomeScreen';
-// // IMPLEMENT NOTIFICATIONS: https://www.youtube.com/watch?v=z6DEJXYQpP4&ab_channel=AdrianTwarog
-// export default function App() {
-//   return (
-//     // <View style={styles.container}>
-//     //   <Text>Open up App.js to start working on your app!</Text>
-//     //   <StatusBar style="auto" />
-//     // </View>
-//     <Block style={styles.container}>
-//       <CreateEvent />
-//     </Block>
-//   );
-  
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#fff',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-// });
-
-// In App.js in a new project
-
 import * as React from 'react';
-import { View, Text, Button, TextInput } from 'react-native';
+import { View, Text, TextInput } from 'react-native';
+import { Button, Header } from 'react-native-elements';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CreateEventScreen from './Home/CreateEvent/CreateEvent'
@@ -45,21 +15,37 @@ import styles from './App'
 function HomeScreen({ navigation }) {
   return (
     <View style={styles.view}>
-      <Text style={{marginBottom: 20}}>Home Screen</Text>
-      <Button 
-        style={{marginBottom: 20}}
+      <Header
+      backgroundImageStyle={{}}
+      barStyle="default"
+      centerComponent={{
+        text: "HOME",
+        style: { color: "#fff", fontSize: 32 }
+      }}
+      centerContainerStyle={{}}
+      containerStyle={{ width: "100%", marginBottom: 20 }}
+      leftComponent={{ icon: "menu", color: "#fff" }}
+      leftContainerStyle={{}}
+      linearGradientProps={{}}
+      placement="center"
+      rightComponent={{ icon: "home", color: "#fff" }}
+      rightContainerStyle={{}}
+      statusBarProps={{}}
+    />
+      <Button
+        containerStyle={{ margin: 5, borderWidth: 2 }} 
         title="Create Event"
         onPress={() =>
           navigation.navigate('Create')}
       ></Button>
       <Button
-        style={{marginBottom: 20}} 
+        containerStyle={{ margin: 5, borderWidth: 2 }}
         title="Join Event"
         onPress={() =>
           navigation.navigate('Join')}
       ></Button>
       <Button
-        style={{marginBottom: 20}} 
+        containerStyle={{ margin: 5, borderWidth: 2 }}
         title="Some Tests"
         onPress={() =>
           navigation.navigate('Tests')}

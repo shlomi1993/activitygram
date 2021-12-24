@@ -1,10 +1,7 @@
-import React, { useState } from 'react';
+import * as React from 'react';
 import { View, Text, TextInput } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { ListItem, Avatar, Card, Image, Button, SearchBar, Header } from "react-native-elements";
-import Icon from "react-native-vector-icons/dist/MaterialCommunityIcons";
-import LinearGradient from "react-native-linear-gradient";
 
 
 class JoinEvent extends React.Component {
