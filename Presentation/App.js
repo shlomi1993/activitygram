@@ -34,11 +34,17 @@ import { View, Text, Button, TextInput } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CreateEventScreen from './Home/CreateEvent/CreateEvent'
+import JoinEventScreen from './Home/JoinEvent/JoinEvent'
 import TestsScreen from './Tests/InitAppTests'
+import styles from './App'
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap');
+</style>
 
 function HomeScreen({ navigation }) {
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <View style={styles.view}>
       <Text style={{marginBottom: 20}}>Home Screen</Text>
       <Button 
         style={{marginBottom: 20}}
@@ -58,13 +64,6 @@ function HomeScreen({ navigation }) {
         onPress={() =>
           navigation.navigate('Tests')}
       ></Button>
-    </View>
-  );
-}
-function JoinEventScreen() {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Join Event Screen</Text>
     </View>
   );
 }
