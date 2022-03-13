@@ -1,51 +1,85 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Button, Block, Text, Input, theme } from 'galio-framework';
+import * as React from 'react';
+import { View, Text, TextInput } from 'react-native';
+import { Button, Header } from 'react-native-elements';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import CreateEventScreen from './Home/CreateEvent/CreateEvent'
+import JoinEventScreen from './Home/JoinEvent/JoinEvent'
+import TestsScreen from './Tests/InitAppTests'
+import styles from './App'
 
-// IMPLEMENT NOTIFICATIONS: https://www.youtube.com/watch?v=z6DEJXYQpP4&ab_channel=AdrianTwarog
-export default function App() {
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap');
+</style>
+
+function HomeScreen({ navigation }) {
   return (
-    // <View style={styles.container}>
-    //   <Text>Open up App.js to start working on your app!</Text>
-    //   <StatusBar style="auto" />
-    // </View>
-    <Block style={styles.container}>
-      <Button onPress={ () => console.log("pressed") }>
-        <Block row middle>
-          <Text size={16} >TEST PRESS</Text>
-        </Block>
-      </Button>
-      <Button onPress={() => {
-        console.log("post sent")
-
-        // Set IP to your local IPv4.
-        fetch('http://172.16.28.12:8080/TEST', {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-              param1: 'stringParam',
-              param2: 12
-            })
-        });
-      }}>
-        <Block row middle>
-          <Text size={16} >TEST POST</Text>
-        </Block>
-      </Button>
-    </Block>
+    <View style={styles.view}>
+      <Header
+      backgroundImageStyle={{}}
+      barStyle="default"
+      centerComponent={{
+        text: "HOME",
+        style: { color: "#fff", fontSize: 32 }
+      }}
+      centerContainerStyle={{}}
+      containerStyle={{ width: "100%", marginBottom: 20 }}
+      leftComponent={{ icon: "menu", color: "#fff" }}
+      leftContainerStyle={{}}
+      linearGradientProps={{}}
+      placement="center"
+      rightComponent={{ icon: "home", color: "#fff" }}
+      rightContainerStyle={{}}
+      statusBarProps={{}}
+    />
+      <Button
+        containerStyle={{ margin: 5, borderWidth: 2 }} 
+        title="Create Event"
+        onPress={() =>
+          navigation.navigate('Create')}
+      ></Button>
+      <Button
+        containerStyle={{ margin: 5, borderWidth: 2 }}
+        title="Join Event"
+        onPress={() =>
+          navigation.navigate('Join')}
+      ></Button>
+      <Button
+        containerStyle={{ margin: 5, borderWidth: 2 }}
+        title="Some Tests"
+        onPress={() =>
+          navigation.navigate('Tests')}
+      ></Button>
+    </View>
   );
-  
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+// createNativeStackNavigator is a function that returns an object containing 2 properties: Screen and Navigator
+const Stack = createNativeStackNavigator();
+
+/*
+PROPS
+<Stack.Screen name="Home">
+  {props => <HomeScreen {...props} extraData={someData} />}
+</Stack.Screen>
+*/
+
+class App extends React.Component {
+
+    render() {
+    return (
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Home">
+          <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'Welcome to Activitygram!' }} />
+          <Stack.Screen name="Create" component={CreateEventScreen} />
+          <Stack.Screen name="Join" component={JoinEventScreen} />
+          <Stack.Screen name="Tests" component={TestsScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  }
+
+}
+
+
+export default App;
