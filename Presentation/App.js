@@ -3,9 +3,10 @@ import { View, Text, TextInput } from 'react-native';
 import { Button, Header } from 'react-native-elements';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import CreateEventScreen from './Home/CreateEvent/CreateEvent'
-import JoinEventScreen from './Home/JoinEvent/JoinEvent'
-import TestsScreen from './Tests/InitAppTests'
+import CreateEventScreen from './Home/CreateEvent/CreateEvent';
+import JoinEventScreen from './Home/JoinEvent/JoinEvent';
+import SplashScreen from './SplashScreen/SplashScreen';
+import TestsScreen from './Tests/InitAppTests';
 import styles from './App'
 
 <style>
@@ -46,6 +47,12 @@ function HomeScreen({ navigation }) {
       ></Button>
       <Button
         containerStyle={{ margin: 5, borderWidth: 2 }}
+        title="Splash Screen - draft"
+        onPress={() =>
+          navigation.navigate('Splash')}
+      ></Button>
+      <Button
+        containerStyle={{ margin: 5, borderWidth: 2 }}
         title="Some Tests"
         onPress={() =>
           navigation.navigate('Tests')}
@@ -73,6 +80,7 @@ class App extends React.Component {
           <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'Welcome to Activitygram!' }} />
           <Stack.Screen name="Create" component={CreateEventScreen} />
           <Stack.Screen name="Join" component={JoinEventScreen} />
+          <Stack.Screen name="Splash" component={SplashScreen} />
           <Stack.Screen name="Tests" component={TestsScreen} />
         </Stack.Navigator>
       </NavigationContainer>
