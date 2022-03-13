@@ -3,7 +3,6 @@ import { View, Text, TextInput } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { ListItem, Avatar, Card, Image, Button, SearchBar, Header } from "react-native-elements";
 
-
 class JoinEvent extends React.Component {
   constructor(props) {
     super(props);
