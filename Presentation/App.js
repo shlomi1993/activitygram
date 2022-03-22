@@ -20,7 +20,7 @@ export default function App() {
         console.log("post sent")
 
         // Set IP to your local IPv4.
-        fetch('http://172.16.28.12:8080/TEST', {
+        fetch('http://172.18.44.68:8080/TEST', {
           method: 'POST',
           headers: {
             Accept: 'application/json',

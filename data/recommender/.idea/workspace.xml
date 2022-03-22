@@ -2,11 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8737638c-de34-4b25-9522-296e2b5aa939" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/basedata.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/recommender.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../DataAccess.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database Deployments - Cloud- MongoDB Cloud.url" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Recommender.py" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/../database/connection.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../database/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Presentation/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../Presentation/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Service/AppServer.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../Service/AppServer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../database/DataAccess.js" beforeDir="false" afterPath="$PROJECT_DIR$/../database/DataAccess.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../../yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,6 +40,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Google Drive/מסמכים/עבודה/מיונים/Cellebrite/PythonSolution" />
   </component>
   <component name="RunManager">
     <configuration name="basedata" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
@@ -75,6 +80,8 @@
       <option name="presentableId" value="Default" />
       <updated>1646469565560</updated>
       <workItem from="1646469568602" duration="7666000" />
+      <workItem from="1646505874886" duration="595000" />
+      <workItem from="1646763792840" duration="16000" />
     </task>
     <servers />
   </component>

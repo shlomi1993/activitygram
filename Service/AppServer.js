@@ -2,6 +2,16 @@ var path = require('path');
 const express = require('express');
 const fileUpload = require('express-fileupload');
 
+const mongoose = require("mongoose");
+
+mongoose.connect('mongodb://localhost:27017/usersdb',
+    {
+        useNewUrlParser: true,
+        useFindAndModify: false,
+        useUnifiedTopology: true
+    }
+);
+
 const app = express();
 
 app.use(
