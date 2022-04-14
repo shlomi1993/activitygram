@@ -84,7 +84,7 @@ class SplashScreen extends React.Component {
   render() {
       return (
     <React.Fragment>
-        <Container>
+        {/* <Container>
           <Text >Login Page</Text>
           <Form>
             <Item>
@@ -120,7 +120,7 @@ class SplashScreen extends React.Component {
         isDialogVisible: this.state.isDialogVisible = false
         })}}>
        </DialogInput>
-        </Container>
+        </Container> */}
       </React.Fragment>
       )
     }

@@ -47,7 +47,7 @@ function HomeScreen({ navigation }) {
       ></Button>
       <Button
         containerStyle={{ margin: 5, borderWidth: 2 }}
-        title="Splash Screen - draft"
+        title="Splash Screen - not in use"
         onPress={() =>
           navigation.navigate('Splash')}
       ></Button>
