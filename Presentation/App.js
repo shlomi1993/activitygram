@@ -6,12 +6,62 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CreateEventScreen from './Home/CreateEvent/CreateEvent';
 import JoinEventScreen from './Home/JoinEvent/JoinEvent';
 import SplashScreen from './SplashScreen/SplashScreen';
+import ProfileScreen from './Profile page/ProfilePage';
 import TestsScreen from './___tests___/InitAppTests';
 import styles from './App'
+import Profile from './Profile page/screens/profile'
+import Product from './Profile page/screens/product'
+import Setting from './Profile page/screens/setting'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Icon } from 'react-native-elements';
 
+import SettingOption from './Profile page/screens/setting/Options'
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap');
 </style>
+
+const SettingStack = createNativeStackNavigator()
+function SettingsStackScreen() {
+  return (
+    <SettingStack.Navigator>
+      <SettingStack.Screen name="Settings" component={Setting} />
+      <SettingStack.Screen name="Options" component={SettingOption} />
+    </SettingStack.Navigator>
+  )
+}
+
+const ProductStack = createNativeStackNavigator()
+function ProductStackScreen() {
+  return (
+    <ProductStack.Navigator>
+      <ProductStack.Screen name="Product" component={Product} />
+    </ProductStack.Navigator>
+  )
+}
+
+const ProfileStack = createNativeStackNavigator()
+function ProfileStackScreen() {
+  return (
+    <ProfileStack.Navigator
+      screenOptions={{
+        headerShown: false
+      }}
+    >
+      <ProfileStack.Screen name="Profile" component={Profile} />
+    </ProfileStack.Navigator>
+  )
+}
+
+const Tab = createBottomTabNavigator()
+
+const HomeIcon = ({ focused, tintColor }) => (
+  <Icon
+    name="lens"
+    type="material"
+    size={26}
+    color={focused ? '#adacac' : '#ededed'}
+  />
+)
 
 function HomeScreen({ navigation }) {
   return (
@@ -76,13 +126,42 @@ class App extends React.Component {
     render() {
     return (
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home">
+        {/* <Stack.Navigator initialRouteName="Home">
           <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'Welcome to Activitygram!' }} />
           <Stack.Screen name="Create" component={CreateEventScreen} />
           <Stack.Screen name="Join" component={JoinEventScreen} />
           <Stack.Screen name="Splash" component={SplashScreen} />
           <Stack.Screen name="Tests" component={TestsScreen} />
-        </Stack.Navigator>
+        </Stack.Navigator> */}
+      <Tab.Navigator 
+        screenOptions={({ route }) => ({
+          tabBarIcon: props => <HomeIcon {...props}/>
+        })}
+        tabBarOptions={{
+          activeTintColor: 'tomato',
+          inactiveTintColor: 'gray',
+          showLabel: false,
+          showIcon: true,
+          indicatorStyle: {
+            backgroundColor: 'transparent',
+          },
+          labelStyle: {
+            fontSize: 12,
+          },
+          iconStyle: {
+            width: 30,
+            height: 30,
+          },
+          style: {
+            // backgroundColor: 'transparent',
+            justifyContent: 'center',
+          },
+        }}
+      >
+        <Tab.Screen name="Profile" component={ProfileStackScreen} />
+        <Tab.Screen name="Event" component={ProductStackScreen} />
+        <Tab.Screen name="Settings" component={SettingsStackScreen} />
+      </Tab.Navigator>
       </NavigationContainer>
     );
   }
