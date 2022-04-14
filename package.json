@@ -1,5 +1,8 @@
 {
   "dependencies": {
+    "firebase": "^9.6.10",
+    "native-base": "^3.3.7",
+    "react-native-dialog-input": "^1.0.8",
     "react-native-push-notification": "^8.1.1"
   }
 }
