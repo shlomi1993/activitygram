@@ -6,7 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CreateEventScreen from './Home/CreateEvent/CreateEvent';
 import JoinEventScreen from './Home/JoinEvent/JoinEvent';
 import SplashScreen from './SplashScreen/SplashScreen';
-import TestsScreen from './Tests/InitAppTests';
+import TestsScreen from './___tests___/InitAppTests';
 import styles from './App'
 
 <style>

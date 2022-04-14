@@ -15,7 +15,7 @@
     "@react-navigation/native-stack": "^6.2.5",
     "expo": "~43.0.2",
     "expo-status-bar": "~1.1.0",
-    "firebase": "^9.6.8",
+    "firebase": "^9.6.10",
     "galio-framework": "^0.8.0",
     "mobx": "^6.3.8",
     "native-base": "^3.3.7",
