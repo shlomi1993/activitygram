@@ -6,16 +6,17 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CreateEventScreen from './Home/CreateEvent/CreateEvent';
 import JoinEventScreen from './Home/JoinEvent/JoinEvent';
 import SplashScreen from './SplashScreen/SplashScreen';
-import ProfileScreen from './Profile page/ProfilePage';
+import ProfileScreen from './ProfilePage/ProfilePage';
 import TestsScreen from './___tests___/InitAppTests';
 import styles from './App'
-import Profile from './Profile page/screens/profile'
-import Product from './Profile page/screens/product'
-import Setting from './Profile page/screens/setting'
+import Profile from './ProfilePage/screens/profile'
+import EventList from './ProfilePage/screens/eventList'
+import Event from './ProfilePage/screens/event'
+import Setting from './ProfilePage/screens/setting'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Icon } from 'react-native-elements';
 
-import SettingOption from './Profile page/screens/setting/Options'
+import SettingOption from './ProfilePage/screens/setting/Options'
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap');
 </style>
@@ -30,12 +31,12 @@ function SettingsStackScreen() {
   )
 }
 
-const ProductStack = createNativeStackNavigator()
-function ProductStackScreen() {
+const EventStack = createNativeStackNavigator()
+function EventStackScreen() {
   return (
-    <ProductStack.Navigator>
-      <ProductStack.Screen name="Product" component={Product} />
-    </ProductStack.Navigator>
+    <EventStack.Navigator>
+      <EventStack.Screen name="Event" component={Event} />
+    </EventStack.Navigator>
   )
 }
 
@@ -49,6 +50,19 @@ function ProfileStackScreen() {
     >
       <ProfileStack.Screen name="Profile" component={Profile} />
     </ProfileStack.Navigator>
+  )
+}
+
+const EventListStack = createNativeStackNavigator()
+function EventListStackScreen() {
+  return (
+    <EventListStack.Navigator
+      screenOptions={{
+        headerShown: false
+      }}
+    >
+      <EventListStack.Screen name="EventList" component={EventList} />
+    </EventListStack.Navigator>
   )
 }
 
@@ -159,7 +173,8 @@ class App extends React.Component {
         }}
       >
         <Tab.Screen name="Profile" component={ProfileStackScreen} />
-        <Tab.Screen name="Event" component={ProductStackScreen} />
+        <Tab.Screen name="Event" component={EventStackScreen} />
+        <Tab.Screen name="EventList" component={EventListStackScreen} />
         <Tab.Screen name="Settings" component={SettingsStackScreen} />
       </Tab.Navigator>
       </NavigationContainer>
