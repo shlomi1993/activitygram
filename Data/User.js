@@ -1,72 +1,7 @@
 const { MongoClient } = require('mongodb');
 
-//Update functions
-async function changeFirstName(client, curr_user, firstName){
-  const result = await client.db("activitygram").collection("users").updateOne(
-      {"_id" : curr_user.id},
-      {$set:{firstName: firstName}}
-  );
-}
-async function changeLastName(client, curr_user, lastName){
-  const result = await client.db("activitygram").collection("users").updateOne(
-      {"_id" : curr_user.id},
-      {$set:{lastName: lastName}}
-  );
-}
-async function changeDateOfBirth(client, curr_user, dateOfBirth){
-  const result = await client.db("activitygram").collection("users").updateOne(
-      {"_id" : curr_user.id},
-      {$set:{dateOfBirth: dateOfBirth}}
-  );
-}
-async function changeAge(client, curr_user, age){
-  const result = await client.db("activitygram").collection("users").updateOne(
-      {"_id" : curr_user.id},
-      {$set:{age: age}}
-  );
-}
-async function changeCountry(client, curr_user, country){
-  const result = await client.db("activitygram").collection("users").updateOne(
-      {"_id" : curr_user.id},
-      {$set:{country: country}}
-  );
-}
-async function changeProfileImage(client, curr_user, profileImage){
-  const result = await client.db("activitygram").collection("users").updateOne(
-      {"_id" : curr_user.id},
-      {$set:{profileImage: profileImage}}
-  );
-}
-async function changeBio(client, curr_user, bio){
-  const result = await client.db("activitygram").collection("users").updateOne(
-      {"_id" : curr_user.id},
-      {$set:{bio: bio}}
-  );
-}
-async function changeFriendsList(client, curr_user, friendsList){
-  const result = await client.db("activitygram").collection("users").updateOne(
-      {"_id" : curr_user.id},
-      {$set:{friendsList: friendsList}}
-  );
-}
-async function changeIntrests(client, curr_user, intrests){
-  const result = await client.db("activitygram").collection("users").updateOne(
-      {"_id" : curr_user.id},
-      {$set:{intrests: intrests}}
-  );
-}
-async function changeActivityLog(client, curr_user, activityLog){
-  const result = await client.db("activitygram").collection("users").updateOne(
-      {"_id" : curr_user.id},
-      {$set:{activityLog: activityLog}}
-  );
-}
-//creat newUser
-async function createNewUser(client, newUser){
-  const result = await client.db("activitygram").collection("users").insertOne(newUser.forDB);
-  newUser.set_id = result.insertedId;
-  console.log(`New listing created with the following id: ${result.insertedId}`);
-}
+// TO-DO : try to put all the user functions in this file
+
 class User {
   constructor(firstName = 'firstName', 
               lastName= 'lastName',
