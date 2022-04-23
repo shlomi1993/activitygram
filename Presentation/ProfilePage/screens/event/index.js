@@ -1,23 +1,23 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import productData from './product.json'
+import eventData from './event.json'
 
 import { NavAbsolute } from '../../components'
-import Product from './Product'
+import Product from './Event'
 
 const ProductScreen = (props) => {
   props.navigation.setOptions({
     header: ({ navigation }) => (
         <NavAbsolute
           navigation={navigation}
-          title={productData.title}
-          subTitle={productData.address}
+          title={eventData.title}
+          subTitle={eventData.address}
         />
     ),
   })
 
-  return <Product {...productData} {...props}/>
+  return <Product {...eventData} {...props}/>
 }
 
 export default ProductScreen
