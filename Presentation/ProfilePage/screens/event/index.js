@@ -11,8 +11,8 @@ const ProductScreen = (props) => {
     header: ({ navigation }) => (
         <NavAbsolute
           navigation={navigation}
-          title={eventData.title}
-          subTitle={eventData.address}
+          title={eventData.name}
+          subTitle={eventData.date}
         />
     ),
   })
