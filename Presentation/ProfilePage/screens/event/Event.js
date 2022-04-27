@@ -35,7 +35,7 @@ class Product extends Component {
     return (
       <View>
         <Text style={styles.detailText}>About the event</Text>
-        <Text style={styles.subDetailText}>{this.props.detail}</Text>
+        <Text style={styles.subDetailText}>{eventData.description}</Text>
       </View>
     );
   };
