@@ -17,8 +17,8 @@ class Recommender:
         self.auto_update = True
 
     def fetch(self):
-        interests = pd.read_csv('data/debug/interests.csv', low_memory=False)
-        ratings = pd.read_csv('data/debug/ratings.csv', low_memory=False)
+        interests = pd.read_csv('datasets/debug/interests.csv', low_memory=False)
+        ratings = pd.read_csv('datasets/debug/ratings.csv', low_memory=False)
         return interests, ratings
 
     def update(self):
