@@ -1,27 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5900edd1-fcfb-41bc-beab-237f8c3aa6f0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/alice.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/text_classifier.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/text_classifier2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/debug/sample.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/debug/interests.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/debug/ratings.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/debug/small/interests.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/debug/small/ratings.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/debug/small/ratingsOld.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/debug/test.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/movies_example_dataset/movies_subset.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/movies_example_dataset/ratings.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/movies_example_dataset/sample_data.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/movies_example_dataset/test.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/movies_example_dataset/user_283225.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/movies_example_dataset/user_283238.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/recommender.py" beforeDir="false" afterPath="$PROJECT_DIR$/recommender.py" afterDir="false" />
+    <list default="true" id="16478962-4816-41fb-b728-3df99ca73455" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/alice.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/text_classifier.py" beforeDir="false" afterPath="$PROJECT_DIR$/text_classifier.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/text_classifier2.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,7 +25,7 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectId" id="27p28VFSExPqiAoyyvCw22fHiw2" />
+  <component name="ProjectId" id="28iMSY5kCNCgFEikILhkRhi0uiq" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -51,60 +35,10 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
-  <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\shlom\Documents\GitHub\Activitigram\data\recommender\data\debug" />
-    </key>
-  </component>
-  <component name="RunManager" selected="Python.text_classifier2">
-    <configuration name="recommender" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="C:\Users\shlom\anaconda3\python.exe" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/recommender.py" />
-      <option name="PARAMETERS" value="127.0.0.1 8090" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
+  <component name="RunManager">
     <configuration name="text_classifier" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="C:\Users\shlom\anaconda3\python.exe" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/text_classifier.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="text_classifier2" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="recommender" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -115,9 +49,8 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/text_classifier2.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/text_classifier.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -126,14 +59,8 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <list>
-      <item itemvalue="Python.recommender" />
-      <item itemvalue="Python.text_classifier" />
-      <item itemvalue="Python.text_classifier2" />
-    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.text_classifier2" />
         <item itemvalue="Python.text_classifier" />
       </list>
     </recent_temporary>
@@ -141,38 +68,19 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="5900edd1-fcfb-41bc-beab-237f8c3aa6f0" name="Changes" comment="" />
-      <created>1650002547253</created>
+      <changelist id="16478962-4816-41fb-b728-3df99ca73455" name="Changes" comment="" />
+      <created>1651694952798</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1650002547253</updated>
-      <workItem from="1650002548613" duration="25430000" />
-      <workItem from="1651041062531" duration="2280000" />
-      <workItem from="1651043362072" duration="3286000" />
-      <workItem from="1651084926173" duration="4439000" />
-      <workItem from="1651399397169" duration="51000" />
+      <updated>1651694952798</updated>
+      <workItem from="1651694962051" duration="13310000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/recommender$recommender__1_.coverage" NAME="recommender (1) Coverage Results" MODIFIED="1650030280050" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/recommender$main.coverage" NAME="main Coverage Results" MODIFIED="1650017331012" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/recommender$text_classifier.coverage" NAME="text_classifier Coverage Results" MODIFIED="1651043448650" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/recommender$sample.coverage" NAME="sample Coverage Results" MODIFIED="1650016074055" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/data/debug" />
-    <SUITE FILE_PATH="coverage/recommender$recommender.coverage" NAME="recommender Coverage Results" MODIFIED="1651043514329" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/recommender$text_classifier.coverage" NAME="text_classifier Coverage Results" MODIFIED="1651740244989" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
