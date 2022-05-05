@@ -3,6 +3,7 @@
 
 import sys
 import pandas as pd
+import text_classifier as tc
 from collaborative_filtering import CollaborativeFiltering
 from time import sleep
 from quart import Quart, request, g, jsonify
@@ -17,8 +18,8 @@ class Recommender:
         self.auto_update = True
 
     def fetch(self):
-        interests = pd.read_csv('data/debug/interests.csv', low_memory=False)
-        ratings = pd.read_csv('data/debug/ratings.csv', low_memory=False)
+        interests = pd.read_csv('datasets/debug/interests.csv', low_memory=False)
+        ratings = pd.read_csv('datasets/debug/ratings.csv', low_memory=False)
         return interests, ratings
 
     def update(self):
@@ -58,13 +59,30 @@ class Recommender:
             self.update()
             return 'dataset update completed'
 
-        @app.route('/predict', methods=['GET'])
-        async def predict():
+        @app.route('/interests', methods=['GET'])
+        async def interests():
             uid = request.args.get('uid')
             k = int(request.args.get('k'))
             user_based = True if request.args.get('userbased') == '1' else False
             result = self.cf.predict_interests(uid, k, user_based)
             return jsonify(result)
+
+        @app.route('/learn', methods=['GET'])
+        async def learn():
+            uid = request.args.get('uid')
+            train_x = request.args.get('train_x')
+            train_y = request.args.get('train_y')
+            tc.train_model(uid, train_x, train_y, n_epochs=100)
+            return f'User {uid} model was successfully updated.'
+
+        @app.route('/predict', methods=['GET'])
+        async def learn():
+            uid = request.args.get('uid')
+            # Use cache.
+            test_x = request.args.get('test_x')
+            predictions = tc.predict(uid, test_x)
+            # How to return results?
+            return jsonify(predictions)
 
         return app
 
