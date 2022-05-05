@@ -1,4 +1,8 @@
+# Shlomi Ben-Shushan
+
+
 import numpy as np
+import json
 import spacy
 import torch
 from torch import nn
@@ -35,48 +39,50 @@ def create_linear_layer(in_features, out_features):
     )
 
 
-def create_train_loaders(train_x_file, train_y_file):
-    f = open(train_x_file, 'r')
-    texts = f.read().split('<br>')
-    f.close()
-    descriptions = [nlp(t).vector for t in texts]
-    train_x_np = np.array(descriptions)
-    train_y_np = np.loadtxt(train_y_file)
+def preprocess_train_set(train_x_file):
 
-    n_train = len(train_x_np)
+    file = open(train_x_file, 'r')
+    train_set = json.load(file)
+    file.close()
+
+    vectors, labels = [], []
+    for example in train_set:
+        vectors.append(nlp(example['description']).vector)
+        labels.append(example['label'])
+
+    n_train = len(vectors)
     indexes = [int(i) for i in list(range(n_train))]
     np.random.shuffle(indexes)
-    s = int(0.1 * n_train)
+    s = int(0.2 * n_train)
     train_idx = indexes[s:]
     valid_idx = indexes[:s]
 
-    train_x = np.array([train_x_np[i] for i in train_idx])
-    train_y = np.array([train_y_np[i] for i in train_idx])
-    valid_x = np.array([train_x_np[i] for i in valid_idx])
-    valid_y = np.array([train_y_np[i] for i in valid_idx])
+    train_x = np.array([vectors[i] for i in train_idx])
+    train_y = np.array([labels[i] for i in train_idx])
+    valid_x = np.array([vectors[i] for i in valid_idx])
+    valid_y = np.array([labels[i] for i in valid_idx])
 
-    # Convert numpy arrays to normalized tensors.
     train_x_t = torch.from_numpy(train_x).float()
     train_y_t = torch.from_numpy(train_y).long()
     valid_x_t = torch.from_numpy(valid_x).float()
     valid_y_t = torch.from_numpy(valid_y).long()
 
-    # Create tensor datasets.
     train_dataset = TensorDataset(train_x_t, train_y_t)
     valid_dataset = TensorDataset(valid_x_t, valid_y_t)
 
-    # Create and return data loaders (with batch_size=64).
     return DataLoader(train_dataset, 64), DataLoader(valid_dataset, 64)
 
 
-def create_test_loader(test_x_file):
-    f = open(test_x_file, 'r')
-    texts = f.read().split('<br>')
-    f.close()
-    descriptions = [nlp(t).vector for t in texts]
-    test_x_np = np.array(descriptions)
-    test_x_t = torch.from_numpy(test_x_np).float()
-    return texts, DataLoader(test_x_t, 64)
+def preprocess_test_set(test_file):
+    file = open(test_file, 'r')
+    test_set = json.load(file)
+    file.close()
+    event_ids, vectors = [], []
+    for event in test_set:
+        event_ids.append(event['event_id'])
+        vectors.append(nlp(event['description']).vector)
+    test_dataset = torch.from_numpy(np.array(vectors)).float()
+    return event_ids, test_dataset
 
 
 def plot(t_losses, v_losses, t_accuracies, v_accuracies):
@@ -104,7 +110,6 @@ class TextClassifierNN(nn.Module):
         self.linear2 = create_linear_layer(32, 11)
         self.linear3 = create_linear_layer(11, len(CLASSES))
         self.optim = Adam(self.parameters(), lr=0.01)
-        print('Text Classifier Neural Network model created.')
 
     def forward(self, x):
         out = self.linear1(x)
@@ -145,9 +150,9 @@ class TextClassifierNN(nn.Module):
         return valid_loss, valid_accuracy
 
 
-def train_model(uid, train_x, train_y, n_epochs, save_plot=False):
+def train_model(uid, train_file, n_epochs, save_plot=False):
     model = TextClassifierNN()
-    train_dataset, valid_dataset = create_train_loaders(train_x, train_y)
+    train_dataset, valid_dataset = preprocess_train_set(train_file)
     train_losses, train_accuracies = [], []
     valid_losses, valid_accuracies = [], []
     print('Training epochs...')
@@ -172,22 +177,20 @@ def train_model(uid, train_x, train_y, n_epochs, save_plot=False):
     torch.save(model.state_dict(), f'./model_uid_{uid}')
     if save_plot:
         plot(train_losses, valid_losses, train_accuracies, valid_accuracies)
-        print('Charts of losses and accuracies were saved to PNG files.')
 
 
-def predict(uid, test_x):
-    descriptions, test_dataset = create_test_loader(test_x)
+def predict(uid, test_file):
+    event_ids, test_dataset = preprocess_test_set(test_file)
     model = TextClassifierNN()
     model.load_state_dict(torch.load(f'model_uid_{uid}'))
     model.eval()
-    print('Calculating predictions...')
     predictions = []
-    for t, x in zip(descriptions, test_dataset):
-        y_hat = model(x).max(1, keepdim=True)[1].item()
-        predictions.append((t, CLASSES[y_hat]))
-    print('Predictions returned.')
+    for eid, x in zip(event_ids, test_dataset):
+        y_hat = model(x.unsqueeze(0)).max(1, keepdim=True)[1].item()
+        predictions.append((eid, CLASSES[y_hat]))
+    print('Predictions calculated.')
     return predictions
 
 
-# train_model(1234, './datasets/train_x.csv', './datasets/train_y.csv', 100)
-# print(predict(1234, './datasets/test_x.csv'))
+# train_model(1234, './datasets/train.json', 100)
+# print(predict(1234, './datasets/test.json'))

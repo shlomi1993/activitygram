@@ -1,4 +1,7 @@
-import sys
+# Shlomi Ben-Shushan
+
+
+import sys, os
 import pandas as pd
 import text_classifier as tc
 from collaborative_filtering import CollaborativeFiltering
@@ -11,7 +14,6 @@ class Recommender:
     def __init__(self):
         self.cf = CollaborativeFiltering()
         self.db = []  # place-holder
-        self.update()
         self.auto_update = True
 
     def fetch(self):
@@ -27,6 +29,7 @@ class Recommender:
         app = Quart(__name__)
 
         async def scheduled_update():
+            self.update()
             while self.auto_update:
                 sleep(600)
                 self.update()
@@ -64,22 +67,26 @@ class Recommender:
             result = self.cf.predict_interests(uid, k, user_based)
             return jsonify(result)
 
+        # http://localhost:8090/learn?uid=1234&train=./datasets/train.json
         @app.route('/learn', methods=['GET'])
         async def learn():
             uid = request.args.get('uid')
-            train_x = request.args.get('train_x')
-            train_y = request.args.get('train_y')
-            tc.train_model(uid, train_x, train_y, n_epochs=100)
+            train = request.args.get('train')
+            tc.train_model(uid, train, n_epochs=100)
             return f'User {uid} model was successfully updated.'
 
+        # http://localhost:8090/predict?uid=1234&test=./datasets/test.json
         @app.route('/predict', methods=['GET'])
-        async def learn():
-            uid = request.args.get('uid')
-            # Use cache.
-            test_x = request.args.get('test_x')
-            predictions = tc.predict(uid, test_x)
-            # How to return results?
-            return jsonify(predictions)
+        async def predict():
+            uid = int(request.args.get('uid'))
+            if os.path.exists(f'./model_uid_{uid}'):
+                # Use cache.
+                test = request.args.get('test')
+                predictions = tc.predict(uid, test)
+                # How to return results?
+                return jsonify(predictions)
+            else:
+                return f'No model found for user {uid}.'
 
         return app
 

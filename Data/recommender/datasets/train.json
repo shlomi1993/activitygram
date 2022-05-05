@@ -1,0 +1,80 @@
+[
+	{
+		"event_id": 110,
+		"description": "a nice event for soccer lovers.",
+		"label": 2
+	},
+	{
+		"event_id": 111,
+		"description": "a cool event for those whom football is in their blood.",
+		"label": 2
+	},
+	{
+		"event_id": 112,
+		"description": "a dating night in Bar-Ilan University.",
+		"label": 0
+	},
+	{
+		"event_id": 113,
+		"description": "cool party in Tel-Aviv on friday.",
+		"label": 0
+	},
+	{
+		"event_id": 114,
+		"description": "lecture about computer science and how it changed the world.",
+		"label": 1
+	},{
+		"event_id": 115,
+		"description": "lecture about the future of avionics.",
+		"label": 0
+	},{
+		"event_id": 116,
+		"description": "this is a charity event, please come and denote!",
+		"label": 1
+	},
+	{
+		"event_id": 117,
+		"description": "Looking for a new job? this event is for you!",
+		"label": 1
+	},
+	{
+		"event_id": 118,
+		"description": "an event about watching a analyizing a movie about football.",
+		"label": 2
+	},
+	{
+		"event_id": 119,
+		"description": "an event about watching a analyizing a movie about aircrafts.",
+		"label": 0
+	},
+	{
+		"event_id": 120,
+		"description": "an event about watching a analyizing a movie about war.",
+		"label": 0
+	},
+	{
+		"event_id": 121,
+		"description": "a nice event for soccer lovers.",
+		"label": 2
+	},
+	{
+		"event_id": 122,
+		"description": "a nice event for soccer lovers.",
+		"label": 2
+	},
+	{
+		"event_id": 123,
+		"description": "a nice event for soccer lovers.",
+		"label": 2
+	},
+	{
+		"event_id": 124,
+		"description": "a nice event for soccer lovers.",
+		"label": 2
+	},
+		{
+		"event_id": 125,
+		"description": "A cool air show.",
+		"label": 0
+	}
+]
