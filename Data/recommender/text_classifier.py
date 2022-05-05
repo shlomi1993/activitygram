@@ -1,165 +1,193 @@
+import numpy as np
+import spacy
 import torch
 from torch import nn
-from torch.utils.data import DataLoader
-from torch.utils.data.dataset import random_split
-from torchtext.datasets import AG_NEWS
-from torchtext.data.utils import get_tokenizer
-from torchtext.vocab import build_vocab_from_iterator
-from torchtext.data.functional import to_map_style_dataset
-import time
-
-EPOCHS = 1
-LR = 5
-BATCH_SIZE = 64
-
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+from torch.nn import functional as F
+from torch.optim import Adam
+from torch.utils.data import TensorDataset, DataLoader
+from matplotlib import pyplot as plt
 
 
-def yield_tokens(data_iter):
-    for _, text in data_iter:
-        yield tokenizer(text)
+nlp = spacy.load('en_core_web_sm')
+
+CLASSES = {
+    0: 'Will-not-be-interested',
+    1: 'Will-be-interested',
+    2: 'Will-participate'
+}
 
 
-def collate_batch(batch):
-    label_list, text_list, offsets = [], [], [0]
-    for (_label, _text) in batch:
-        label_list.append(label_pipeline(_label))
-        processed_text = torch.tensor(text_pipeline(_text), dtype=torch.int64)
-        text_list.append(processed_text)
-        offsets.append(processed_text.size(0))
-    label_list = torch.tensor(label_list, dtype=torch.int64)
-    offsets = torch.tensor(offsets[:-1]).cumsum(dim=0)
-    text_list = torch.cat(text_list)
-    return label_list.to(device), text_list.to(device), offsets.to(device)
+def create_convolution_layer(in_ch, out_ch, k, stride, pad, pool_k):
+    return nn.Sequential(
+        nn.Conv2d(in_ch, out_ch, k, stride, pad),
+        nn.BatchNorm2d(out_ch),
+        nn.ReLU(),
+        nn.MaxPool2d(kernel_size=pool_k),
+    )
 
 
-class TextClassificationModel(nn.Module):
+def create_linear_layer(in_features, out_features):
+    return nn.Sequential(
+        nn.Linear(in_features, out_features),
+        nn.BatchNorm1d(out_features),
+        nn.ReLU(),
+        nn.Dropout(),
+    )
 
-    def __init__(self, vocab_size, embed_dim, num_class):
-        super(TextClassificationModel, self).__init__()
-        self.embedding = nn.EmbeddingBag(vocab_size, embed_dim, sparse=True)
-        self.fc = nn.Linear(embed_dim, num_class)
-        self.init_weights()
 
-    def init_weights(self):
-        initrange = 0.5
-        self.embedding.weight.data.uniform_(-initrange, initrange)
-        self.fc.weight.data.uniform_(-initrange, initrange)
-        self.fc.bias.data.zero_()
+def create_train_loaders(train_x_file, train_y_file):
+    f = open(train_x_file, 'r')
+    texts = f.read().split('<br>')
+    f.close()
+    descriptions = [nlp(t).vector for t in texts]
+    train_x_np = np.array(descriptions)
+    train_y_np = np.loadtxt(train_y_file)
 
-    def forward(self, text, offsets):
-        embedded = self.embedding(text, offsets)
-        return self.fc(embedded)
+    n_train = len(train_x_np)
+    indexes = [int(i) for i in list(range(n_train))]
+    np.random.shuffle(indexes)
+    s = int(0.1 * n_train)
+    train_idx = indexes[s:]
+    valid_idx = indexes[:s]
 
-    def learn(self, dataloader):
+    train_x = np.array([train_x_np[i] for i in train_idx])
+    train_y = np.array([train_y_np[i] for i in train_idx])
+    valid_x = np.array([train_x_np[i] for i in valid_idx])
+    valid_y = np.array([train_y_np[i] for i in valid_idx])
+
+    # Convert numpy arrays to normalized tensors.
+    train_x_t = torch.from_numpy(train_x).float()
+    train_y_t = torch.from_numpy(train_y).long()
+    valid_x_t = torch.from_numpy(valid_x).float()
+    valid_y_t = torch.from_numpy(valid_y).long()
+
+    # Create tensor datasets.
+    train_dataset = TensorDataset(train_x_t, train_y_t)
+    valid_dataset = TensorDataset(valid_x_t, valid_y_t)
+
+    # Create and return data loaders (with batch_size=64).
+    return DataLoader(train_dataset, 64), DataLoader(valid_dataset, 64)
+
+
+def create_test_loader(test_x_file):
+    f = open(test_x_file, 'r')
+    texts = f.read().split('<br>')
+    f.close()
+    descriptions = [nlp(t).vector for t in texts]
+    test_x_np = np.array(descriptions)
+    test_x_t = torch.from_numpy(test_x_np).float()
+    return texts, DataLoader(test_x_t, 64)
+
+
+def plot(t_losses, v_losses, t_accuracies, v_accuracies):
+    plt.figure()
+    plt.title('TCNN - Average loss per epoch')
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss values')
+    plt.plot(list(range(len(t_losses))), t_losses, v_losses)
+    plt.legend(["Training Loss", "Validation Loss"])
+    plt.savefig("TCNN_Loss_per_Epoch.png")
+    plt.figure()
+    plt.title('TCNN - Average accuracy per epoch')
+    plt.xlabel('Epoch')
+    plt.ylabel('Accuracy percentages')
+    plt.plot(list(range(len(t_accuracies))), t_accuracies, v_accuracies)
+    plt.legend(["Training Accuracy", "Validation Accuracy"])
+    plt.savefig("TCNN_Accuracy_per_Epoch.png")
+
+
+class TextClassifierNN(nn.Module):
+
+    def __init__(self):
+        super(TextClassifierNN, self).__init__()
+        self.linear1 = create_linear_layer(96, 32)
+        self.linear2 = create_linear_layer(32, 11)
+        self.linear3 = create_linear_layer(11, len(CLASSES))
+        self.optim = Adam(self.parameters(), lr=0.01)
+        print('Text Classifier Neural Network model created.')
+
+    def forward(self, x):
+        out = self.linear1(x)
+        out = self.linear2(out)
+        out = self.linear3(out)
+        out = F.log_softmax(out, -1)
+        return out
+
+    def learn(self, train_dataset):
         self.train()
-        total_acc, total_count = 0, 0
-        log_interval = 500
-        start_time = time.time()
-        for idx, (label, text, offsets) in enumerate(dataloader):
-            optimizer.zero_grad()
-            predicted_label = model(text, offsets)
-            loss = criterion(predicted_label, label)
+        train_loss = 0
+        correct = 0
+        for x, y in train_dataset:
+            self.optim.zero_grad()
+            y_hat = self(x)
+            loss = F.nll_loss(y_hat, y)
             loss.backward()
-            torch.nn.utils.clip_grad_norm_(model.parameters(), 0.1)
-            optimizer.step()
-            total_acc += (predicted_label.argmax(1) == label).sum().item()
-            total_count += label.size(0)
-            if idx % log_interval == 0 and idx > 0:
-                elapsed = time.time() - start_time
-                print('| epoch {:3d} | {:5d}/{:5d} batches '
-                      '| accuracy {:8.3f}'.format(epoch, idx, len(dataloader),
-                                                  total_acc / total_count))
-                total_acc, total_count = 0, 0
-                start_time = time.time()
+            self.optim.step()
+            train_loss += loss.item()
+            pred = y_hat.data.max(1, keepdim=True)[1]
+            correct += pred.eq(y.view_as(pred)).cpu().sum().item()
+        train_loss /= (len(train_dataset))
+        train_accuracy = (100. * correct) / len(train_dataset.dataset)
+        return train_loss, train_accuracy
 
-    def evaluate(self, dataloader):
+    def validate(self, valid_dataset):
         self.eval()
-        total_acc = 0
-        total_count = 0
+        valid_loss = 0
+        correct = 0
         with torch.no_grad():
-            for idx, (label, text, offsets) in enumerate(dataloader):
-                predicted_label = model(text, offsets)
-                loss = criterion(predicted_label, label)
-                total_acc += (predicted_label.argmax(1) == label).sum().item()
-                total_count += label.size(0)
-        return total_acc / total_count
-
-    def predict(self, text, text_pipeline):
-        with torch.no_grad():
-            text = torch.tensor(text_pipeline(text))
-            output = self(text, torch.tensor([0]))
-            return output.argmax(1).item() + 1
+            for x, y in valid_dataset:
+                y_hat = self(x)
+                valid_loss += F.nll_loss(y_hat, y, reduction="sum").item()
+                pred = y_hat.max(1, keepdim=True)[1]
+                correct += pred.eq(y.view_as(pred)).cpu().sum().item()
+        valid_loss /= len(valid_dataset.dataset)
+        valid_accuracy = (100. * correct) / len(valid_dataset.dataset)
+        return valid_loss, valid_accuracy
 
 
-tokenizer = get_tokenizer('basic_english')
-train_iter = AG_NEWS(split='train')
+def train_model(uid, train_x, train_y, n_epochs, save_plot=False):
+    model = TextClassifierNN()
+    train_dataset, valid_dataset = create_train_loaders(train_x, train_y)
+    train_losses, train_accuracies = [], []
+    valid_losses, valid_accuracies = [], []
+    print('Training epochs...')
+    for e in range(n_epochs):
+        print(f'epoch {e + 1}/{n_epochs}:', end=' ')
 
-text_pipeline = lambda x: vocab(tokenizer(x))
-label_pipeline = lambda x: int(x) - 1
+        # Train:
+        t_loss, t_accuracy = model.learn(train_dataset)
+        train_losses.append(t_loss)
+        train_accuracies.append(t_accuracy)
+        print(f'train loss: {str(round(t_loss, 4))}', end=', ')
+        print(f'train accuracy: {str(round(t_accuracy, 2))}%', end=', ')
 
-vocab = build_vocab_from_iterator(yield_tokens(train_iter), specials=["<unk>"])
-vocab.set_default_index(vocab["<unk>"])
+        # Validate:
+        v_loss, v_accuracy = model.validate(valid_dataset)
+        valid_losses.append(v_loss)
+        valid_accuracies.append(v_accuracy)
+        print(f'valid loss: {str(round(v_loss, 4))}', end=', ')
+        print(f'valid accuracy: {str(round(v_accuracy, 2))}%')
 
-n_class = len(set([label for (label, text) in train_iter]))
-v_size = len(vocab)
-emsize = 64
+    print('Training completed!')
+    torch.save(model.state_dict(), f'./model_uid_{uid}')
+    if save_plot:
+        plot(train_losses, valid_losses, train_accuracies, valid_accuracies)
+        print('Charts of losses and accuracies were saved to PNG files.')
 
-model = TextClassificationModel(v_size, emsize, n_class).to(device)
 
-criterion = torch.nn.CrossEntropyLoss()
-optimizer = torch.optim.SGD(model.parameters(), lr=LR)
-scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 1.0, gamma=0.1)
+def predict(uid, test_x):
+    descriptions, test_dataset = create_test_loader(test_x)
+    model = TextClassifierNN()
+    model.load_state_dict(torch.load(f'model_uid_{uid}'))
+    model.eval()
+    print('Calculating predictions...')
+    predictions = []
+    for t, x in zip(descriptions, test_dataset):
+        y_hat = model(x).max(1, keepdim=True)[1].item()
+        predictions.append((t, CLASSES[y_hat]))
+    print('Predictions returned.')
+    return predictions
 
-total_accu = None
-train_iter, test_iter = AG_NEWS()
-train_dataset = to_map_style_dataset(train_iter)
-test_dataset = to_map_style_dataset(test_iter)
-num_train = int(len(train_dataset) * 0.90)
-split_train_, split_valid_ = random_split(train_dataset, [num_train, len(train_dataset) - num_train])
 
-train_dataloader = DataLoader(split_train_, batch_size=BATCH_SIZE, shuffle=True, collate_fn=collate_batch)
-valid_dataloader = DataLoader(split_valid_, batch_size=BATCH_SIZE, shuffle=True, collate_fn=collate_batch)
-test_dataloader = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=True, collate_fn=collate_batch)
-
-for epoch in range(1, EPOCHS + 1):
-    epoch_start_time = time.time()
-    model.learn(train_dataloader)
-    accu_val = model.evaluate(valid_dataloader)
-    if total_accu is not None and total_accu > accu_val:
-        scheduler.step()
-    else:
-        total_accu = accu_val
-    print('-' * 59)
-    print(
-        '| end of epoch {:3d} | time: {:5.2f}s | valid accuracy {:8.3f} '.format(epoch, time.time() - epoch_start_time,
-                                                                                 accu_val))
-    print('-' * 59)
-
-print('Checking the results of test dataset.')
-accu_test = model.evaluate(test_dataloader)
-print('test accuracy {:8.3f}'.format(accu_test))
-
-ag_news_label = {1: "World",
-                 2: "Sports",
-                 3: "Business",
-                 4: "Sci/Tec"}
-
-ex_text_str = "MEMPHIS, Tenn. – Four days ago, Jon Rahm was \
-    enduring the season’s worst weather conditions on Sunday at The \
-    Open on his way to a closing 75 at Royal Portrush, which \
-    considering the wind and the rain was a respectable showing. \
-    Thursday’s first round at the WGC-FedEx St. Jude Invitational \
-    was another story. With temperatures in the mid-80s and hardly any \
-    wind, the Spaniard was 13 strokes better in a flawless round. \
-    Thanks to his best putting performance on the PGA Tour, Rahm \
-    finished with an 8-under 62 for a three-stroke lead, which \
-    was even more impressive considering he’d never played the \
-    front nine at TPC Southwind."
-
-model = model.to("cpu")
-
-print("This is a %s news" % ag_news_label[model.predict(ex_text_str, text_pipeline)])
-
-# if _name_ == '_main_':
-#    main()
+# train_model(1234, './datasets/train_x.csv', './datasets/train_y.csv', 100)
+# print(predict(1234, './datasets/test_x.csv'))
