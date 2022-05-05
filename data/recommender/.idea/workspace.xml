@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="16478962-4816-41fb-b728-3df99ca73455" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/alice.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/text_classifier.py" beforeDir="false" afterPath="$PROJECT_DIR$/text_classifier.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/text_classifier2.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,6 +32,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RunManager">
     <configuration name="text_classifier" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
@@ -73,7 +71,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1651694952798</updated>
-      <workItem from="1651694962051" duration="13310000" />
+      <workItem from="1651694962051" duration="13709000" />
+      <workItem from="1651757701333" duration="1697000" />
     </task>
     <servers />
   </component>
