@@ -1,12 +1,14 @@
 const fs = require('fs');
 const express = require('express');
-const db = require('../Data/database/db_connection');
-const { exit } = require('process');
-const spawn = require("child_process").spawn;
+const PythonShell = require('python-shell').PythonShell;
 
-var conn = JSON.parse(fs.readFileSync('connections.json'));
+let conn = JSON.parse(fs.readFileSync('connections.json'));
 
-const recommender = spawn('python3',["./Data/recommender/recommender.py", conn.Recommender.ip, conn.Recommender.port]);
+let python = new PythonShell('../Data/recommender/recommender.py')
+python.on('message', (message) => {
+    console.log('Recommender: ' + message);
+});
+
 const app = express();
 
 app.use(
