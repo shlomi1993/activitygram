@@ -112,7 +112,7 @@ async function connectToDB() {
         await client.connect();
         new_user = new User("Shir")
         // Create a single new listing
-        // await createNewUser(client, new_user);
+        await createNewUser(client, new_user);
         // await changeUserName(client, new_user, "SHLOMI");
         new_interest = new Interest("Swimming")
         // await createNewInterest(client, new_interest);
@@ -121,7 +121,7 @@ async function connectToDB() {
         new_Event = new Event("Mimuna calebration")
         //await createNewEvent(client, new_Event);
         new_Group = new Group("Dancers")
-        await createNewGroup(client, new_Group);
+        //await createNewGroup(client, new_Group);
 
         } catch (e) {
         console.error(e);

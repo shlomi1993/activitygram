@@ -12,7 +12,7 @@ class User {
               bio = null,
               friendsList = null,
               intrests = null,
-              activityLog = null) {
+              activityLog = []) { //array of events
     this.id = null;
     this.firstName = firstName;
     this.lastName = lastName;
