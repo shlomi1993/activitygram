@@ -8,7 +8,7 @@ import {
   View,
 } from "react-native";
 import PropTypes from "prop-types";
-
+import { Platform } from "react-native";
 import eventData from "./event.json";
 
 import PhotoButton from "./PhotoButton";
@@ -16,7 +16,31 @@ import ProductStyles from "./ProductStyle";
 
 const styles = StyleSheet.create({ ...ProductStyles });
 
-function onPressRegister() {}
+export const baseUrl = Platform.OS === 'android' ?
+    'http://127.0.0.1/'
+: 
+'http://localhost:8080/';
+
+async function onPressRegister() {
+  await fetch(`${baseUrl}/setEvent`, {
+ method: 'POST',
+ headers: {
+   Accept: 'application/json',
+   'Content-Type': 'application/json'
+ },
+ body: JSON.stringify({
+   firstParam: 'hi',
+   secondParam: 'bye'
+ })
+}).then((json) => {
+  console.log('sent request')
+})
+.catch((error) => {
+  console.error(error);
+});
+  console.log(baseUrl)
+  console.log('clicked!')
+}
 
 function onPressContact() {}
 
@@ -98,7 +122,7 @@ class Product extends Component {
         <View style={styles.footer}>
           <TouchableOpacity
             style={styles.buttonFooter}
-            onPress={onPressRegister()}
+            onPress={()=>{onPressRegister()}}
           >
             <Text style={styles.textFooter}>REGISTER</Text>
           </TouchableOpacity>
