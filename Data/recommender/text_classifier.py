@@ -14,6 +14,8 @@ from matplotlib import pyplot as plt
 
 nlp = spacy.load('en_core_web_sm')
 
+MODEL_UID = '../Data/recommender/models/model_uid_'
+
 CLASSES = {
     0: 'Will-not-be-interested',
     1: 'Will-be-interested',
@@ -174,7 +176,7 @@ def train_model(uid, train_file, n_epochs, save_plot=False):
         print(f'valid accuracy: {str(round(v_accuracy, 2))}%')
 
     print('Training completed!')
-    torch.save(model.state_dict(), f'./model_uid_{uid}')
+    torch.save(model.state_dict(), MODEL_UID + str(uid))
     if save_plot:
         plot(train_losses, valid_losses, train_accuracies, valid_accuracies)
 
@@ -182,7 +184,7 @@ def train_model(uid, train_file, n_epochs, save_plot=False):
 def predict(uid, test_file):
     event_ids, test_dataset = preprocess_test_set(test_file)
     model = TextClassifierNN()
-    model.load_state_dict(torch.load(f'model_uid_{uid}'))
+    model.load_state_dict(torch.load(MODEL_UID + str(uid)))
     model.eval()
     predictions = []
     for eid, x in zip(event_ids, test_dataset):

@@ -1,8 +1,9 @@
 # Shlomi Ben-Shushan
 
 
-import sys, os
+import os
 import pandas as pd
+import json
 import text_classifier as tc
 from collaborative_filtering import CollaborativeFiltering
 from time import sleep
@@ -67,7 +68,7 @@ class Recommender:
             result = self.cf.predict_interests(uid, k, user_based)
             return jsonify(result)
 
-        # http://localhost:8090/learn?uid=1234&train=./datasets/train.json
+        # http://localhost:8100/learn?uid=1234&train=../Data/recommender/datasets/train.json
         @app.route('/learn', methods=['GET'])
         async def learn():
             uid = request.args.get('uid')
@@ -75,11 +76,11 @@ class Recommender:
             tc.train_model(uid, train, n_epochs=100)
             return f'User {uid} model was successfully updated.'
 
-        # http://localhost:8090/predict?uid=1234&test=./datasets/test.json
+        # http://localhost:8100/predict?uid=1234&test=../Data/recommender/datasets/test.json
         @app.route('/predict', methods=['GET'])
         async def predict():
             uid = int(request.args.get('uid'))
-            if os.path.exists(f'./model_uid_{uid}'):
+            if os.path.exists(tc.MODEL_UID + str(uid)):
                 # Use cache.
                 test = request.args.get('test')
                 predictions = tc.predict(uid, test)
@@ -93,4 +94,9 @@ class Recommender:
 
 if __name__ == '__main__':
     recommender = Recommender()
-    recommender.get_app().run(host=sys.argv[1], port=int(sys.argv[2]))
+    file = open('../Service/connections.json', 'r')
+    conn = json.loads(file.read())
+    file.close()
+    ip = conn['Recommender']['ip']
+    port = conn['Recommender']['port']
+    recommender.get_app().run(host=ip, port=port)
