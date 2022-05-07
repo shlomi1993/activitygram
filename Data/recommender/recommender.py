@@ -68,7 +68,7 @@ class Recommender:
             result = self.cf.predict_interests(uid, k, user_based)
             return jsonify(result)
 
-        # http://localhost:8100/learn?uid=1234&train=../Data/recommender/datasets/train.json
+        # http://localhost:8090/learn?uid=1234&train=../Data/recommender/datasets/train.json
         @app.route('/learn', methods=['GET'])
         async def learn():
             uid = request.args.get('uid')
@@ -76,7 +76,7 @@ class Recommender:
             tc.train_model(uid, train, n_epochs=100)
             return f'User {uid} model was successfully updated.'
 
-        # http://localhost:8100/predict?uid=1234&test=../Data/recommender/datasets/test.json
+        # http://localhost:8090/predict?uid=1234&test=../Data/recommender/datasets/test.json
         @app.route('/predict', methods=['GET'])
         async def predict():
             uid = int(request.args.get('uid'))
