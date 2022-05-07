@@ -2,15 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9adabeb9-0eb9-498c-9825-b35a7af63458" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/datasets/test_x.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/datasets/train_x.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/datasets/train_y.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/model_uid_1234" beforeDir="false" afterPath="$PROJECT_DIR$/model_uid_1234" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/recommender.py" beforeDir="false" afterPath="$PROJECT_DIR$/recommender.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/text_classifier.py" beforeDir="false" afterPath="$PROJECT_DIR$/text_classifier.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,6 +25,8 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../GeneticAlgorithms" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RunManager" selected="Python.recommender">
     <configuration name="recommender" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
@@ -99,6 +93,7 @@
       <option name="presentableId" value="Default" />
       <updated>1651760855549</updated>
       <workItem from="1651760873518" duration="7774000" />
+      <workItem from="1651835416251" duration="488000" />
     </task>
     <servers />
   </component>
