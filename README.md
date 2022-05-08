@@ -1,16 +1,16 @@
 # Activitygram
 
-Data Setup:
+**Data Setup:**
 * yarn
 * cd Data/database
 * node ./db_connection.js
 
-Service Setup:
+**Service Setup:**
 * cd Service
 * npm install (?)
 * node ./AppServer.js
 
-Client Setup:
+**Client Setup:**
 * cd presentation/Activitygram_Client
 * yarn
 * yarn start (OR npx react-native run-android)
