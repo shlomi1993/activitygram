@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import contactData from '../../../mocks/contact.json'
+import contactData from '../../mocks/contact.json'
 
 import Profile from './Profile'
 
