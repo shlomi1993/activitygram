@@ -2,9 +2,9 @@ import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Button, Icon } from 'react-native-elements'
 
-import ProductStyles from './ProductStyle'
+import EventStyles from './EventStyle'
 
-const styles = StyleSheet.create({ ...ProductStyles })
+const styles = StyleSheet.create({ ...EventStyles })
 
 const PhotoButton = () => (
   <View style={styles.coverMetaContainer}>

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Icon } from 'react-native-elements'
-import { Colors } from '../../../Constants'
+import { Colors } from '../../Constants'
 
 const Chevron = () => (
   <Icon
