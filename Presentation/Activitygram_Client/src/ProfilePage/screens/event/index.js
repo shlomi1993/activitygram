@@ -6,9 +6,6 @@ import eventData from './event.json'
 import { NavAbsolute } from '../../components'
 import Event from './Event'
 
-
-
-
 const EventScreen = (props) => {
     props.navigation.setOptions({
         header: ({ navigation }) => ( <
