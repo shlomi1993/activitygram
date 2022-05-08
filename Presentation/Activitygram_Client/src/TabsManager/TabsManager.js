@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Profile from '../ProfilePage/screens/profile'
-import EventList from '../ProfilePage/screens/eventList'
-import Event from '../ProfilePage/screens/event'
-import Setting from '../ProfilePage/screens/setting'
+import Profile from '../screens/profile'
+import EventList from '../screens/eventList'
+import Event from '../screens/event'
+import Setting from '../screens/setting'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Icon } from 'react-native-elements';
-import SettingOption from '../ProfilePage/screens/setting/Options'
+import SettingOption from '../screens/setting/Options'
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap');

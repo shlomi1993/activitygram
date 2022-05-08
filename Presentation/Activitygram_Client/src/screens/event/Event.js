@@ -12,9 +12,9 @@ import { Platform } from "react-native";
 import eventData from "./event.json";
 
 import PhotoButton from "./PhotoButton";
-import ProductStyles from "./ProductStyle";
+import EventStyles from "./EventStyle";
 
-const styles = StyleSheet.create({ ...ProductStyles });
+const styles = StyleSheet.create({ ...EventStyles });
 
 export const url = Platform.OS === 'android' ? 'http://10.0.2.2:8080/' : 'http://127.0.0.1/8080/';
 
@@ -38,7 +38,7 @@ async function onPressRegister() {
 
 function onPressContact() {}
 
-class Product extends Component {
+class Event extends Component {
   static propTypes = {
     img: PropTypes.string.isRequired,
     detail: PropTypes.string.isRequired,
@@ -109,9 +109,9 @@ class Product extends Component {
               {this.renderContactHeader()}
             </View>
           </View>
-          <View style={styles.productRow}>{this.renderDescription()}</View>
-          <View style={styles.productRow}>{this.renderNavigator()}</View>
-          <View style={styles.productRow}>{this.renderDetail()}</View>
+          <View style={styles.eventRow}>{this.renderDescription()}</View>
+          <View style={styles.eventRow}>{this.renderNavigator()}</View>
+          <View style={styles.eventRow}>{this.renderDetail()}</View>
         </ScrollView>
         <View style={styles.footer}>
           <TouchableOpacity
@@ -133,4 +133,4 @@ class Product extends Component {
   }
 }
 
-export default Product;
+export default Event;

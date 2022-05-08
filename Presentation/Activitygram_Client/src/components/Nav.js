@@ -4,7 +4,7 @@ import { Icon } from 'react-native-elements'
 import { Platform } from 'react-native'
 import PropTypes from 'prop-types'
 
-import { Colors } from '../../Constants'
+import { Colors } from '../Constants'
 
 const styles = StyleSheet.create({
   centerRow: {

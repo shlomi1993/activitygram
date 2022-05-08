@@ -1,5 +1,5 @@
 import { Dimensions } from 'react-native'
-import { Colors } from '../../../Constants'
+import { Colors } from '../../Constants'
 
 export default {
   cardContainer: {
@@ -25,7 +25,7 @@ export default {
     flex: 1,
     marginBottom: 55,
   },
-  productRow: {
+  eventRow: {
     margin: 25,
   },
   mainViewStyle: {
