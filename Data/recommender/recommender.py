@@ -54,7 +54,7 @@ class Recommender:
                 # How to return results?
                 return jsonify(predictions)
             else:
-                return jsonify('No model found for user {uid}.')
+                return jsonify(f'No model found for user {uid}.')
 
         return app
 
