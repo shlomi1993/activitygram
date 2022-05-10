@@ -25,7 +25,43 @@ app.get('/', (req, res) => {
 	console.log(msg);
 });
 
-// Example: http://localhost:8080/getEvent?event_id=62659000cf3b790c6cf9f96b
+/** USERS */
+
+app.post('/createUser', (req, res) => {
+    newUser = {
+        username: req.body.username,
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        bio: req.body.bio,
+        city: req.body.city,
+        state: req.body.state,
+		phone: req.body.phone,
+        email: req.body.email,
+        facebook: req.body.facebook,
+        twitter: req.body.twitter,
+        linkedin: req.body.linkedin,
+        github: req.body.github,        
+		lastGeo: req.body.lastGeo,
+        school: req.body.school,
+        collage: req.body.collage,
+		interests: req.body.interests,
+		image: req.body.image,
+		activityLog: [],
+		initiatedActivities: [],
+        managedActivities: [],
+		participantedActivities: [],
+        suspension: false,
+        creationTime: Date(),
+    };
+    let result1 = database.createUser(newUser);
+    let result2 = database.updateRatings(req.body.initial_ratings);  // ratings should be a string of "userId, interestId, tag1|tag2|...|tagn"
+	res.send(result1)
+});
+
+
+
+/** ACTIVITIES */
+
 app.get('/getEvent', (req, res) => {
 	let eid = req.query.event_id;
 	database.getEventById(eid).then((event) => res.send(event));
@@ -36,7 +72,6 @@ app.get('/searchEvent', (req, res) => {
 	database.searchEvent(keyword).then((eventList) => res.send(eventList));
 })
 
-// Example: postman
 app.post('/createEvent', (req, res) => {
     newEvent = {
         title: req.body.title,
@@ -60,12 +95,6 @@ app.post('/createEvent', (req, res) => {
 	res.send(result)
 });
 
-app.get('/getGroup', (req, res) => {
-	let eid = req.query.event_id;
-	database.getEventById(eid).then((event) => res.send(event));
-});
-
-// Example: http://localhost:8080/getPredictionCF?user_id=123464&k=10&userbased=1
 app.get('/getPredictionCF', (req, res) => {
 	let uid = req.query.user_id;
 	let k = req.query.k;
@@ -73,25 +102,11 @@ app.get('/getPredictionCF', (req, res) => {
 	recommender.predict_cf(uid, k, userbased).then((topk) => res.send(topk));
 });
 
-// Example: http://localhost:8080/TEST1?user_id=123464&train=../Data/recommender/datasets/train.json
-app.get('/TEST1', (req, res) => {
-	let uid = req.query.user_id;
-	let train = req.query.train;
-	recommender.train_nn(uid, train).then((topk) => res.send(topk));
-});
-// Example: http://localhost:8080/TEST2?user_id=123464&test=../Data/recommender/datasets/test.json
-app.get('/TEST2', (req, res) => {
+app.get('/getPredictionNN', (req, res) => {
 	let uid = req.query.user_id;
 	let test = req.query.test;
 	recommender.predict_nn(uid, test).then((topk) => res.send(topk));
 });
 
+
 app.listen(conn.App.port, () => console.log('AppServer is up!'));
-
-// process.on('SIGTERM', shutDown);
-// process.on('SIGINT', shutDown);
-
-// function shutDown() {
-// 	dbClient.close();
-// 	// recommender close?
-// }
