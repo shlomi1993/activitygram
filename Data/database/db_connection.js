@@ -1,14 +1,25 @@
+const fs = require('fs')
+const conn = JSON.parse(fs.readFileSync('connections.json'));
 const User = require('./User.js');
 const Interest = require('./Interest.js');
 const Tag = require('./Tag.js');
 const Event = require('./Event.js');
 const Group = require('./Group.js');
-const ObjectId = require('mongodb').ObjectId;
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 
-function createMongoClient(uri) {
-	return new MongoClient(uri);
-}
+const client = new MongoClient(conn.Database.uri);
+client.connect()
+
+const database = client.db('activitygram');
+const events = database.collection('events');
+const users = database.collection('users');
+const groups = database.collection('groups');
+const interests = database.collection('interests');
+const tags = database.collection('tags');
+
+// models = database.collection('models')
+// datasets = database.collection('datasets')
+
 
 //creat newUser
 async function createNewUser(client, newUser) {
@@ -109,12 +120,19 @@ async function createNewTag(client, newTag) {
 	console.log(`New listing created with the following id: ${result.insertedId}`);
 }
 
+// search events
+module.exports.searchEvent = async function (keyword) {
+    events.createIndex({ title: 'text', description: 'text' });
+	query = { $text: { $search: keyword } };
+	const eventList = await events.find(query).toArray();
+	return eventList;
+};
+
 //creat NewEvent
-async function createNewEvent(client, newEvent) {
-	const result = await client.db('activitygram').collection('events').insertOne(newEvent.forDB);
-	newEvent.set_id = result.insertedId;
-	console.log(`New listing created with the following id: ${result.insertedId}`);
-}
+module.exports.createNewEvent = async function(newEvent) {
+	const result = events.insertOne(newEvent);
+	return `New listing created with the following id: ${result.insertedId}`;
+};
 
 //creat NewGroup
 async function createNewGroup(client, newGroup) {
@@ -124,8 +142,8 @@ async function createNewGroup(client, newGroup) {
 }
 
 //get Event by ID
-async function getEventById(client, eventId) {
-	const result = await client.db('activitygram').collection('events').find({ _id: ObjectId(eventId) }).toArray();
+async function getEventById(eventId) {
+	const result = await events.find({ _id: ObjectId(eventId) }).toArray();
 	return result[0];
 }
 
@@ -152,5 +170,4 @@ async function getEventById(client, eventId) {
 // }
 // module.exports.connectToDB = connectToDB;
 
-module.exports.createMongoClient = createMongoClient;
 module.exports.getEventById = getEventById;
