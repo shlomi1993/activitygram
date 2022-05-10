@@ -179,7 +179,7 @@ def train_model(uid, train_file, n_epochs, save_plot=False):
     torch.save(model.state_dict(), MODEL_UID + str(uid))
     if save_plot:
         plot(train_losses, valid_losses, train_accuracies, valid_accuracies)
-
+    return f'User {uid} model was successfully updated.'
 
 def predict(uid, test_file):
     event_ids, test_dataset = preprocess_test_set(test_file)
