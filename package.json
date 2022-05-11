@@ -2,6 +2,7 @@
   "dependencies": {
     "axios": "^0.27.2",
     "firebase": "^9.6.10",
+    "json2csv": "^5.0.7",
     "mongodb": "^4.5.0",
     "native-base": "^3.3.7",
     "react-native-dialog-input": "^1.0.8",
