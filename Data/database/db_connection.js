@@ -1,4 +1,4 @@
-const fs = require('fs')
+const fs = require('fs');
 const conn = JSON.parse(fs.readFileSync('connections.json'));
 const User = require('./User.js');
 const Interest = require('./Interest.js');
@@ -8,24 +8,76 @@ const Group = require('./Group.js');
 const { MongoClient, ObjectId } = require('mongodb');
 
 const client = new MongoClient(conn.Database.uri);
-client.connect()
+client.connect();
 
 const database = client.db('activitygram');
-const events = database.collection('events');
+const activities = database.collection('activities');
 const users = database.collection('users');
 const groups = database.collection('groups');
 const interests = database.collection('interests');
 const tags = database.collection('tags');
-const models = database.collection('models')
-const datasets = database.collection('datasets')
+const models = database.collection('models');
+const ratings = database.collection('ratings');
 
+const interestsPath = '../Data/recommender/datasets/interests.csv';
+const ratingsPath = '../Data/recommender/datasets/ratings.csv';
+const datasetsPath = '../Data/recommender/datasets/train_uid_';
 
-//creat newUser
-async function createNewUser(client, newUser) {
-	const result = await users.insertOne(newUser.forDB);
-	newUser.set_id = result.insertedId;
-	console.log(`New listing created with the following id: ${result.insertedId}`);
-}
+// Fetch Collaborative Filtering data
+module.exports.fetchDataForCF = async () => {
+	let interestsContent = 'interestId,title,tags\n';
+	let interestsDocs = await interests.find().toArray();
+	interestsDocs.forEach((d) => {
+		interestsContent += `${d._id.toString()},${d.title},`;
+		d.tags.forEach((t) => (interestsContent += `${t}|`));
+		interestsContent = interestsContent.slice(0, -1);
+		interestsContent += '\n';
+	});
+	fs.writeFileSync(interestsPath, interestsContent.slice(0, -1));
+
+	let ratingsContent = 'userId,interestId,rating\n';
+	let ratingsDocs = await ratings.find().toArray();
+	ratingsDocs.forEach((d) => {
+		ratingsContent += `${d.userId},${d.interestId},${d.rating}\n`;
+	});
+	fs.writeFileSync(ratingsPath, ratingsContent.slice(0, -1));
+
+	return 'Collaborative Filtering data fetched.';
+};
+
+// Fetch Neural Network data
+module.exports.fetchDataForNN = async (user_id) => {
+	let train = [];
+	let user = await users.find({ _id: ObjectId(user_id) }).toArray();
+	let activityLog = user[0].activityLog;
+	for (const log of activityLog) {
+		let jsoned = JSON.parse(log);
+		let aid = jsoned.activity_id;
+		let activity = await activities.find({ _id: ObjectId(aid) }).toArray();
+		let description = activity[0].description;
+		let label = jsoned.label;
+		train.push({
+			activity_id: aid,
+			description: description,
+			label: label
+		});
+	}
+	fs.writeFileSync(`${datasetsPath}${user_id}.json`, JSON.stringify(train, null, 2));
+};
+
+// Create a user
+module.exports.createUser = async function(newUser) {
+	const user = await users.insertOne(newUser);
+	const uid = await user.insertedId.toString();
+	await JSON.parse(newUser.interests).forEach((interest) => {
+		ratings.insertOne({
+			userId: uid,
+			interestId: interest.id,
+			rating: 10.0
+		});
+	});
+	return `New user created with the id: ${uid}`;
+};
 
 //Update functions
 async function changeFirstName(curr_user, firstName) {
@@ -90,16 +142,16 @@ async function createNewTag(client, newTag) {
 }
 
 // search events
-module.exports.searchEvent = async function (keyword) {
-    events.createIndex({ title: 'text', description: 'text' });
+module.exports.searchActivity = async function(keyword) {
+	events.createIndex({ title: 'text', description: 'text' });
 	query = { $text: { $search: keyword } };
 	const eventList = await events.find(query).toArray();
 	return eventList;
 };
 
 //creat NewEvent
-module.exports.createNewEvent = async function(newEvent) {
-	const result = events.insertOne(newEvent);
+module.exports.createNewActivity = async function(newActivity) {
+	const result = events.insertOne(newActivity);
 	return `New listing created with the following id: ${result.insertedId}`;
 };
 
@@ -110,8 +162,8 @@ async function createNewGroup(client, newGroup) {
 	console.log(`New listing created with the following id: ${result.insertedId}`);
 }
 
-//get Event by ID
-module.exports.getEventById = async function(eventId) {
-	const result = await events.find({ _id: ObjectId(eventId) }).toArray();
+//get Activity by ID
+module.exports.getActivityById = async function(eventId) {
+	const result = await activities.find({ _id: ObjectId(eventId) }).toArray();
 	return result[0];
-}
+};

@@ -79,12 +79,12 @@ def preprocess_test_set(test_file):
     file = open(test_file, 'r')
     test_set = json.load(file)
     file.close()
-    event_ids, vectors = [], []
+    activity_ids, vectors = [], []
     for event in test_set:
-        event_ids.append(event['event_id'])
+        activity_ids.append(event['activity_id'])
         vectors.append(nlp(event['description']).vector)
     test_dataset = torch.from_numpy(np.array(vectors)).float()
-    return event_ids, test_dataset
+    return activity_ids, test_dataset
 
 
 def plot(t_losses, v_losses, t_accuracies, v_accuracies):
@@ -182,12 +182,12 @@ def train_model(uid, train_file, n_epochs, save_plot=False):
     return f'User {uid} model was successfully updated.'
 
 def predict(uid, test_file):
-    event_ids, test_dataset = preprocess_test_set(test_file)
+    activity_ids, test_dataset = preprocess_test_set(test_file)
     model = TextClassifierNN()
     model.load_state_dict(torch.load(MODEL_UID + str(uid)))
     model.eval()
     predictions = []
-    for eid, x in zip(event_ids, test_dataset):
+    for eid, x in zip(activity_ids, test_dataset):
         y_hat = model(x.unsqueeze(0)).max(1, keepdim=True)[1].item()
         predictions.append((eid, CLASSES[y_hat]))
     print('Predictions calculated.')
