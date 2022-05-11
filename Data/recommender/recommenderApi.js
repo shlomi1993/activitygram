@@ -6,7 +6,6 @@ const conn = JSON.parse(fs.readFileSync('./connections.json'));
 
 const uri = `http://${conn.Recommender.ip}:${conn.Recommender.port}`;
 
-// http://localhost:8090/train_cf [to complete...]
 module.exports.train_cf = async function(interests_csv, ratings_csv) {
 	let request = `${uri}/train_cf?interests=${interests_csv}&ratings=${ratings_csv}`;
 	let result = null;
@@ -21,7 +20,6 @@ module.exports.train_cf = async function(interests_csv, ratings_csv) {
 	return JSON.parse(result);
 };
 
-// http://localhost:8090/predict_cf?uid=123464&k=10&userbased=1
 module.exports.predict_cf = async function(uid, k, userbased) {
 	let request = `${uri}/predict_cf?uid=${uid}&k=${k}&userbased=${userbased}`;
 	let result = null;
@@ -36,7 +34,6 @@ module.exports.predict_cf = async function(uid, k, userbased) {
 	return JSON.parse(result);
 };
 
-// http://localhost:8090/train_nn?uid=123464&train=../Data/recommender/datasets/train.json
 module.exports.train_nn = async function(uid, train_file) {
 	let request = `${uri}/train_nn?uid=${uid}&train=${train_file}`;
 	let result = null;
@@ -51,7 +48,6 @@ module.exports.train_nn = async function(uid, train_file) {
 	return JSON.parse(result);
 };
 
-// http://localhost:8090/predict_nn?uid=123464&test=../Data/recommender/datasets/test.json
 module.exports.predict_nn = async function(uid, test_file) {
 	let request = `${uri}/predict_nn?uid=${uid}&test=${test_file}`;
 	let result = null;

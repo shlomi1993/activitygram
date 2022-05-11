@@ -6,6 +6,8 @@ const Tag = require('./Tag.js');
 const Event = require('./Event.js');
 const Group = require('./Group.js');
 const { MongoClient, ObjectId } = require('mongodb');
+const crypto = require('crypto');
+const hash = crypto.createHash('sha512');
 
 const client = new MongoClient(conn.Database.uri);
 client.connect();
@@ -36,13 +38,13 @@ module.exports.fetchDataForCF = async () => {
 	fs.writeFileSync(interestsPath, interestsContent.slice(0, -1));
 
 	let ratingsContent = 'userId,interestId,rating\n';
-	let ratingsDocs = await ratings.find().toArray();
+    let ratingsDocs = await ratings.find().toArray();
 	ratingsDocs.forEach((d) => {
 		ratingsContent += `${d.userId},${d.interestId},${d.rating}\n`;
 	});
 	fs.writeFileSync(ratingsPath, ratingsContent.slice(0, -1));
 
-	return 'Collaborative Filtering data fetched.';
+	return ratingsDocs.length;
 };
 
 // Fetch Neural Network data
@@ -62,13 +64,17 @@ module.exports.fetchDataForNN = async (user_id) => {
 			label: label
 		});
 	}
-	fs.writeFileSync(`${datasetsPath}${user_id}.json`, JSON.stringify(train, null, 2));
+    fs.writeFileSync(`${datasetsPath}${user_id}.json`, JSON.stringify(train, null, 2));
+    return train.length
 };
 
 // Create a user
 module.exports.createUser = async function(newUser) {
-	const user = await users.insertOne(newUser);
-	const uid = await user.insertedId.toString();
+    const user = await users.insertOne(newUser);
+    const uido = await user.insertedId
+    const uid = uido.toString();
+    const hashedSaltedPassword = hash.update(newUser.password + uid, 'utf-8').digest('hex');
+    await users.updateOne({ _id: uido }, { $set: { hashedPassword: hashedSaltedPassword } });
 	await JSON.parse(newUser.interests).forEach((interest) => {
 		ratings.insertOne({
 			userId: uid,
