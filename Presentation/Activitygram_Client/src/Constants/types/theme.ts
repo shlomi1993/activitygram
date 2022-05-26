@@ -222,24 +222,15 @@ export interface ThemeIcons {
   components: ImageSourcePropType;
   document: ImageSourcePropType;
   documentation: ImageSourcePropType;
-  extras: ImageSourcePropType;
-  flight: ImageSourcePropType;
   home: ImageSourcePropType;
-  hotel: ImageSourcePropType;
   image: ImageSourcePropType;
   location: ImageSourcePropType;
   menu: ImageSourcePropType;
-  more: ImageSourcePropType;
   notification: ImageSourcePropType;
-  office: ImageSourcePropType;
-  payment: ImageSourcePropType;
   profile: ImageSourcePropType;
   register: ImageSourcePropType;
-  rental: ImageSourcePropType;
   search: ImageSourcePropType;
   settings: ImageSourcePropType;
-  star: ImageSourcePropType;
-  train: ImageSourcePropType;
   users: ImageSourcePropType;
   warning: ImageSourcePropType;
 }
