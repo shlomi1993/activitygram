@@ -13,7 +13,7 @@ import { StatusBar } from "expo-status-bar";
 
 import BigList from "react-native-big-list";
 import data from "../data/eventList.json";
-import Block from "./components/Block";
+import Block from "./components/EventListBlock";
 
 const ITEM_HEIGHT = 50;
 
