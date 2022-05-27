@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
-const Block = (props) => {
+const EventListBlock = (props) => {
   return <View {...props} style={styles.block} />;
 };
 
@@ -13,4 +13,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Block;
+export default EventListBlock;
