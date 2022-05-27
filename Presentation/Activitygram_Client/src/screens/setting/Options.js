@@ -1,7 +1,7 @@
 import React from 'react'
 import { SafeAreaView, View } from 'react-native'
 
-import { Nav } from '../../components'
+import { Nav } from '../../components/Nav'
 
 const Options = (props) => {
   props.navigation.setOptions({

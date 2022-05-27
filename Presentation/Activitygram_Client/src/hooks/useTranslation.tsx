@@ -3,8 +3,8 @@ import * as Localization from 'expo-localization';
 import Storage from '@react-native-async-storage/async-storage';
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 
-import translations from '../constants/translations/';
-import {ITranslate} from '../constants/types';
+import translations from '../Constants/translations/';
+import {ITranslate} from '../Constants/types';
 
 export const TranslationContext = React.createContext({});
 

@@ -32,73 +32,49 @@ export const WEIGHTS: ThemeWeights = {
 };
 
 export const ICONS: ThemeIcons = {
-  apple: require('../assets/icons/apple.png'),
-  google: require('../assets/icons/google.png'),
-  facebook: require('../assets/icons/facebook.png'),
-  arrow: require('../assets/icons/arrow.png'),
-  articles: require('../assets/icons/articles.png'),
-  basket: require('../assets/icons/basket.png'),
-  bell: require('../assets/icons/bell.png'),
-  calendar: require('../assets/icons/calendar.png'),
-  chat: require('../assets/icons/chat.png'),
-  check: require('../assets/icons/check.png'),
-  clock: require('../assets/icons/clock.png'),
-  close: require('../assets/icons/close.png'),
-  components: require('../assets/icons/components.png'),
-  document: require('../assets/icons/document.png'),
-  documentation: require('../assets/icons/documentation.png'),
-  home: require('../assets/icons/home.png'),
-  image: require('../assets/icons/image.png'),
-  location: require('../assets/icons/location.png'),
-  menu: require('../assets/icons/menu.png'),
-  notification: require('../assets/icons/notification.png'),
-  profile: require('../assets/icons/profile.png'),
-  register: require('../assets/icons/register.png'),
-  search: require('../assets/icons/search.png'),
-  settings: require('../assets/icons/settings.png'),
-  users: require('../assets/icons/users.png'),
-  warning: require('../assets/icons/warning.png'),
+  apple: require('../../assets/icons/apple.png'),
+  google: require('../../assets/icons/google.png'),
+  facebook: require('../../assets/icons/facebook.png'),
+  arrow: require('../../assets/icons/arrow.png'),
+  articles: require('../../assets/icons/articles.png'),
+  basket: require('../../assets/icons/basket.png'),
+  bell: require('../../assets/icons/bell.png'),
+  calendar: require('../../assets/icons/calendar.png'),
+  check: require('../../assets/icons/check.png'),
+  clock: require('../../assets/icons/clock.png'),
+  close: require('../../assets/icons/close.png'),
+  components: require('../../assets/icons/components.png'),
+  document: require('../../assets/icons/document.png'),
+  documentation: require('../../assets/icons/documentation.png'),
+  home: require('../../assets/icons/home.png'),
+  image: require('../../assets/icons/image.png'),
+  location: require('../../assets/icons/location.png'),
+  menu: require('../../assets/icons/menu.png'),
+  notification: require('../../assets/icons/notification.png'),
+  profile: require('../../assets/icons/profile.png'),
+  register: require('../../assets/icons/register.png'),
+  search: require('../../assets/icons/search.png'),
+  settings: require('../../assets/icons/settings.png'),
+  users: require('../../assets/icons/users.png'),
+  warning: require('../../assets/icons/warning.png'),
 };
 
 export const ASSETS: ThemeAssets = {
   // fonts
-  OpenSansLight: require('../assets/fonts/OpenSans-Light.ttf'),
-  OpenSansRegular: require('../assets/fonts/OpenSans-Regular.ttf'),
-  OpenSansSemiBold: require('../assets/fonts/OpenSans-SemiBold.ttf'),
-  OpenSansExtraBold: require('../assets/fonts/OpenSans-ExtraBold.ttf'),
-  OpenSansBold: require('../assets/fonts/OpenSans-Bold.ttf'),
+  OpenSansLight: require('../../assets/fonts/OpenSans-Light.ttf'),
+  OpenSansRegular: require('../../assets/fonts/OpenSans-Regular.ttf'),
+  OpenSansSemiBold: require('../../assets/fonts/OpenSans-SemiBold.ttf'),
+  OpenSansExtraBold: require('../../assets/fonts/OpenSans-ExtraBold.ttf'),
+  OpenSansBold: require('../../assets/fonts/OpenSans-Bold.ttf'),
 
   // backgrounds/logo
-  logo: require('../assets/images/logo.png'),
-  header: require('../assets/images/header.png'),
-  background: require('../assets/images/background.png'),
-  ios: require('../assets/images/ios.png'),
-  android: require('../assets/images/android.png'),
+  background: require('../../assets/images/background.png'),
+  ios: require('../../assets/images/ios.png'),
+  android: require('../../assets/images/android.png'),
 
   // cards
-  card1: require('../assets/images/card1.png'),
-  card2: require('../assets/images/card2.png'),
-  card3: require('../assets/images/card3.png'),
-  card4: require('../assets/images/card4.png'),
-  card5: require('../assets/images/card5.png'),
+  card1: require('../../assets/images/card1.png'),
 
-  // gallery photos
-  photo1: require('../assets/images/photo1.png'),
-  photo2: require('../assets/images/photo2.png'),
-  photo3: require('../assets/images/photo3.png'),
-  photo4: require('../assets/images/photo4.png'),
-  photo5: require('../assets/images/photo5.png'),
-  photo6: require('../assets/images/photo6.png'),
-  carousel1: require('../assets/images/carousel1.png'),
-
-  // avatars
-  avatar1: require('../assets/images/avatar1.png'),
-  avatar2: require('../assets/images/avatar2.png'),
-
-  // cars
-  x5: require('../assets/images/x5.png'),
-  gle: require('../assets/images/gle.png'),
-  tesla: require('../assets/images/tesla.png'),
 };
 
 export const FONTS: ThemeFonts = {
