@@ -1,0 +1,90 @@
+{
+  "common": {
+    "appDetails": "Activitygram",
+    "appName": "Activitygram",
+    "appVersion": "1.0",
+    "about": "About",
+    "visit": "Visit",
+    "posted": "Posted on {{date}}",
+    "recommended": "Recommended for you",
+    "viewall": "View All",
+    "more": "More",
+    "follow": "Follow",
+    "followed": "Followed",
+    "search": "Search",
+    "night": "night",
+    "day": "day",
+    "joinnow": "Join Now",
+    "selectDate": "Select date",
+    "checkInOut": "Check-In & Check-Out",
+    "adults": "Adults",
+    "message": "Enter your message",
+    "or": "or",
+    "name": "Name",
+    "namePlaceholder": "Enter your full name",
+    "email": "Email",
+    "emailPlaceholder": "Enter your email address",
+    "password": "Password",
+    "passwordPlaceholder": "Enter a password",
+    "agree": "I agree with the ",
+    "terms": "Terms and Conditions",
+    "signup": "Sign Up",
+    "signin": "Sign In",
+    "goBack": "Go back",
+    "inProcess": "In process",
+    "checkout": "Proceed to checkout",
+    "accept": "Accept",
+    "guests": {
+      "one": "1 guest",
+      "other": "{{count}} guests",
+      "zero": "0 Guests"
+    }
+  },
+  "app": {
+    "name": "Activitygram",
+    "fullname": "Activitygram",
+    "native": "React Native",
+    "link": "activitygram.com"
+  },
+  "darkMode": "Dark Mode",
+  "screens": {
+    "home": "Home",
+    "explore": "Explore",
+    "network": "Network",
+    "settings": "Settings",
+    "profile": "Profile",
+    "register": "Create event"
+  },
+  "navigation": {
+    "home": "Activitygram",
+    "components": "Components",
+    "profile": "Profile",
+    "settings": "Settings",
+    "notifications": "Notifications",
+    "agreement": "User Agreement",
+    "about": "About",
+    "privacy": "Privacy",
+    "register": "Register",
+    "login": "Login"
+  },
+  "menu": {
+    "started": "Getting Started",
+    "documentation": "Documentation"
+  },
+  "home": {
+    "title": "Activitygram",
+    "following": "Following",
+    "trending": "Trending"
+  },
+  "register": {
+    "title": "Welcome",
+    "subtitle": "Register with"
+  },
+  "profile": {
+    "title": "Profile",
+    "posts": "Posts",
+    "followers": "Followers",
+    "following": "Following",
+    "aboutMe": "About me"
+  }
+}
