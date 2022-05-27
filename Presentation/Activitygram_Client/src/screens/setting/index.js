@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native'
 
 import contactData from '../../mocks/contact.json'
 
-import { Nav } from '../../components'
+import { Nav } from '../../Nav'
 import Setting from './Setting'
 
 const SettingScreen = (props) => {
