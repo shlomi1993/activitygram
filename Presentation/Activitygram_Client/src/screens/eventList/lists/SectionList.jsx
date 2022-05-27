@@ -5,7 +5,7 @@ import { StatusBar } from "expo-status-bar";
 
 import BigList from "react-native-big-list";
 import sections from "../data/sectionsList.json";
-import Block from "./components/Block";
+import Block from "./components/EventListBlock";
 
 export default function SectionList() {
   const renderItem = ({ item }) => {

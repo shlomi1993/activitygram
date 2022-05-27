@@ -10,7 +10,7 @@ import { List, Subheading, TextInput } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
 
 import data from "../data/eventList.json";
-import Block from "./components/Block";
+import Block from "./components/EventListBlock";
 
 export default function SectionList() {
   const [numberColumns, setNumberColumns] = useState(3);
