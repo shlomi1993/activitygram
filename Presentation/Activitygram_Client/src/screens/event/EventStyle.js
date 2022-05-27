@@ -1,5 +1,5 @@
 import { Dimensions } from 'react-native'
-import { Colors } from '../../Constants'
+import { Colors } from '../../consts'
 
 export default {
   cardContainer: {
