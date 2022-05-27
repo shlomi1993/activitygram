@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import eventData from './event.json'
 
-import { NavAbsolute } from '../../components'
+import { NavAbsolute } from '../../Nav'
 import Event from './Event'
 
 const EventScreen = (props) => {
