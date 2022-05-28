@@ -53,7 +53,8 @@
     "network": "Network",
     "settings": "Settings",
     "profile": "Profile",
-    "register": "Create event"
+    "register": "Create event",
+    "components": "Components"
   },
   "navigation": {
     "home": "Activitygram",
