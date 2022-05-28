@@ -2,10 +2,10 @@ import React, {useLayoutEffect, useState} from 'react';
 import {FlatList, TouchableOpacity} from 'react-native';
 
 import {useNavigation} from '@react-navigation/native';
-import {useHeaderHeight} from '@react-navigation/elements';
+import {useHeaderHeight} from '@react-navigation/stack';
 
-import {useTheme} from '../hooks/';
-import {Block, Button, Input, Image, Switch, Modal, Text} from '../components/';
+import {useTheme} from '../hooks';
+import {Block, Button, Input, Image, Switch, Modal, Text} from '../components';
 
 // buttons example
 const Buttons = () => {
@@ -300,43 +300,6 @@ const Cards = () => {
         </Block>
       </Block>
       {/* full image width card */}
-      <Block card marginTop={sizes.sm}>
-        <Image
-          resizeMode="cover"
-          source={assets?.card1}
-          style={{width: '100%'}}
-        />
-        <Text
-          h5
-          bold
-          transform="uppercase"
-          gradient={gradients.primary}
-          marginTop={sizes.sm}>
-          Trending
-        </Text>
-        <Text
-          p
-          marginTop={sizes.s}
-          marginLeft={sizes.xs}
-          marginBottom={sizes.sm}>
-          The most beautiful and complex UI Kits built by Creative Tim.
-        </Text>
-        {/* user details */}
-        <Block row marginLeft={sizes.xs} marginBottom={sizes.xs}>
-          <Image
-            source={assets.card1}
-            style={{width: sizes.xl, height: sizes.xl, borderRadius: sizes.s}}
-          />
-          <Block marginLeft={sizes.s}>
-            <Text p semibold>
-              Mathew Glock
-            </Text>
-            <Text p gray>
-              Posted on 28 February
-            </Text>
-          </Block>
-        </Block>
-      </Block>
       {/* image background card */}
       <Block card padding={0} marginTop={sizes.sm}>
         <Image
@@ -346,11 +309,10 @@ const Cards = () => {
           radius={sizes.cardRadius}>
           <Block color="rgba(0,0,0,0.3)" padding={sizes.padding}>
             <Text h4 white marginBottom={sizes.sm}>
-              Flexible office space means growth.
+              Mi Shelo Ba Meruba
             </Text>
-            <Text >
-              Rather than worrying about switching offices every couple years,
-              you can instead stay in the same location.
+            <Text p white>
+              Final project
             </Text>
             {/* user details */}
             <Block row marginLeft={sizes.xs} marginTop={sizes.xxl}>
@@ -364,10 +326,10 @@ const Cards = () => {
               />
               <Block marginLeft={sizes.s}>
                 <Text p white semibold>
-                  Devin Coldewey
+                  Gal Shir and Shlomi
                 </Text>
                 <Text p white>
-                  Marketing Manager
+                  Managers
                 </Text>
               </Block>
             </Block>
@@ -391,7 +353,7 @@ const Gallery = () => {
   return (
     <Block marginTop={sizes.m} paddingHorizontal={sizes.padding}>
       <Text p semibold marginBottom={sizes.s}>
-        Carousel
+        Near Me
       </Text>
       {/* carousel example */}
       <Block marginBottom={sizes.xxl}>
@@ -401,21 +363,20 @@ const Gallery = () => {
           style={{width: '100%'}}
         />
         <Text p secondary marginTop={sizes.sm}>
-          Private Room • 1 Guests • 1 Sofa
+          Private • 10 Guests • 18+
         </Text>
         <Text h4 marginVertical={sizes.s}>
-          Single room in center
+          Best party in town
         </Text>
         <Text p lineHeight={26}>
-          As Uber works through a huge amount of internal management turmoil,
-          the company is also consolidating.
+          18+ only
         </Text>
       </Block>
       {/* photo gallery */}
       <Block>
         <Block row align="center" justify="space-between">
           <Text h5 semibold>
-            Album 1
+            Sport
           </Text>
           <Button>
             <Text p primary semibold>
@@ -423,7 +384,7 @@ const Gallery = () => {
             </Text>
           </Button>
         </Block>
-        <Block row justify="space-between" wrap="wrap">
+      <Block row justify="space-between" wrap="wrap">
           <Image
             resizeMode="cover"
             source={assets?.card1}
@@ -485,7 +446,7 @@ const Gallery = () => {
       <Block>
         <Block row align="center" justify="space-between">
           <Text h5 semibold>
-            Album 2
+            Celebrations
           </Text>
           <Button>
             <Text p primary semibold>
@@ -540,11 +501,11 @@ const Components = () => {
           resizeMode="cover"
           width={sizes.width}
           height={headerHeight}
-          source={assets.background}
+          source={assets.card1}
         />
       ),
     });
-  }, [assets.background, navigation, sizes.width, headerHeight]);
+  }, [assets.card1, navigation, sizes.width, headerHeight]);
 
   return (
     <Block safe>

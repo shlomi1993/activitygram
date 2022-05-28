@@ -23,8 +23,8 @@ export interface IArticleOptions {
   id?: number;
   title?: string;
   description?: string;
-  type?: 'room' | 'apartment' | 'house'; // private room | entire apartment | entire house
-  sleeping?: {total?: number; type?: 'sofa' | 'bed'};
+  type?: 'celebrations' | 'sport' | 'other';
+  sleeping?: {total?: number; type?: 'adults' | 'kids'};
   guests?: number;
   price?: number;
   user?: IUser;
