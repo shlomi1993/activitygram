@@ -169,7 +169,6 @@ const Button = ({
   ]) as ViewStyle;
 
   /* handle onPress event */
-  // The React useCallback Hook returns a memoized callback function.
   const handlePress = useCallback(
     (event) => {
       onPress?.(event);

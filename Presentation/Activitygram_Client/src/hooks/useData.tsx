@@ -19,18 +19,6 @@ import {
 } from '../constants/mocks';
 import {light} from '../constants';
 
-const user =   {
-  id: 1,
-  name: 'Devin Coldewey',
-  department: 'Marketing Manager',
-  stats: {posts: 323, followers: 53200, following: 749000},
-  social: {twitter: 'CreativeTim', dribbble: 'creativetim'},
-  about:
-    'Decisions: If you can’t decide, the answer is no. If two equally difficult paths, choose the one more painful in the short term (pain avoidance is creating an illusion of equality).',
-  avatar:
-    'https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?fit=crop&w=80&q=80',
-}
-
 export const DataContext = React.createContext({});
 
 export const DataProvider = ({children}: {children: React.ReactNode}) => {
