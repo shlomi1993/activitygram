@@ -31,7 +31,7 @@ module.exports.predict_cf = async function(uid, k, userbased) {
 		.catch((error) => {
 			console.error(error);
 		});
-	return JSON.parse(result);
+	return result; //JSON.parse(result);
 };
 
 module.exports.train_nn = async function(uid, train_file) {
