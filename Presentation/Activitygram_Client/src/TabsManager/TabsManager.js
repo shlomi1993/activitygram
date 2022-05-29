@@ -4,6 +4,7 @@ import Profile from '../screens/profile'
 import EventList from '../screens/eventList'
 import Event from '../screens/event'
 import Setting from '../screens/setting'
+import Create from '../screens/create'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Icon } from 'react-native-elements';
 import SettingOption from '../screens/setting/Options'
@@ -57,6 +58,15 @@ function EventListStackScreen() {
   )
 }
 
+const CreateStack = createNativeStackNavigator()
+function CreateStackScreen() {
+  return (
+    <CreateStack.Navigator>
+      <SettingStack.Screen name="Create" component={Create} />
+    </CreateStack.Navigator>
+  )
+}
+
 const Tab = createBottomTabNavigator()
 
 const HomeIcon = ({ focused, tintColor }) => (
@@ -101,6 +111,7 @@ class TabsManager extends React.Component {
         <Tab.Screen name="Event" component={EventStackScreen} />
         <Tab.Screen name="EventList" component={EventListStackScreen} />
         <Tab.Screen name="Settings" component={SettingsStackScreen} />
+        <Tab.Screen name="Create" component={CreateStackScreen} />
       </Tab.Navigator>
     );
   }
