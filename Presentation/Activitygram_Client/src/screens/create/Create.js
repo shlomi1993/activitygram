@@ -1,35 +1,24 @@
 import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, TextInput, View, Button } from 'react-native';
+import { StyleSheet, TextInput, Button, ScrollView } from 'react-native';
 
 export const url = Platform.OS === 'android' ? 'http://10.0.2.2:8080/' : 'http://127.0.0.1/8080/';
 
-let json = {}
-
-async function onPressCreate() {
-  await fetch(url + 'createTest', {
+async function onPressCreate(params) {
+	var formBody = [];
+	for (var property in params) {
+		var encodedKey = encodeURIComponent(property);
+		var encodedValue = encodeURIComponent(params[property]);
+		formBody.push(encodedKey + '=' + encodedValue);
+	}
+	formBody = formBody.join('&');
+	await fetch(url + 'createActivity', {
 		method: 'POST',
 		headers: {
-      'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+			'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
 		},
-		body: JSON.stringify({
-      "title": json.title,
-      "startTime": json.startTime,
-      "endTime": json.endTime,
-      "recurrent": json.recurrent,
-      "location": json.location,
-      "description": json.description,
-      "interests": json.interests,
-      "preconditions": json.preconditions,
-      "initiator": json.initiator,
-      "managers": json.managers,
-      "invited": json.invited,
-      "images": json.images,
-      "qr": json.qr,
-      "tags": json.tags,
-      "status": json.status
-    })
+		body: formBody
 	})
-    .then((res) => {
+		.then((res) => {
 			console.log('sent request');
 		})
 		.catch((err) => {
@@ -38,66 +27,138 @@ async function onPressCreate() {
 }
 
 const Create = () => {
-	// const [ text, setText ] = useState('');
+	let json = {};
 	return (
-    <SafeAreaView>
-      
+		<ScrollView>
 			<TextInput
 				style={styles.input}
-        onChangeText={(newText) => { json.title = newText; }}
+				onChangeText={(newText) => {
+					json.title = newText;
+				}}
 				placeholder="Activity Title"
-      />
-      
-      <TextInput
-				style={styles.input}
-        onChangeText={(newText) => { json.startTime = newText; }}
-				placeholder="Start time"
-      />
+			/>
 
-      <TextInput
+			<TextInput
 				style={styles.input}
-        onChangeText={(newText) => { json.endTime = newText; }}
+				onChangeText={(newText) => {
+					json.startTime = newText;
+				}}
+				placeholder="Start time"
+			/>
+
+			<TextInput
+				style={styles.input}
+				onChangeText={(newText) => {
+					json.endTime = newText;
+				}}
 				placeholder="End time"
 			/>
 
-      <TextInput
+			<TextInput
 				style={styles.input}
-        onChangeText={(newText) => { json.recurrent = newText; }}
+				onChangeText={(newText) => {
+					json.recurrent = newText;
+				}}
 				placeholder="Recurrent"
-      />
-      
-      {/* <TextInput
-				style={styles.input}
-        onChangeText={(newText) => { json.recurrent = newText; }}
-				placeholder="Location"
 			/>
-      "location": json.location,
-      "description": json.description,
-      "interests": json.interests,
-      "preconditions": json.preconditions,
-      "initiator": json.initiator,
-      "managers": json.managers,
-      "invited": json.invited,
-      "images": json.images,
-      "qr": json.qr,
-      "tags": json.tags,
-      "status": json.status */}
 
 			<TextInput
 				style={styles.input}
-				onChangeText={(newText) => { json.description = newText; }}
+				onChangeText={(newText) => {
+					json.location = newText;
+				}}
+				placeholder="Location"
+			/>
+
+			<TextInput
+				style={styles.input}
+				onChangeText={(newText) => {
+					json.description = newText;
+				}}
 				placeholder="Description"
 			/>
 
+			<TextInput
+				style={styles.input}
+				onChangeText={(newText) => {
+					json.interests = newText;
+				}}
+				placeholder="Interests"
+			/>
+
+			<TextInput
+				style={styles.input}
+				onChangeText={(newText) => {
+					json.preconditions = newText;
+				}}
+				placeholder="Preconditions"
+			/>
+
+			<TextInput
+				style={styles.input}
+				onChangeText={(newText) => {
+					json.initiator = newText;
+				}}
+				placeholder="Initiator"
+			/>
+
+			<TextInput
+				style={styles.input}
+				onChangeText={(newText) => {
+					json.managers = newText;
+				}}
+				placeholder="Managers"
+			/>
+
+			<TextInput
+				style={styles.input}
+				onChangeText={(newText) => {
+					json.invited = newText;
+				}}
+				placeholder="Invited"
+			/>
+
+			<TextInput
+				style={styles.input}
+				onChangeText={(newText) => {
+					json.images = newText;
+				}}
+				placeholder="Images"
+			/>
+
+			<TextInput
+				style={styles.input}
+				onChangeText={(newText) => {
+					json.qr = newText;
+				}}
+				placeholder="QR"
+			/>
+
+			<TextInput
+				style={styles.input}
+				onChangeText={(newText) => {
+					json.tags = newText;
+				}}
+				placeholder="Tags"
+			/>
+
+			<TextInput
+				style={styles.input}
+				onChangeText={(newText) => {
+					json.status = newText;
+				}}
+				placeholder="Status"
+			/>
+
 			<Button
-        onPress={() => {
-          console.log('clicked')
-          onPressCreate(json)
-        }}
-				title='Create'
+				onPress={() => {
+					console.log('clicked');
+					onPressCreate(json);
+				}}
+				title="Create"
 				color="#841584"
 			/>
-		</SafeAreaView>
+		</ScrollView>
 	);
 };
 
