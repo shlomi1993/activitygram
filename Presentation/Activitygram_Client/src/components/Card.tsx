@@ -7,7 +7,7 @@ import Text from './Text';
 import {ICard} from '../constants/types';
 import {useTheme, useTranslation} from '../hooks';
 
-const Product = ({image, title, type, linkLabel}: ICard) => {
+const Card = ({image, title, type, linkLabel}: ICard) => {
   const {t} = useTranslation();
   const {assets, colors, sizes} = useTheme();
 
@@ -55,4 +55,4 @@ const Product = ({image, title, type, linkLabel}: ICard) => {
   );
 };
 
-export default Product;
+export default Card;
