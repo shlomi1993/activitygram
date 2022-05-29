@@ -1,78 +1,101 @@
 import React, { useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, TextInput, View, Button } from 'react-native';
 
-// function onChangeText(text) {
-//   console.log(text)
-// }
-let title = '';
-let startTime = '';
-let endTime = '';
-let recurrent = false;
-let images = [];
-let location = '';
-let description = '';
-let inititator = '';
-let managers = [];
-let invited = [];
-let tags = [];
-let qr = '';
-let status = '';
-
 export const url = Platform.OS === 'android' ? 'http://10.0.2.2:8080/' : 'http://127.0.0.1/8080/';
 
-async function onPressCreate(title, description) {
-	await fetch(url + 'createTest', {
+let json = {}
+
+async function onPressCreate() {
+  await fetch(url + 'createTest', {
 		method: 'POST',
 		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json'
+      'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
 		},
 		body: JSON.stringify({
-			title: title,
-			description: description
-		})
+      "title": json.title,
+      "startTime": json.startTime,
+      "endTime": json.endTime,
+      "recurrent": json.recurrent,
+      "location": json.location,
+      "description": json.description,
+      "interests": json.interests,
+      "preconditions": json.preconditions,
+      "initiator": json.initiator,
+      "managers": json.managers,
+      "invited": json.invited,
+      "images": json.images,
+      "qr": json.qr,
+      "tags": json.tags,
+      "status": json.status
+    })
 	})
-		.then((json) => {
+    .then((res) => {
 			console.log('sent request');
 		})
-		.catch((error) => {
+		.catch((err) => {
 			console.log('error');
 		});
 }
 
 const Create = () => {
-	// const [ text, onChangeText ] = React.useState('Useless Text');
-	// const [ number, onChangeNumber ] = React.useState(null);
-
-	const [ text, setText ] = useState('');
-
+	// const [ text, setText ] = useState('');
 	return (
-		<SafeAreaView>
+    <SafeAreaView>
+      
 			<TextInput
 				style={styles.input}
-        onChangeText={(newText) => {
-          console.log('inserted')
-					title = newText;
-				}}
+        onChangeText={(newText) => { json.title = newText; }}
 				placeholder="Activity Title"
+      />
+      
+      <TextInput
+				style={styles.input}
+        onChangeText={(newText) => { json.startTime = newText; }}
+				placeholder="Start time"
+      />
+
+      <TextInput
+				style={styles.input}
+        onChangeText={(newText) => { json.endTime = newText; }}
+				placeholder="End time"
 			/>
 
+      <TextInput
+				style={styles.input}
+        onChangeText={(newText) => { json.recurrent = newText; }}
+				placeholder="Recurrent"
+      />
+      
+      {/* <TextInput
+				style={styles.input}
+        onChangeText={(newText) => { json.recurrent = newText; }}
+				placeholder="Location"
+			/>
+      "location": json.location,
+      "description": json.description,
+      "interests": json.interests,
+      "preconditions": json.preconditions,
+      "initiator": json.initiator,
+      "managers": json.managers,
+      "invited": json.invited,
+      "images": json.images,
+      "qr": json.qr,
+      "tags": json.tags,
+      "status": json.status */}
+
 			<TextInput
 				style={styles.input}
-				onChangeText={(newText) => {
-					description = newText;
-				}}
+				onChangeText={(newText) => { json.description = newText; }}
 				placeholder="Description"
 			/>
 
 			<Button
         onPress={() => {
           console.log('clicked')
-          onPressCreate(title, description)
+          onPressCreate(json)
         }}
 				title='Create'
 				color="#841584"
-				accessibilityLabel="Learn more about this purple button"
 			/>
 		</SafeAreaView>
 	);
