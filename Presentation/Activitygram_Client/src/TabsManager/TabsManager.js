@@ -57,12 +57,11 @@ function EventListStackScreen() {
     </EventListStack.Navigator>
   )
 }
-
 const CreateStack = createNativeStackNavigator()
 function CreateStackScreen() {
   return (
     <CreateStack.Navigator>
-      <SettingStack.Screen name="Create" component={Create} />
+      <CreateStack.Screen name="Search" component={Create} />
     </CreateStack.Navigator>
   )
 }
@@ -111,7 +110,7 @@ class TabsManager extends React.Component {
         <Tab.Screen name="Event" component={EventStackScreen} />
         <Tab.Screen name="EventList" component={EventListStackScreen} />
         <Tab.Screen name="Settings" component={SettingsStackScreen} />
-        <Tab.Screen name="Create" component={CreateStackScreen} />
+        <Tab.Screen name="Search" component={CreateStackScreen} />
       </Tab.Navigator>
     );
   }

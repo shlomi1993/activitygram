@@ -12,7 +12,7 @@ const CreateScreen = (props) => {
     header: ({navigation}) => (
       <SafeAreaView>
         <Nav
-          title="Create"
+          title="Search"
           navigation={navigation}
           leftIcon={{
             type: 'ionicon',
