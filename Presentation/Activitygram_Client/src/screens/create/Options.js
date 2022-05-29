@@ -7,7 +7,7 @@ const Options = (props) => {
   props.navigation.setOptions({
     header: ({navigation}) => (
       <SafeAreaView>
-        <Nav title="Create" navigation={navigation} />
+        <Nav title="Search" navigation={navigation} />
       </SafeAreaView>
     ),
   })
