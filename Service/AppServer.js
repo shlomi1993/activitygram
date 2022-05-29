@@ -132,6 +132,11 @@ app.get('/deleteUser', (req, res) => {
 
 /** ACTIVITIES */
 
+app.post('/createTest', (req, res) => {
+    console.log(req.params)
+	// res.send(result);
+});
+
 app.post('/createActivity', (req, res) => {
 	newActivity = {
 		title: req.body.title,
