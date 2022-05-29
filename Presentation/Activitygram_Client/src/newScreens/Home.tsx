@@ -1,14 +1,22 @@
-import React, {useCallback, useState} from 'react';
+import React, {useLayoutEffect, useState, useCallback } from 'react';
+import {FlatList, TouchableOpacity} from 'react-native';
 
-import {useData, useTheme, useTranslation} from '../hooks/';
-import {Block, Button, Image, Input, Product, Text} from '../components/';
+import {useNavigation} from '@react-navigation/native';
+import {useHeaderHeight} from '@react-navigation/stack';
+
+import {useTheme, useTranslation, useData} from '../hooks';
+import {Block, Button, Input, Image, Switch, Modal, Text, Product} from '../components';
+import 'react-native-gesture-handler';
 
 const Home = () => {
   const {t} = useTranslation();
   const [tab, setTab] = useState<number>(0);
   const {following, trending} = useData();
   const [products, setProducts] = useState(following);
-  const {assets, colors, fonts, gradients, sizes} = useTheme();
+
+  const {assets, sizes, colors, fonts, gradients } = useTheme();
+  const navigation = useNavigation();
+  const headerHeight = useHeaderHeight();
 
   const handleProducts = useCallback(
     (tab: number) => {
@@ -18,13 +26,27 @@ const Home = () => {
     [following, trending, setTab, setProducts],
   );
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerBackground: () => (
+        <Image
+          radius={0}
+          resizeMode="cover"
+          width={sizes.width}
+          height={headerHeight}
+          source={assets.background}
+        />
+      ),
+    });
+  }, [assets.background, navigation, sizes.width, headerHeight]);
+
   return (
-    <Block>
+    <Block safe>
       {/* search input */}
       <Block color={colors.card} flex={0} padding={sizes.padding}>
         <Input search placeholder={t('common.search')} />
       </Block>
-
+      
       {/* toggle products list */}
       <Block
         row
@@ -44,10 +66,10 @@ const Home = () => {
               width={sizes.socialIconSize}
               height={sizes.socialIconSize}
               gradient={gradients?.[tab === 0 ? 'primary' : 'secondary']}>
-              <Image source={assets.card1} color={colors.white} radius={0} />
+              <Image source={assets.search} color={colors.white} radius={0} />
             </Block>
             <Text p font={fonts?.[tab === 0 ? 'medium' : 'normal']}>
-              {t('home.following')}
+              {t('home.nearme')}
             </Text>
           </Block>
         </Button>
@@ -76,12 +98,13 @@ const Home = () => {
               />
             </Block>
             <Text p font={fonts?.[tab === 1 ? 'medium' : 'normal']}>
-              {t('home.trending')}
+              {t('home.recommended')}
             </Text>
           </Block>
         </Button>
       </Block>
 
+      
       {/* products list */}
       <Block
         scroll
