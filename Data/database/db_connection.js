@@ -157,7 +157,7 @@ module.exports.searchActivity = async function(keyword) {
 
 //creat NewEvent
 module.exports.createNewActivity = async function(newActivity) {
-	const result = events.insertOne(newActivity);
+	const result = activities.insertOne(newActivity);
 	return `New listing created with the following id: ${result.insertedId}`;
 };
 

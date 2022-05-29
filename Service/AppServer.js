@@ -133,6 +133,7 @@ app.get('/deleteUser', (req, res) => {
 /** ACTIVITIES */
 
 app.post('/createTest', (req, res) => {
+    console.log(req.query)
     console.log(req.body)
 	res.send('Success');
 });
@@ -151,12 +152,12 @@ app.post('/createActivity', (req, res) => {
 		managers: req.body.managers,
 		participants: req.body.participants,
 		images: req.body.images,
-		qrCode: req.body.qrCode,
+		qrCode: req.body.qr,
 		tags: req.body.tags,
 		status: req.body.status,
 		creationTime: Date()
 	};
-	let result = database.createActivity(newActivity);
+	let result = database.createNewActivity(newActivity);
 	res.send(result);
 });
 
