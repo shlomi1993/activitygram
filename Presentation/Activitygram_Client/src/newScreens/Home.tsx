@@ -43,9 +43,9 @@ const Home = () => {
   return (
     <Block safe>
       {/* search input */}
-      <Block color={colors.card} flex={0} padding={sizes.padding}>
+      {/* <Block color={colors.card} flex={0} padding={sizes.padding}>
         <Input search placeholder={t('common.search')} />
-      </Block>
+      </Block> */}
       
       {/* toggle products list */}
       <Block
