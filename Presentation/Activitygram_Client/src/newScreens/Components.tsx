@@ -317,7 +317,7 @@ const Cards = () => {
             {/* user details */}
             <Block row marginLeft={sizes.xs} marginTop={sizes.xxl}>
               <Image
-                source={assets.card1}
+                source={assets.background}
                 style={{
                   width: sizes.xl,
                   height: sizes.xl,
@@ -359,7 +359,7 @@ const Gallery = () => {
       <Block marginBottom={sizes.xxl}>
         <Image
           resizeMode="cover"
-          source={assets.card1}
+          source={assets.background}
           style={{width: '100%'}}
         />
         <Text p secondary marginTop={sizes.sm}>
@@ -387,7 +387,7 @@ const Gallery = () => {
       <Block row justify="space-between" wrap="wrap">
           <Image
             resizeMode="cover"
-            source={assets?.card1}
+            source={assets?.background}
             marginBottom={IMAGE_MARGIN}
             style={{
               height: IMAGE_SIZE,
@@ -396,7 +396,7 @@ const Gallery = () => {
           />
           <Image
             resizeMode="cover"
-            source={assets?.card1}
+            source={assets?.background}
             marginBottom={IMAGE_MARGIN}
             style={{
               height: IMAGE_SIZE,
@@ -405,7 +405,7 @@ const Gallery = () => {
           />
           <Image
             resizeMode="cover"
-            source={assets?.card1}
+            source={assets?.background}
             marginBottom={IMAGE_MARGIN}
             style={{
               height: IMAGE_SIZE,
@@ -414,7 +414,7 @@ const Gallery = () => {
           />
           <Image
             resizeMode="cover"
-            source={assets?.card1}
+            source={assets?.background}
             marginBottom={IMAGE_MARGIN}
             style={{
               height: IMAGE_SIZE,
@@ -423,7 +423,7 @@ const Gallery = () => {
           />
           <Image
             resizeMode="cover"
-            source={assets?.card1}
+            source={assets?.background}
             marginBottom={IMAGE_MARGIN}
             style={{
               height: IMAGE_SIZE,
@@ -432,7 +432,7 @@ const Gallery = () => {
           />
           <Image
             resizeMode="cover"
-            source={assets?.card1}
+            source={assets?.background}
             marginBottom={IMAGE_MARGIN}
             style={{
               height: IMAGE_SIZE,
@@ -457,7 +457,7 @@ const Gallery = () => {
         <Block row justify="space-between" wrap="wrap">
           <Image
             resizeMode="cover"
-            source={assets?.card1}
+            source={assets?.background}
             style={{
               width: IMAGE_VERTICAL_SIZE + IMAGE_MARGIN / 2,
               height: IMAGE_VERTICAL_SIZE * 2 + IMAGE_VERTICAL_MARGIN,
@@ -466,7 +466,7 @@ const Gallery = () => {
           <Block marginLeft={sizes.m}>
             <Image
               resizeMode="cover"
-              source={assets?.card1}
+              source={assets?.background}
               marginBottom={IMAGE_VERTICAL_MARGIN}
               style={{
                 height: IMAGE_VERTICAL_SIZE,
@@ -475,7 +475,7 @@ const Gallery = () => {
             />
             <Image
               resizeMode="cover"
-              source={assets?.card1}
+              source={assets?.background}
               style={{
                 height: IMAGE_VERTICAL_SIZE,
                 width: IMAGE_VERTICAL_SIZE,
@@ -501,11 +501,11 @@ const Components = () => {
           resizeMode="cover"
           width={sizes.width}
           height={headerHeight}
-          source={assets.card1}
+          source={assets.background}
         />
       ),
     });
-  }, [assets.card1, navigation, sizes.width, headerHeight]);
+  }, [assets.background, navigation, sizes.width, headerHeight]);
 
   return (
     <Block safe>

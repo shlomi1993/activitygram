@@ -5,7 +5,7 @@ import Block from './Block';
 import Image from './Image';
 import Text from './Text';
 import {IProduct} from '../constants/types';
-import {useTheme, useTranslation} from '../hooks/';
+import {useTheme, useTranslation} from '../hooks';
 
 const Product = ({image, title, type, linkLabel}: IProduct) => {
   const {t} = useTranslation();
@@ -18,9 +18,9 @@ const Product = ({image, title, type, linkLabel}: IProduct) => {
     <Block
       card
       flex={0}
-      row={isHorizontal}
+      row={false}
       marginBottom={sizes.sm}
-      width={isHorizontal ? CARD_WIDTH * 2 + sizes.sm : CARD_WIDTH}>
+      width={CARD_WIDTH }>
       <Image
         resizeMode="cover"
         source={{uri: image}}
