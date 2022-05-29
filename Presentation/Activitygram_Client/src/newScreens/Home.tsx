@@ -5,7 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useHeaderHeight} from '@react-navigation/stack';
 
 import {useTheme, useTranslation, useData} from '../hooks';
-import {Block, Button, Input, Image, Switch, Modal, Text, Product} from '../components';
+import {Block, Button, Input, Image, Switch, Modal, Text, Card} from '../components';
 import 'react-native-gesture-handler';
 
 const Home = () => {
@@ -113,7 +113,7 @@ const Home = () => {
         contentContainerStyle={{paddingBottom: sizes.l}}>
         <Block row wrap="wrap" justify="space-between" marginTop={sizes.sm}>
           {products?.map((product) => (
-            <Product {...product} key={`card-${product?.id}`} />
+            <Card {...product} key={`card-${product?.id}`} />
           ))}
         </Block>
       </Block>
