@@ -133,8 +133,8 @@ app.get('/deleteUser', (req, res) => {
 /** ACTIVITIES */
 
 app.post('/createTest', (req, res) => {
-    console.log(req.params)
-	// res.send(result);
+    console.log(req.body)
+	res.send('Success');
 });
 
 app.post('/createActivity', (req, res) => {
