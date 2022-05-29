@@ -101,7 +101,7 @@ const DrawerContent = (
             width={33}
             height={33}
             color={colors.text}
-            source={assets.logo}
+            source={assets.background}
             marginRight={sizes.sm}
           />
           <Block>
@@ -176,6 +176,7 @@ export default () => {
 
   return (
     <Block gradient={gradients.light}>
+      
       <Drawer.Navigator
         drawerType="slide"
         overlayColor="transparent"
