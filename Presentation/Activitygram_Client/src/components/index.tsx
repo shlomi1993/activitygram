@@ -6,7 +6,7 @@ import Modal from './Modal';
 import Switch from './Switch';
 import Checkbox from './Checkbox';
 import Image from './Image';
-import Product from './DynamicCard';
+import Product from './CardVerticalList';
 
 export {
   Block,

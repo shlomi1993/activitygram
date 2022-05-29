@@ -1,6 +1,6 @@
 import i18n from 'i18n-js';
-import {ImageSourcePropType} from 'react-native';
-import {ITheme} from './theme';
+import { ImageSourcePropType } from 'react-native';
+import { ITheme } from './theme';
 
 export * from './components';
 export * from './theme';
@@ -10,8 +10,8 @@ export interface IUser {
   name?: string;
   department?: string;
   avatar?: string;
-  stats?: {posts?: number; followers?: number; following?: number};
-  social?: {twitter?: string; dribbble?: string};
+  stats?: { posts?: number; followers?: number; following?: number };
+  social?: { twitter?: string; dribbble?: string };
   about?: string;
 }
 
@@ -24,7 +24,7 @@ export interface IArticleOptions {
   title?: string;
   description?: string;
   type?: 'celebrations' | 'sport' | 'other';
-  sleeping?: {total?: number; type?: 'adults' | 'kids'};
+  sleeping?: { total?: number; type?: 'adults' | 'kids' };
   guests?: number;
   price?: number;
   user?: IUser;
@@ -39,13 +39,13 @@ export interface IArticle {
   location?: ILocation;
   rating?: number;
   user?: IUser;
-  offers?: IProduct[];
+  offers?: ICardVerticalList[];
   options?: IArticleOptions[];
   timestamp?: number;
   onPress?: (event?: any) => void;
 }
 
-export interface IProduct {
+export interface ICardVerticalList {
   id?: number;
   title?: string;
   description?: string;
@@ -70,10 +70,10 @@ export interface IUseData {
   handleUsers: (data?: IUser[]) => void;
   basket: IBasket;
   handleBasket: (data?: IBasket) => void;
-  following: IProduct[];
-  setFollowing: (data?: IProduct[]) => void;
-  trending: IProduct[];
-  setTrending: (data?: IProduct[]) => void;
+  following: ICardVerticalList[];
+  setFollowing: (data?: ICardVerticalList[]) => void;
+  trending: ICardVerticalList[];
+  setTrending: (data?: ICardVerticalList[]) => void;
   categories: ICategory[];
   setCategories: (data?: ICategory[]) => void;
   recommendations: IArticle[];
@@ -132,11 +132,11 @@ export interface INotification {
   business?: boolean;
   createdAt?: number | Date;
   type:
-    | 'document'
-    | 'documentation'
-    | 'payment'
-    | 'notification'
-    | 'profile'
-    | 'extras'
-    | 'office';
+  | 'document'
+  | 'documentation'
+  | 'payment'
+  | 'notification'
+  | 'profile'
+  | 'extras'
+  | 'office';
 }
