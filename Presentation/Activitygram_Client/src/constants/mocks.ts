@@ -7,7 +7,7 @@ import {
   IExtra,
   ILocation,
   INotification,
-  ICardVerticalList,
+  ICard,
   IUser,
 } from './types';
 
@@ -82,7 +82,7 @@ export const USERS: IUser[] = [
 ];
 
 // following cards
-export const FOLLOWING: ICardVerticalList[] = [
+export const FOLLOWING: ICard[] = [
   {
     id: 1,
     type: 'vertical',
@@ -128,7 +128,7 @@ export const FOLLOWING: ICardVerticalList[] = [
 ];
 
 // trending cards
-export const TRENDING: ICardVerticalList[] = [
+export const TRENDING: ICard[] = [
   {
     id: 1,
     type: 'horizontal',
@@ -192,7 +192,7 @@ export const ARTICLE_OPTIONS: IArticleOptions[] = [
 ];
 
 // offers
-export const OFFERS: ICardVerticalList[] = [
+export const OFFERS: ICard[] = [
   {
     id: 1,
     type: 'vertical',

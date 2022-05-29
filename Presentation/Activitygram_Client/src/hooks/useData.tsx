@@ -4,7 +4,7 @@ import Storage from '@react-native-async-storage/async-storage';
 import {
   IArticle,
   ICategory,
-  ICardVerticalList,
+  ICard,
   IUser,
   IUseData,
   ITheme,
@@ -26,8 +26,8 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
   const [theme, setTheme] = useState<ITheme>(light);
   const [user, setUser] = useState<IUser>(USERS[0]);
   const [users, setUsers] = useState<IUser[]>(USERS);
-  const [following, setFollowing] = useState<ICardVerticalList[]>(FOLLOWING);
-  const [trending, setTrending] = useState<ICardVerticalList[]>(TRENDING);
+  const [following, setFollowing] = useState<ICard[]>(FOLLOWING);
+  const [trending, setTrending] = useState<ICard[]>(TRENDING);
   const [categories, setCategories] = useState<ICategory[]>(CATEGORIES);
   const [articles, setArticles] = useState<IArticle[]>(ARTICLES);
   const [article, setArticle] = useState<IArticle>({});

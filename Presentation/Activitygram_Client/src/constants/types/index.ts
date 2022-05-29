@@ -39,13 +39,13 @@ export interface IArticle {
   location?: ILocation;
   rating?: number;
   user?: IUser;
-  offers?: ICardVerticalList[];
+  offers?: ICard[];
   options?: IArticleOptions[];
   timestamp?: number;
   onPress?: (event?: any) => void;
 }
 
-export interface ICardVerticalList {
+export interface ICard {
   id?: number;
   title?: string;
   description?: string;
@@ -70,10 +70,10 @@ export interface IUseData {
   handleUsers: (data?: IUser[]) => void;
   basket: IBasket;
   handleBasket: (data?: IBasket) => void;
-  following: ICardVerticalList[];
-  setFollowing: (data?: ICardVerticalList[]) => void;
-  trending: ICardVerticalList[];
-  setTrending: (data?: ICardVerticalList[]) => void;
+  following: ICard[];
+  setFollowing: (data?: ICard[]) => void;
+  trending: ICard[];
+  setTrending: (data?: ICard[]) => void;
   categories: ICategory[];
   setCategories: (data?: ICategory[]) => void;
   recommendations: IArticle[];
