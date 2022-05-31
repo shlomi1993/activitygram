@@ -7,6 +7,7 @@ const Event = require('./Event.js');
 const Group = require('./Group.js');
 const { MongoClient, ObjectId } = require('mongodb');
 const crypto = require('crypto');
+const { constants } = require('buffer');
 const hash = crypto.createHash('sha512');
 
 const client = new MongoClient(conn.Database.uri);
@@ -149,15 +150,33 @@ async function createNewTag(client, newTag) {
 
 // search events
 module.exports.searchActivity = async function(keyword) {
-	events.createIndex({ title: 'text', description: 'text' });
-	query = { $text: { $search: keyword } };
-	const eventList = await events.find(query).toArray();
-	return eventList;
+	console.log(`searchActivity, Keyword to search is ${keyword}`);
+	// const tables = [activities, users, groups, interests, tags, models, ratings]
+	// const object_result = []
+	// for (let i = 0; i < tables.length; i++) {
+	// 	const curr_table = tables[i]
+	// 	console.log("\n curr_table: " + i + curr_table.toString() + "\n")
+	// 	const fields = curr_table.findOne()
+	// 	for (let j = 0; j < fields.length; j++) {
+	// 		const curr_field = fields[j]
+	// 		console.log("\n curr_field: " + j + curr_field + "\n")
+	// 		const query = { curr_field: keyword }
+	// 		const result = await users.find(query).toArray()
+	// 		object_result.push(result)
+	// 	  }
+	//   }
+	// console.log("\n object_result: " + object_result + "\n")
+
+	// db.users.find({"$or": [{"firstName": /shir/}, {"lastName": /shir/}]) 
+	// and merge its results with results from db.groups.find({"name": /david/}) – 
+	const query = { firstName: keyword }
+	const result = await users.find(query).toArray()
+	return result
 };
 
 //creat NewEvent
 module.exports.createNewActivity = async function(newActivity) {
-	const result = events.insertOne(newActivity);
+	const result = activities.insertOne(newActivity);
 	return `New listing created with the following id: ${result.insertedId}`;
 };
 
