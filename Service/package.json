@@ -16,6 +16,8 @@
     "crypto": "^1.0.1",
     "express": "^4.18.0",
     "express-fileupload": "^1.2.1",
+    "g": "^2.0.1",
+    "nodemon": "^2.0.16",
     "python-shell": "^3.0.1"
   }
 }

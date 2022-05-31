@@ -133,6 +133,7 @@ app.get('/deleteUser', (req, res) => {
 /** ACTIVITIES */
 
 app.post('/createTest', (req, res) => {
+    console.log(req.query)
     console.log(req.body)
 	res.send('Success');
 });
@@ -151,12 +152,12 @@ app.post('/createActivity', (req, res) => {
 		managers: req.body.managers,
 		participants: req.body.participants,
 		images: req.body.images,
-		qrCode: req.body.qrCode,
+		qrCode: req.body.qr,
 		tags: req.body.tags,
 		status: req.body.status,
 		creationTime: Date()
 	};
-	let result = database.createActivity(newActivity);
+	let result = database.createNewActivity(newActivity);
 	res.send(result);
 });
 
@@ -205,10 +206,12 @@ app.get('/getActivity', (req, res) => {
 	database.getActivityById(eid).then((event) => res.send(event));
 });
 
-app.get('/searchActivity', (req, res) => {
-	console.log('NOT YET IMPLEMENTED.');
-	// let keyword = req.query.keyword;
-	// database.searchActivity(keyword).then((eventList) => res.send(eventList));
+app.post('/search', (req, res) => {
+	//TO-DO!!
+	res.send("appserver")
+	found_data = database.searchActivity(req.body.keyword)
+	// .then((eventList) => res.send(eventList));
+	console.log(found_data)
 });
 
 /** GROUPS */

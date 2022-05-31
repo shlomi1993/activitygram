@@ -1,19 +1,24 @@
 import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, TextInput, View, Button } from 'react-native';
+import { StyleSheet, TextInput, Button, ScrollView } from 'react-native';
 
 export const url = Platform.OS === 'android' ? 'http://10.0.2.2:8080/' : 'http://127.0.0.1/8080/';
 
-let json = {}
-
-async function onPressCreate() {
-	await fetch(url + 'createTest', {
+async function onPressCreate(params) {
+	var formBody = [];
+	console.log("in onPressCreate ")
+	for (var property in params) {
+		var encodedKey = encodeURIComponent(property);
+		console.log("encodedKey = " + encodedKey);
+		var encodedValue = encodeURIComponent(params[property]);
+		formBody.push(encodedKey + '=' + encodedValue);
+	}
+	formBody = formBody.join('&');
+	await fetch(url + 'search', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
 		},
-		body: JSON.stringify({
-			"user_input": json.description
-		})
+		body: formBody
 	})
 		.then((res) => {
 			console.log('sent request');
@@ -24,45 +29,28 @@ async function onPressCreate() {
 }
 
 const Create = () => {
-	// const [ text, setText ] = useState('');
+	let json = {};
 	return (
-		<SafeAreaView>
-
-			{/* <TextInput
-				style={styles.input}
-        onChangeText={(newText) => { json.recurrent = newText; }}
-				placeholder="Location"
-			/>
-      "location": json.location,
-      "description": json.description,
-      "interests": json.interests,
-      "preconditions": json.preconditions,
-      "initiator": json.initiator,
-      "managers": json.managers,
-      "invited": json.invited,
-      "images": json.images,
-      "qr": json.qr,
-      "tags": json.tags,
-      "status": json.status */}
-
+		<ScrollView>
 			<TextInput
 				style={styles.input}
-				onChangeText={(newText) => { 
-					console.log('inserted - ' + newText)
-					json.description = newText; 
+				onChangeText={(newText) => {
+					json.keyword = newText;
 				}}
-				placeholder="Description"
+				placeholder="Search"
 			/>
+
 
 			<Button
 				onPress={() => {
-					console.log('clicked')
-					onPressCreate(json)
+					console.log('clicked');
+					console.log(json);
+					onPressCreate(json);
 				}}
-				title='Search'
+				title="Search"
 				color="#841584"
 			/>
-		</SafeAreaView>
+		</ScrollView>
 	);
 };
 
