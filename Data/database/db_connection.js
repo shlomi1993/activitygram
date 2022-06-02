@@ -149,13 +149,23 @@ async function createNewTag(client, newTag) {
 }
 
 // search events
-module.exports.searchActivity = async function(keyword) {
-	console.log(`\nsearchActivity, Keyword to search is ${keyword}\n`);
-	const result = await users.find({ firstName: "Shir" }).toArray();
-	console.log(`\nfirstName is ${result[0].firstName}\n`)
-	console.log(`\nlastName is ${result[0].lastName}\n`)
-	console.log(`\nresult is ${(JSON.stringify(result[0]))}\n`)
-	const found = users.find({$or:[{firstName: "Shir", lastName: "Shir"}]}).toArray();
+module.exports.searchActivity = async function(keyword, inputs) {
+	
+	// inputs is a list with what to seach:
+	// [users, activities, groups]
+	const inpust = [users, activities, groups]
+	if (inputs.includes(users)){
+		const found_users = await users.find({ firstName: "Shir" }).toArray();
+		const found = users.find({$or:[{firstName: "Shir", lastName: "Shir"}]}).toArray();
+	}
+	if (inputs.includes(activities)){
+		const found_activities = await activities.find({ firstName: "Shir" }).toArray();
+	}
+
+	// const found_users = await users.find({ firstName: "Shir" }).toArray();
+	// console.log(`\nfirstName is ${result[0].firstName}\n`)
+	// console.log(`\nlastName is ${result[0].lastName}\n`)
+	// console.log(`\nresult is ${(JSON.stringify(result[0]))}\n`)
 	return result[0]
 };
 

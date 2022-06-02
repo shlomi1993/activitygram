@@ -209,11 +209,15 @@ app.get('/getActivity', (req, res) => {
 app.post('/search', (req, res) => {
 	console.log(`got ${JSON.stringify(req.body)} body\n`);
 	let name_to_search = req.body.keyword
+	// {"keyword: "shir",
+	// 	"inputs": [users]}
+	// 
+	let what_to_search = req.body.inputs
 	// console.log(`got ${name_to_search} from request`);
 	// let data = database.searchActivity(name_to_search)
 	// console.log(`data is ${data}`)
 
-	let result = database.searchActivity(name_to_search)
+	let result = database.searchActivity(name_to_search, what_to_search)
 	console.log(`result is ${result}`)
 	res.send(result);
 	res.send("res.send")
