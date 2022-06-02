@@ -150,12 +150,12 @@ async function createNewTag(client, newTag) {
 
 // search events
 module.exports.searchActivity = async function(keyword) {
-	console.log(`searchActivity, Keyword to search is ${keyword}`);
+	console.log(`\nsearchActivity, Keyword to search is ${keyword}\n`);
 	const result = await users.find({ firstName: "Shir" }).toArray();
-	console.log(`firstName is ${(result[0].firstName)}\n`)
-	console.log(`lastName is ${(result[0].lastName)}\n`)
-	console.log(`result is ${(JSON.stringify(result[0]))}\n`)
-	const found = users.find({$or:[{firstName: "shir", lastName: "Shir"}]})
+	console.log(`\nfirstName is ${result[0].firstName}\n`)
+	console.log(`\nlastName is ${result[0].lastName}\n`)
+	console.log(`\nresult is ${(JSON.stringify(result[0]))}\n`)
+	const found = users.find({$or:[{firstName: "Shir", lastName: "Shir"}]}).toArray();
 	return result[0]
 };
 

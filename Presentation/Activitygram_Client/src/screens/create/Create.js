@@ -5,7 +5,7 @@ export const url = Platform.OS === 'android' ? 'http://10.0.2.2:8080/' : 'http:/
 
 async function onPressCreate(params) {
 	var formBody = [];
-	console.log("in onPressCreate ")
+	console.log("in onPressCreate func")
 	for (var property in params) {
 		var encodedKey = encodeURIComponent(property);
 		var encodedValue = encodeURIComponent(params[property]);
@@ -21,6 +21,7 @@ async function onPressCreate(params) {
 	})
 		.then((res) => {
 			console.log('sent request');
+			console.log(`res ${JSON.stringify(res)}`)
 		})
 		.catch((err) => {
 			console.log('error');
