@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { StyleSheet, TextInput, Button, ScrollView } from 'react-native';
-
+import { CheckBox } from 'react-native-elements';
+import { Text, View } from "react-native";
 export const url = Platform.OS === 'android' ? 'http://10.0.2.2:8080/' : 'http://127.0.0.1/8080/';
 
 async function onPressCreate(params) {
-	var formBody = [];
+	var formBody = []
 	console.log("in onPressCreate func")
 	for (var property in params) {
 		var encodedKey = encodeURIComponent(property);
@@ -28,8 +29,9 @@ async function onPressCreate(params) {
 		});
 }
 
-const Create = () => {
+const Create = () => {	  
 	let json = {};
+	const [isSelected, setSelection] = useState(false);
 	return (
 		<ScrollView>
 			<TextInput
@@ -40,6 +42,16 @@ const Create = () => {
 				placeholder="Search"
 			/>
 
+		{/* <View style={styles.container}>
+			<View style={styles.checkboxContainer}>
+				<CheckBox
+					value={isSelected}
+					onValueChange={setSelection}
+					style={styles.checkbox}
+				/>
+				<Text style={styles.label}>Do you React Native?</Text>
+			</View>
+		</View> */}
 
 			<Button
 				onPress={() => {
@@ -60,7 +72,21 @@ const styles = StyleSheet.create({
 		margin: 12,
 		borderWidth: 1,
 		padding: 10
-	}
+	},
+	container: {
+		flex: 1,
+		alignItems: "center",
+		justifyContent: "center",
+	},
+	checkboxContainer: {
+		flexDirection: "row",
+		marginBottom: 20,
+	},
+	checkbox: {
+		alignSelf: "center",
+	},
+	label: {
+		margin: 8,
+	},
 });
-
 export default Create;
