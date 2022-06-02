@@ -149,10 +149,13 @@ async function createNewTag(client, newTag) {
 
 // search events
 module.exports.searchActivity = async function(keyword) {
-	events.createIndex({ title: 'text', description: 'text' });
-	query = { $text: { $search: keyword } };
-	const eventList = await events.find(query).toArray();
-	return eventList;
+	console.log(`\nsearchActivity, Keyword to search is ${keyword}\n`);
+	const result = await users.find({ firstName: "Shir" }).toArray();
+	console.log(`\nfirstName is ${result[0].firstName}\n`)
+	console.log(`\nlastName is ${result[0].lastName}\n`)
+	console.log(`\nresult is ${(JSON.stringify(result[0]))}\n`)
+	const found = users.find({$or:[{firstName: "Shir", lastName: "Shir"}]}).toArray();
+	return result[0]
 };
 
 //creat NewEvent
