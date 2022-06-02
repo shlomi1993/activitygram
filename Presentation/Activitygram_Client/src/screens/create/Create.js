@@ -8,7 +8,6 @@ async function onPressCreate(params) {
 	console.log("in onPressCreate ")
 	for (var property in params) {
 		var encodedKey = encodeURIComponent(property);
-		console.log("encodedKey = " + encodedKey);
 		var encodedValue = encodeURIComponent(params[property]);
 		formBody.push(encodedKey + '=' + encodedValue);
 	}

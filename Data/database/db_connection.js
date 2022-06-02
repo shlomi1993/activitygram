@@ -151,27 +151,12 @@ async function createNewTag(client, newTag) {
 // search events
 module.exports.searchActivity = async function(keyword) {
 	console.log(`searchActivity, Keyword to search is ${keyword}`);
-	// const tables = [activities, users, groups, interests, tags, models, ratings]
-	// const object_result = []
-	// for (let i = 0; i < tables.length; i++) {
-	// 	const curr_table = tables[i]
-	// 	console.log("\n curr_table: " + i + curr_table.toString() + "\n")
-	// 	const fields = curr_table.findOne()
-	// 	for (let j = 0; j < fields.length; j++) {
-	// 		const curr_field = fields[j]
-	// 		console.log("\n curr_field: " + j + curr_field + "\n")
-	// 		const query = { curr_field: keyword }
-	// 		const result = await users.find(query).toArray()
-	// 		object_result.push(result)
-	// 	  }
-	//   }
-	// console.log("\n object_result: " + object_result + "\n")
-
-	// db.users.find({"$or": [{"firstName": /shir/}, {"lastName": /shir/}]) 
-	// and merge its results with results from db.groups.find({"name": /david/}) – 
-	const query = { firstName: keyword }
-	const result = await users.find(query).toArray()
-	return result
+	const result = await users.find({ firstName: "Shir" }).toArray();
+	console.log(`firstName is ${(result[0].firstName)}\n`)
+	console.log(`lastName is ${(result[0].lastName)}\n`)
+	console.log(`result is ${(JSON.stringify(result[0]))}\n`)
+	const found = users.find({$or:[{firstName: "shir", lastName: "Shir"}]})
+	return result[0]
 };
 
 //creat NewEvent
