@@ -207,11 +207,13 @@ app.get('/getActivity', (req, res) => {
 });
 
 app.post('/search', (req, res) => {
-	//TO-DO!!
-	res.send("appserver")
-	found_data = database.searchActivity(req.body.keyword)
+	console.log(`got ${JSON.stringify(req.body)} body\n`);
+	let name_to_search = req.body.keyword
+	console.log(`got ${name_to_search} from request`);
+	database.searchActivity(name_to_search)
+	res.send("res.send")
 	// .then((eventList) => res.send(eventList));
-	console.log(found_data)
+	// .then((eventList) => res.send(eventList));
 });
 
 /** GROUPS */
