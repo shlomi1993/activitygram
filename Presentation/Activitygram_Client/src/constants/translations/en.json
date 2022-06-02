@@ -34,6 +34,7 @@
     "inProcess": "In process",
     "checkout": "Proceed to checkout",
     "accept": "Accept",
+    "register": "Register",
     "guests": {
       "one": "1 guest",
       "other": "{{count}} guests",
@@ -53,7 +54,8 @@
     "network": "Network",
     "settings": "Settings",
     "profile": "Profile",
-    "register": "Create event"
+    "register": "Create event",
+    "components": "Components"
   },
   "navigation": {
     "home": "Activitygram",
@@ -73,8 +75,8 @@
   },
   "home": {
     "title": "Activitygram",
-    "following": "Following",
-    "trending": "Trending"
+    "nearme": "Near Me",
+    "recommended": "Recommended"
   },
   "register": {
     "title": "Welcome",

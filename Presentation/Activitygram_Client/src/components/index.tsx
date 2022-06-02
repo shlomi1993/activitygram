@@ -6,6 +6,7 @@ import Modal from './Modal';
 import Switch from './Switch';
 import Checkbox from './Checkbox';
 import Image from './Image';
+import Card from './Card';
 
 export {
   Block,
@@ -16,4 +17,5 @@ export {
   Checkbox,
   Image,
   Modal,
+  Card,
 };
