@@ -30,7 +30,7 @@ export interface IArticleOptions {
   user?: IUser;
   image?: string;
 }
-export interface IArticle {
+export interface IBigCard {
   id?: number;
   title?: string;
   description?: string;
@@ -76,12 +76,12 @@ export interface IUseData {
   setTrending: (data?: ICard[]) => void;
   categories: ICategory[];
   setCategories: (data?: ICategory[]) => void;
-  recommendations: IArticle[];
-  setRecommendations: (data?: IArticle[]) => void;
-  articles: IArticle[];
-  setArticles: (data?: IArticle[]) => void;
-  article: IArticle;
-  handleArticle: (data?: IArticle) => void;
+  recommendations: IBigCard[];
+  setRecommendations: (data?: IBigCard[]) => void;
+  bigCard: IBigCard[];
+  setArticles: (data?: IBigCard[]) => void;
+  bigCards: IBigCard;
+  handleArticle: (data?: IBigCard) => void;
   notifications: INotification[];
   handleNotifications: (data?: INotification[]) => void;
 }
