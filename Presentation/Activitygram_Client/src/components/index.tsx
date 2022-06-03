@@ -7,6 +7,7 @@ import Switch from './Switch';
 import Checkbox from './Checkbox';
 import Image from './Image';
 import Card from './Card';
+import BigCard from './BigCard';
 
 export {
   Block,
@@ -18,4 +19,5 @@ export {
   Image,
   Modal,
   Card,
+  BigCard
 };
