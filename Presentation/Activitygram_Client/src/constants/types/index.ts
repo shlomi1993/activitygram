@@ -78,9 +78,9 @@ export interface IUseData {
   setCategories: (data?: ICategory[]) => void;
   recommendations: IBigCard[];
   setRecommendations: (data?: IBigCard[]) => void;
-  bigCard: IBigCard[];
+  articles: IBigCard[];
   setArticles: (data?: IBigCard[]) => void;
-  bigCards: IBigCard;
+  article: IBigCard;
   handleArticle: (data?: IBigCard) => void;
   notifications: INotification[];
   handleNotifications: (data?: INotification[]) => void;
