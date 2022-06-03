@@ -10,6 +10,48 @@ import 'react-native-gesture-handler';
 
 const isAndroid = Platform.OS === 'android';
 
+const ImageSeries = () => {
+  const {assets, sizes, colors } = useTheme();
+
+  const IMAGE_SIZE = (sizes.width - (sizes.padding + sizes.sm) * 2) / 3;
+  const IMAGE_VERTICAL_SIZE =
+    (sizes.width - (sizes.padding + sizes.sm) * 2) / 2;
+  const IMAGE_MARGIN = (sizes.width - IMAGE_SIZE * 3 - sizes.padding * 2) / 2;
+  const IMAGE_VERTICAL_MARGIN =
+    (sizes.width - (IMAGE_VERTICAL_SIZE + sizes.sm) * 2) / 2;
+
+  return(
+    <Block row justify="space-between" wrap="wrap">
+            <Image
+              resizeMode="cover"
+              source={assets?.background}
+              marginBottom={IMAGE_MARGIN}
+              style={{
+                height: IMAGE_SIZE,
+                width: IMAGE_SIZE,
+              }}
+            />
+            <Image
+              resizeMode="cover"
+              source={assets?.background}
+              marginBottom={IMAGE_MARGIN}
+              style={{
+                height: IMAGE_SIZE,
+                width: IMAGE_SIZE,
+              }}
+            />
+            <Image
+              resizeMode="cover"
+              source={assets?.background}
+              marginBottom={IMAGE_MARGIN}
+              style={{
+                height: IMAGE_SIZE,
+                width: IMAGE_SIZE,
+              }}
+            />
+    </Block>
+  )
+}
 const Profile = () => {
   const {assets, sizes, colors } = useTheme();
   const navigation = useNavigation();
@@ -45,7 +87,7 @@ const Profile = () => {
         paddingHorizontal={sizes.s}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingBottom: sizes.padding}}>
-        <Block flex={0}>
+        <Block flex={0} marginTop={sizes.sm}>
           <Image
             background
             resizeMode="cover"
@@ -53,85 +95,22 @@ const Profile = () => {
             paddingBottom={sizes.l}
             radius={sizes.cardRadius}
             source={assets.background}>
-            <Button
-              row
-              flex={0}
-              justify="flex-start"
-              onPress={() => navigation.goBack()}>
-              <Image
-                radius={0}
-                width={10}
-                height={18}
-                color={colors.white}
-                source={assets.arrow}
-                transform={[{rotate: '180deg'}]}
-              />
-              <Text p white marginLeft={sizes.s}>
-                {t('profile.title')}
-              </Text>
-            </Button>
             <Block flex={0} align="center">
               <Image
-                width={64}
-                height={64}
+                width={128}
+                height={128}
                 marginBottom={sizes.sm}
-                source={{uri: user?.avatar}}
+                source={assets.card1}
               />
               <Text h5 center white>
-                {user?.name}
+                Name
               </Text>
-              <Text p center white>
-                {user?.department}
+              <Text p center white marginBottom={sizes.md}>
+                Nickname
               </Text>
-              <Block row marginVertical={sizes.m}>
-                <Button
-                  white
-                  outlined
-                  shadow={false}
-                  radius={sizes.m}
-                  onPress={() => {
-                    alert(`Follow ${user?.name}`);
-                  }}>
-                  <Block
-                    justify="center"
-                    radius={sizes.m}
-                    paddingHorizontal={sizes.m}
-                    color="rgba(255,255,255,0.2)">
-                    <Text white bold transform="uppercase">
-                      {t('common.follow')}
-                    </Text>
-                  </Block>
-                </Button>
-                <Button
-                  shadow={false}
-                  radius={sizes.m}
-                  marginHorizontal={sizes.sm}
-                  color="rgba(255,255,255,0.2)"
-                  outlined={String(colors.white)}
-                  onPress={() => {}}>
-                  <Ionicons
-                    size={18}
-                    name="logo-twitter"
-                    color={colors.white}
-                  />
-                </Button>
-                <Button
-                  shadow={false}
-                  radius={sizes.m}
-                  color="rgba(255,255,255,0.2)"
-                  outlined={String(colors.white)}
-                  onPress={() => {}}>
-                  <Ionicons
-                    size={18}
-                    name="logo-dribbble"
-                    color={colors.white}
-                  />
-                </Button>
-              </Block>
             </Block>
           </Image>
 
-          {/* profile: stats */}
           <Block
             flex={0}
             radius={sizes.sm}
@@ -140,7 +119,6 @@ const Profile = () => {
             marginHorizontal="8%"
             color="rgba(255,255,255,0.2)">
             <Block
-              row
               blur
               flex={0}
               intensity={100}
@@ -148,31 +126,36 @@ const Profile = () => {
               overflow="hidden"
               tint={colors.blurTint}
               justify="space-evenly"
-              paddingVertical={sizes.sm}
+              paddingHorizontal={sizes.l}
               renderToHardwareTextureAndroid>
-              <Block align="center">
-                <Text h5>0</Text>
-                <Text>placeholder</Text>
-              </Block>
-              <Block align="center">
-                <Text h5>{0 / 1000}k</Text>
-                <Text>placeholder</Text>
-              </Block>
-              <Block align="center">
-                <Text h5>{0 / 1000}k</Text>
-                <Text>placeholder</Text>
-              </Block>
+                <Text h5 center marginTop={sizes.sm}>{t('profile.bio')}</Text>
+                <Text center marginBottom={sizes.sm}>bio</Text>
             </Block>
           </Block>
 
-          {/* profile: about me */}
-          <Block paddingHorizontal={sizes.sm}>
-            <Text h5 semibold marginBottom={sizes.s} marginTop={sizes.sm}>
-              {t('profile.aboutMe')}
+          <Block paddingHorizontal={sizes.sm} marginTop={sizes.sm}>
+          <Block row align="center" justify="space-between">
+            <Text h5 semibold>
+            {t('profile.ParticipatedIn')}
             </Text>
-            <Text p lineHeight={26}>
-              About me
+            <Button>
+              <Text p primary semibold>
+                View all
+              </Text>
+            </Button>
+          </Block>
+          <ImageSeries/>
+          <Block row align="center" justify="space-between">
+            <Text h5 semibold>
+            {t('profile.InterestedIn')}
             </Text>
+            <Button>
+              <Text p primary semibold>
+                View all
+              </Text>
+            </Button>
+          </Block>
+          <ImageSeries/>
           </Block>
         </Block>
       </Block>
