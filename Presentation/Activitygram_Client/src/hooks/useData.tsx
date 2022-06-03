@@ -2,7 +2,7 @@ import React, {useCallback, useContext, useEffect, useState} from 'react';
 import Storage from '@react-native-async-storage/async-storage';
 
 import {
-  IArticle,
+  IBigCard,
   ICategory,
   ICard,
   IUser,
@@ -29,8 +29,8 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
   const [following, setFollowing] = useState<ICard[]>(FOLLOWING);
   const [trending, setTrending] = useState<ICard[]>(TRENDING);
   const [categories, setCategories] = useState<ICategory[]>(CATEGORIES);
-  const [articles, setArticles] = useState<IArticle[]>(ARTICLES);
-  const [article, setArticle] = useState<IArticle>({});
+  const [articles, setArticles] = useState<IBigCard[]>(ARTICLES);
+  const [article, setArticle] = useState<IBigCard>({});
 
   // get isDark mode from storage
   const getIsDark = useCallback(async () => {
@@ -78,7 +78,7 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
 
   // handle Article
   const handleArticle = useCallback(
-    (payload: IArticle) => {
+    (payload: IBigCard) => {
       // set article / compare if has updated
       if (JSON.stringify(payload) !== JSON.stringify(article)) {
         setArticle(payload);

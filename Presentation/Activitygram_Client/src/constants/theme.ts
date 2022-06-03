@@ -58,6 +58,8 @@ export const ICONS: ThemeIcons = {
   settings: require('../assets/icons/settings.png'),
   users: require('../assets/icons/users.png'),
   warning: require('../assets/icons/warning.png'),
+  like: require('../assets/icons/like.png'),
+  unlike: require('../assets/icons/unlike.png')
 };
 
 export const ASSETS: ThemeAssets = {
