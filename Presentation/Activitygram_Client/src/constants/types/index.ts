@@ -53,6 +53,7 @@ export interface ICard {
   timestamp?: number;
   linkLabel?: string;
   type: 'vertical' | 'horizontal';
+  imageInRow?: number;
 }
 export interface ILocation {
   id?: number;

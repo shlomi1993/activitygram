@@ -87,5 +87,13 @@
     "bio": "Bio",
     "ParticipatedIn": "Participated in",
     "InterestedIn": "Interested in"
+  },
+  "activity": {
+    "going": "Going",
+    "left": "Left",
+    "inTotal": "In total",
+    "time": "Time",
+    "createdBy": "Created by",
+    "notes": "Notes"
   }
 }
