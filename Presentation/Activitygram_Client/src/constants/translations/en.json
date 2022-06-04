@@ -84,9 +84,8 @@
   },
   "profile": {
     "title": "Profile",
-    "posts": "Posts",
-    "followers": "Followers",
-    "following": "Following",
-    "aboutMe": "About me"
+    "bio": "Bio",
+    "ParticipatedIn": "Participated in",
+    "InterestedIn": "Interested in"
   }
 }
