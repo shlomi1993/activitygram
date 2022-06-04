@@ -235,6 +235,7 @@ export interface ThemeIcons {
   warning: ImageSourcePropType;
   like: ImageSourcePropType;
   unlike: ImageSourcePropType;
+  success: ImageSourcePropType;
 }
 
 export interface ThemeAssets {
