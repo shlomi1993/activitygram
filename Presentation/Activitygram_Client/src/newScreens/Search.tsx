@@ -7,10 +7,12 @@ import {Block,  Image, Input, Text, Button } from '../components';
 import 'react-native-gesture-handler';
 import { IEventForm } from '../constants/types/forms';
 import 'react-native-gesture-handler';
+
 export const url = Platform.OS === 'android' ? 'http://10.0.2.2:8080/' : 'http://127.0.0.1/8080/';
 
 async function onPressSearch(params) {
-	var formBody = []
+	var formBody = [];
+  // let formBody: any;
 	console.log("in onPressSearch func")
 	for (var property in params) {
 		var encodedKey = encodeURIComponent(property);
@@ -27,7 +29,7 @@ async function onPressSearch(params) {
 	})
 		.then((res) => {
 			console.log('sent request');
-			console.log(`res ${JSON.stringify(res)}`)
+			// console.log(`res ${JSON.stringify(res)}`)
 		})
 		.catch((err) => {
 			console.log('error');
@@ -215,14 +217,16 @@ const Search = () => {
 
   return (
     <Block safe>
-    {/* search input */}
+    {/* search input and button*/}
       <Block justify="space-between" marginBottom={sizes.s} color={colors.card} flex={0.25} padding={sizes.base}>
 
-        <Input search placeholder={t('common.search')} />
-
+        <Input search placeholder={t('common.search')} marginBottom={sizes.sm} 				
+          onChangeText={(newText) => {
+            setForm(prevState => ({...prevState, keyword: newText}));
+        }}/>
 
         <Button flex={1} gradient={gradients.info} marginBottom={sizes.base} onPress={() => {
-					console.log('clicked');
+					console.log('clicked!!');
 					onPressSearch(form);
 				}}>
           <Text white bold transform="uppercase">
