@@ -113,7 +113,7 @@ const Home = () => {
         contentContainerStyle={{paddingBottom: sizes.l}}>
         <Block row wrap="wrap" justify="space-between" marginTop={sizes.sm}>
           {products?.map((product) => (
-            <Card {...product} key={`card-${product?.id}`} />
+            <Card {...product} key={`card-${product?.id}`} type="vertical" />
           ))}
         </Block>
       </Block>
