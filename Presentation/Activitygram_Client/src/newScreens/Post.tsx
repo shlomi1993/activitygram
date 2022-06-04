@@ -152,13 +152,8 @@ const Form = () => {
 
       <Block>
 
-        {/* <Input placeholder="Activity Title" marginBottom={sizes.sm}
-          onChangeText={(newText) => {
-            setForm(prevState => ({ ...prevState, title: newText }));
-          }} /> */}
-
         <Block marginBottom={sizes.sm}>
-          <TextInput label='Activity title' mode='outlined'
+          <TextInput label='Activity title' mode='outlined' autoComplete={false}
             onChangeText={(newText) => {
               setForm(prevState => ({ ...prevState, title: newText }));
             }}
@@ -168,12 +163,12 @@ const Form = () => {
         <Block row marginBottom={sizes.sm}>
 
           <Block marginRight={sizes.sm / 2}>
-            <TextInput label='Start date' mode='outlined' showSoftInputOnFocus={false} error={startDateError}
+            <TextInput label='Start date' mode='outlined' autoComplete={false} showSoftInputOnFocus={false} error={startDateError}
               onPressIn={() => setStartDatePickerVisibility(true)} value={startDate} />
           </Block>
 
           <Block marginLeft={sizes.sm / 2}>
-            <TextInput label='Start time' mode='outlined' showSoftInputOnFocus={false} disabled={startTimeDisable} error={startTimeError}
+            <TextInput label='Start time' mode='outlined' autoComplete={false} showSoftInputOnFocus={false} disabled={startTimeDisable} error={startTimeError}
               onPressIn={() => setStartTimePickerVisibility(true)} value={startTime} />
           </Block>
 
@@ -196,12 +191,12 @@ const Form = () => {
         <Block row marginBottom={sizes.sm}>
 
           <Block marginRight={sizes.sm / 2}>
-            <TextInput label='End date' mode='outlined' showSoftInputOnFocus={false} error={endDateError}
+            <TextInput label='End date' mode='outlined' autoComplete={false} showSoftInputOnFocus={false} error={endDateError}
               onPressIn={() => setEndDatePickerVisibility(true)} value={endDate} />
           </Block>
 
           <Block marginLeft={sizes.sm / 2}>
-            <TextInput label='End time' mode='outlined' showSoftInputOnFocus={false} disabled={endTimeDisable} error={endTimeError}
+            <TextInput label='End time' mode='outlined' autoComplete={false} showSoftInputOnFocus={false} disabled={endTimeDisable} error={endTimeError}
               onPressIn={() => setEndTimePickerVisibility(true)} value={endTime} />
           </Block>
 
