@@ -7,12 +7,13 @@ import Text from './Text';
 import {ICard} from '../constants/types';
 import {useTheme, useTranslation} from '../hooks';
 
-const Card = ({image, title, type, linkLabel}: ICard) => {
+const Card = ({image, title, type, linkLabel, imageInRow}: ICard) => {
   const {t} = useTranslation();
   const {assets, colors, sizes} = useTheme();
 
   const isHorizontal = type !== 'vertical';
-  const CARD_WIDTH = (sizes.width - sizes.padding * 2 - sizes.sm) / 2;
+  const num = imageInRow ? imageInRow : 2
+  const CARD_WIDTH = (sizes.width - sizes.padding * 2 - sizes.sm) / num;
 
   return (
     <Block
