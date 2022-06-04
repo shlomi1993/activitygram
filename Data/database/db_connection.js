@@ -148,7 +148,14 @@ async function createNewTag(client, newTag) {
 }
 
 // search events
-module.exports.searchActivity = async function(keyword) {
+module.exports.searchActivity = async function(keyword, boxData) {
+	console.log(`boxData = ${JSON.stringify(boxData)}`)
+	// retunedData = {}
+	// for(var key in boxData) {
+	// 	var value = dict[key];
+	// 	if (value){
+
+	// 	}
 	console.log(`\nsearchActivity, Keyword to search is ${keyword}\n`);
 	const result = await users.find({ firstName: "Shir" }).toArray();
 	console.log(`\nfirstName is ${result[0].firstName}\n`)
