@@ -5,9 +5,9 @@ import { SafeAreaView } from 'react-native'
 import contactData from '../../mocks/contact.json'
 
 import { Nav } from '../../Nav'
-import Create from './Create'
+import Search from './Search'
 
-const CreateScreen = (props) => {
+const SearchScreen = (props) => {
   props.navigation.setOptions({
     header: ({navigation}) => (
       <SafeAreaView>
@@ -24,11 +24,11 @@ const CreateScreen = (props) => {
     ),
   })
 
-  return <Create {...contactData} {...props} />
+  return <Search {...contactData} {...props} />
 }
 
-CreateScreen.propTypes = {
+SearchScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
 }
 
-export default CreateScreen
+export default SearchScreen

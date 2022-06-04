@@ -1,11 +1,38 @@
-import React, {useLayoutEffect } from 'react';
-
+import React, {useLayoutEffect, useState } from 'react';
+import { Platform } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useHeaderHeight} from '@react-navigation/stack';
-
 import {useTheme, useTranslation } from '../hooks';
 import {Block,  Image, Input, Text, Button } from '../components';
 import 'react-native-gesture-handler';
+import { IEventForm } from '../constants/types/forms';
+import 'react-native-gesture-handler';
+export const url = Platform.OS === 'android' ? 'http://10.0.2.2:8080/' : 'http://127.0.0.1/8080/';
+
+async function onPressSearch(params) {
+	var formBody = []
+	console.log("in onPressSearch func")
+	for (var property in params) {
+		var encodedKey = encodeURIComponent(property);
+		var encodedValue = encodeURIComponent(params[property]);
+		formBody.push(encodedKey + '=' + encodedValue);
+	}
+	formBody = formBody.join('&');
+	await fetch(url + 'search', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+		},
+		body: formBody
+	})
+		.then((res) => {
+			console.log('sent request');
+			console.log(`res ${JSON.stringify(res)}`)
+		})
+		.catch((err) => {
+			console.log('error');
+		});
+}
 
 const Gallery = () => {
     const {assets, sizes} = useTheme();
@@ -164,6 +191,7 @@ const Search = () => {
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
   const {t} = useTranslation();
+  const [form, setForm] = useState<IEventForm>();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -192,23 +220,25 @@ const Search = () => {
 
         <Input search placeholder={t('common.search')} />
 
-        <Button flex={0} gradient={gradients.info} marginHorizontal={sizes.s}>
-            <Text white bold transform="uppercase" marginHorizontal={sizes.s}>
-              search
-            </Text>
+
+        <Button flex={1} gradient={gradients.info} marginBottom={sizes.base} onPress={() => {
+					console.log('clicked');
+					onPressSearch(form);
+				}}>
+          <Text white bold transform="uppercase">
+            search
+          </Text>
         </Button>
 
     </Block>
+
     {/* submit */}
-    {/* <Block > */}
-   
-    {/* </Block> */}
     <Block
         scroll
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingVertical: sizes.padding}}>
         <Block>
-          <Gallery />
+          <Gallery/>
         </Block>
       </Block>
     </Block>
