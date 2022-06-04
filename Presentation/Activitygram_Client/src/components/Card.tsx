@@ -24,7 +24,7 @@ const Card = ({image, title, type, linkLabel, imageInRow}: ICard) => {
       width={CARD_WIDTH }>
       <Image
         resizeMode="cover"
-        source={{uri: image}}
+        source={assets.background}
         style={{
           height: isHorizontal ? 114 : 110,
           width: !isHorizontal ? '100%' : sizes.width / 2.435,
@@ -46,7 +46,7 @@ const Card = ({image, title, type, linkLabel, imageInRow}: ICard) => {
               semibold
               size={sizes.linkSize}
               marginRight={sizes.s}>
-              {linkLabel || t('common.register')}
+              {t('common.register')}
             </Text>
             <Image source={assets.arrow} color={colors.link} />
           </Block>
