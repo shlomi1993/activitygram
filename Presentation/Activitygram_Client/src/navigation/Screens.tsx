@@ -2,9 +2,8 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import {Components, Home, Profile, Post, Search, Explore } from '../newScreens';
+import {Components, Home, Profile, Post, Search, Explore } from '../screens';
 import {useScreenOptions, useTranslation} from '../hooks';
-import Event from '../screens/event'
 const Stack = createStackNavigator();
 const HomeStack = createStackNavigator();
 const ComponentsStack = createStackNavigator();

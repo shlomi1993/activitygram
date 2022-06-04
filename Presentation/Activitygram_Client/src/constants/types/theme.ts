@@ -233,6 +233,9 @@ export interface ThemeIcons {
   settings: ImageSourcePropType;
   users: ImageSourcePropType;
   warning: ImageSourcePropType;
+  like: ImageSourcePropType;
+  unlike: ImageSourcePropType;
+  success: ImageSourcePropType;
 }
 
 export interface ThemeAssets {
