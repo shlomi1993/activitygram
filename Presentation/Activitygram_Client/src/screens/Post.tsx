@@ -9,6 +9,9 @@ import 'react-native-gesture-handler';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Moment from 'moment';
 import { TextInput } from 'react-native-paper';
+import Switch from '../components/Switch'
+import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
+
 
 export const baseUrl = Platform.OS === 'android' ? 'http://10.0.2.2:8080/' : 'http://127.0.0.1/8080/';
 
@@ -54,6 +57,11 @@ const Form = () => {
   const [endTimeDisable, setEndTimeDisable] = useState(true)
   const [endDateError, setEndDateError] = useState(false)
   const [endTimeError, setEndTimeError] = useState(false)
+
+  const [recurrentSwitch, setRecurrentSwitch] = useState(false);
+
+  const [selectedCategory, setSelectedCategory] = useState(null);
+
 
   const createDateObject = (date, time) => {
     let dateArray = date.split(', ')[1].split('.')
@@ -153,6 +161,24 @@ const Form = () => {
       <Block>
 
         <Block marginBottom={sizes.sm}>
+          <Input value={'Initiator placeholder'} editable={false} disabled />
+        </Block>
+
+        <AutocompleteDropdown
+          clearOnFocus={false}
+          closeOnBlur={true}
+          closeOnSubmit={false}
+          initialValue={{ id: '2' }} // or just '2'
+          onSelectItem={setSelectedCategory}
+          dataSet={[
+            { id: '1', title: 'Alpha' },
+            { id: '2', title: 'Beta' },
+            { id: '3', title: 'Gamma' },
+            { id: '4', title: 'Delta' }
+          ]}
+        />
+
+        <Block marginBottom={sizes.sm} marginTop={sizes.sm}>
           <TextInput label='Activity title' mode='outlined' autoComplete={false}
             onChangeText={(newText) => {
               setForm(prevState => ({ ...prevState, title: newText }));
@@ -216,6 +242,32 @@ const Form = () => {
 
         </Block>
 
+        <Block row flex={0} align="center" justify="space-between" marginBottom={sizes.sm}>
+          <Text>Recurrent:</Text>
+          <Block row flex={0}>
+            <Text>{recurrentSwitch ? 'Yes   ' : 'No    '}</Text>
+            <Switch checked={recurrentSwitch} onPress={(checked) => setRecurrentSwitch(checked)} />
+          </Block>
+
+        </Block>
+
+        <Block marginBottom={sizes.sm}>
+          <TextInput label='Location' mode='outlined' autoComplete={false}
+            onChangeText={(newText) => {
+              // Read mode: https://github.com/GeekyAnts/react-native-bing-maps
+              let fixedLocation = { lat: 12.9010875, long: 77.6095084, zoom: 15 }  // Need to set-up Bing maps!
+              setForm(prevState => ({ ...prevState, geolocation: fixedLocation }));
+            }}
+          />
+        </Block>
+
+        <Block marginBottom={sizes.sm}>
+          <TextInput label='Description' mode='outlined' autoComplete={false} multiline={true} numberOfLines={7}
+            onChangeText={(newText) => {
+              setForm(prevState => ({ ...prevState, description: newText }));
+            }}
+          />
+        </Block>
 
 
         {/* <Input placeholder="Start time" marginBottom={sizes.sm}
