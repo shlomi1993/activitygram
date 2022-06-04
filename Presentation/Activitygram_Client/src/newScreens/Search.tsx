@@ -160,7 +160,7 @@ const Gallery = () => {
   };
 
 const Search = () => {
-  const {assets, sizes, colors } = useTheme();
+  const {assets, sizes,gradients, colors } = useTheme();
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
   const {t} = useTranslation();
@@ -188,9 +188,21 @@ const Search = () => {
   return (
     <Block safe>
     {/* search input */}
-      <Block color={colors.card} flex={0} padding={sizes.padding}>
+      <Block justify="space-between" marginBottom={sizes.s} color={colors.card} flex={0.25} padding={sizes.base}>
+
         <Input search placeholder={t('common.search')} />
+
+        <Button flex={0} gradient={gradients.info} marginHorizontal={sizes.s}>
+            <Text white bold transform="uppercase" marginHorizontal={sizes.s}>
+              search
+            </Text>
+        </Button>
+
     </Block>
+    {/* submit */}
+    {/* <Block > */}
+   
+    {/* </Block> */}
     <Block
         scroll
         showsVerticalScrollIndicator={false}
