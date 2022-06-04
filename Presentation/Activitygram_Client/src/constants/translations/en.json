@@ -75,8 +75,8 @@
   },
   "home": {
     "title": "Activitygram",
-    "nearme": "Near Me",
-    "recommended": "Recommended"
+    "all": "All",
+    "nearme": "Near Me"  
   },
   "register": {
     "title": "Welcome",

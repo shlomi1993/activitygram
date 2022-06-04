@@ -212,6 +212,11 @@ app.get('/searchActivity', (req, res) => {
 	// database.searchActivity(keyword).then((eventList) => res.send(eventList));
 });
 
+app.get('/getAllActivities', (req, res) => {
+
+	database.getAllActivities().then((activities) => {res.send(activities); console.log(activities.json())});
+});
+
 /** GROUPS */
 
 app.post('/createGroup', (req, res) => {
