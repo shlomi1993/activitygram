@@ -153,7 +153,7 @@ module.exports.searchActivity = async function(keyword) {
 	const result = await users.find({ firstName: "Shir" }).toArray();
 	console.log(`\nfirstName is ${result[0].firstName}\n`)
 	console.log(`\nlastName is ${result[0].lastName}\n`)
-	console.log(`\nresult is ${(JSON.stringify(result[0]))}\n`)
+	// console.log(`\nresult is ${(JSON.stringify(result[0]))}\n`)
 	const found = users.find({$or:[{firstName: "Shir", lastName: "Shir"}]}).toArray();
 	return result[0]
 };

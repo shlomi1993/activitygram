@@ -4,7 +4,6 @@ import { Search } from '../../newScreens';
 
 export const url = Platform.OS === 'android' ? 'http://10.0.2.2:8080/' : 'http://127.0.0.1/8080/';
 
-
 const Search = () => {
 	let json = {};
 	return (
@@ -19,8 +18,7 @@ const Search = () => {
 
 			<Button
 				onPress={() => {
-					console.log('clicked');
-					console.log(json);
+					console.log('search clicked!!');
 					onPressSearch(json);
 				}}
 				title="Search"
