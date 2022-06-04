@@ -1,15 +1,21 @@
 import React, {useLayoutEffect, useState } from 'react';
 import { Platform } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {useHeaderHeight} from '@react-navigation/stack';
-import {useTheme, useTranslation } from '../hooks';
-import {Block,  Image, Input, Text, Button } from '../components';
-import 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
+import { useHeaderHeight } from '@react-navigation/stack';
+import { useTheme, useTranslation } from '../hooks';
+import { Block, Image, Checkbox, Input, Text, Button } from '../components';
 import { IEventForm } from '../constants/types/forms';
 import 'react-native-gesture-handler';
-
 export const url = Platform.OS === 'android' ? 'http://10.0.2.2:8080/' : 'http://127.0.0.1/8080/';
 
+var boxData = { "Users": false,
+                "Activities": false,
+                "Groups": false}
+
+async function storeCheckData(boxName, state) {
+  boxData[boxName] = state
+  console.log(`boxData: ${JSON.stringify(boxData)}`)
+}
 async function onPressSearch(params) {
 	var formBody = [];
   // let formBody: any;
@@ -20,6 +26,8 @@ async function onPressSearch(params) {
 		formBody.push(encodedKey + '=' + encodedValue);
 	}
 	formBody = formBody.join('&');
+  console.log(`form: ${formBody}`)
+
 	await fetch(url + 'search', {
 		method: 'POST',
 		headers: {
@@ -194,6 +202,8 @@ const Search = () => {
   const headerHeight = useHeaderHeight();
   const {t} = useTranslation();
   const [form, setForm] = useState<IEventForm>();
+  const [isChecked, setIsChecked] = useState(false);
+
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -218,15 +228,24 @@ const Search = () => {
   return (
     <Block safe>
     {/* search input and button*/}
-      <Block justify="space-between" marginBottom={sizes.s} color={colors.card} flex={0.25} padding={sizes.base}>
+    <Block justify="space-between" marginBottom={sizes.xxl} color={colors.card} flex={0.8} padding={sizes.base}>
 
         <Input search placeholder={t('common.search')} marginBottom={sizes.sm} 				
           onChangeText={(newText) => {
             setForm(prevState => ({...prevState, keyword: newText}));
         }}/>
 
+        <Checkbox checked={isChecked} onPress={() => {setIsChecked(!isChecked), storeCheckData('Users', !isChecked)}}/>
+        <Text>Users</Text>
+        <Checkbox checked={isChecked} onPress={() => {setIsChecked(!isChecked), storeCheckData('Activities', !isChecked)}}/>
+        <Text>Activities</Text>
+        <Checkbox checked={isChecked} onPress={() => {setIsChecked(!isChecked), storeCheckData('Groups', !isChecked)}}/>
+        <Text>Groups</Text>
+
         <Button flex={1} gradient={gradients.info} marginBottom={sizes.base} onPress={() => {
-					console.log('clicked!!');
+					console.log('search clicked!!\n');
+          // form['boxData'] = boxData
+          // console.log(`form = ${JSON.stringify(form)}`);
 					onPressSearch(form);
 				}}>
           <Text white bold transform="uppercase">

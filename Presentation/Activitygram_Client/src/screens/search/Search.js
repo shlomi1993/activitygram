@@ -15,7 +15,7 @@ const Search = () => {
 				}}
 				placeholder="Search"
 			/>
-
+			
 			<Button
 				onPress={() => {
 					console.log('search clicked!!');
