@@ -1,5 +1,5 @@
-import React, {useLayoutEffect, useState, useCallback } from 'react';
-import {FlatList, TouchableOpacity} from 'react-native';
+import React, {useLayoutEffect, useState, useCallback, useEffect } from 'react';
+import {FlatList, TouchableOpacity, Platform} from 'react-native';
 
 import {useNavigation} from '@react-navigation/native';
 import {useHeaderHeight} from '@react-navigation/stack';
@@ -7,12 +7,18 @@ import {useHeaderHeight} from '@react-navigation/stack';
 import {useTheme, useTranslation, useData} from '../hooks';
 import {Block, Button, Input, Image, Switch, Modal, Text, Card} from '../components';
 import 'react-native-gesture-handler';
+import { DrawerContentScrollView } from '@react-navigation/drawer';
+
+export const baseUrl = Platform.OS === 'android' ? 'http://10.0.2.2:8080/' : 'http://127.0.0.1/8080/';
 
 const Home = () => {
+
   const {t} = useTranslation();
   const [tab, setTab] = useState<number>(0);
+  const [all, setAll] = useState([]);
+  const [nearMe, setNearMe] = useState([]);
   const {following, trending} = useData();
-  const [products, setProducts] = useState(following);
+  const [products, setProducts] = useState(all);
 
   const {assets, sizes, colors, fonts, gradients } = useTheme();
   const navigation = useNavigation();
@@ -21,10 +27,23 @@ const Home = () => {
   const handleProducts = useCallback(
     (tab: number) => {
       setTab(tab);
-      setProducts(tab === 0 ? following : trending);
+      setProducts(tab === 0 ? all : all);
     },
-    [following, trending, setTab, setProducts],
+    [all, trending, setTab, setProducts],
   );
+
+  useEffect(() => {
+    fetch(baseUrl + 'getAllActivities', {
+      method: 'GET'
+   })
+   .then((response) => response.json())
+   .then((responseJson) => {
+      setAll(responseJson);
+   })
+   .catch((error) => {
+      console.error(error + " detected");
+   });
+  })
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -42,12 +61,6 @@ const Home = () => {
 
   return (
     <Block safe>
-      {/* search input */}
-      {/* <Block color={colors.card} flex={0} padding={sizes.padding}>
-        <Input search placeholder={t('common.search')} />
-      </Block> */}
-      
-      {/* toggle products list */}
       <Block
         row
         flex={0}
@@ -69,7 +82,7 @@ const Home = () => {
               <Image source={assets.search} color={colors.white} radius={0} />
             </Block>
             <Text p font={fonts?.[tab === 0 ? 'medium' : 'normal']}>
-              {t('home.nearme')}
+              {t('home.all')}
             </Text>
           </Block>
         </Button>
@@ -94,18 +107,15 @@ const Home = () => {
               <Image
                 radius={0}
                 color={colors.white}
-                source={assets.documentation}
+                source={assets.location}
               />
             </Block>
             <Text p font={fonts?.[tab === 1 ? 'medium' : 'normal']}>
-              {t('home.recommended')}
+              {t('home.nearme')}
             </Text>
           </Block>
         </Button>
       </Block>
-
-      
-      {/* products list */}
       <Block
         scroll
         paddingHorizontal={sizes.padding}
@@ -113,7 +123,8 @@ const Home = () => {
         contentContainerStyle={{paddingBottom: sizes.l}}>
         <Block row wrap="wrap" justify="space-between" marginTop={sizes.sm}>
           {products?.map((product) => (
-            <Card {...product} key={`card-${product?.id}`} type="vertical" />
+            // need to change title to id
+            <Card {...product} key={`card-${product?.title}`} type="vertical" />
           ))}
         </Block>
       </Block>
