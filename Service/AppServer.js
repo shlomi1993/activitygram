@@ -202,8 +202,8 @@ app.post('/generateActivityQRCode', (req, res) => {
 });
 
 app.get('/getActivity', (req, res) => {
-	let eid = req.query.event_id;
-	database.getActivityById(eid).then((event) => res.send(event));
+	let aid = req.query.activity_id;
+	database.getActivityById(aid).then((event) => res.send(event));
 });
 
 app.get('/searchActivity', (req, res) => {
@@ -214,7 +214,7 @@ app.get('/searchActivity', (req, res) => {
 
 app.get('/getAllActivities', (req, res) => {
 
-	database.getAllActivities().then((activities) => {res.send(activities); console.log(activities.json())});
+	database.getAllActivities().then((activities) => {res.send(activities)});
 });
 
 /** GROUPS */
