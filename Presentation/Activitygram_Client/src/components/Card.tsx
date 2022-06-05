@@ -9,7 +9,7 @@ import { useTheme, useTranslation } from '../hooks';
 import {useNavigation} from '@react-navigation/native';
 
 
-const Card = ({ image, title, type, linkLabel, imageInRow, onPress }: ICard) => {
+const Card = ({ image, _id, title, type, linkLabel, imageInRow }: ICard) => {
   const { t } = useTranslation();
   const { assets, colors, sizes } = useTheme();
   const navigation = useNavigation();

@@ -2,11 +2,8 @@ import dayjs from 'dayjs';
 import {
   IBigCard,
   IArticleOptions,
-  IBasket,
   ICategory,
-  IExtra,
   ILocation,
-  INotification,
   ICard,
   IUser,
 } from './types';
@@ -262,79 +259,6 @@ export const MESSSAGES = [
     },
   },
 ];
-
-// shopping basket recommentations
-export const BASKET_RECOMMENDATIONS: IBasket['items'] = [
-  {
-    id: 4,
-    title: 'Polo T-Shirt',
-    description: 'Impeccably tailored in Italy.',
-    image:
-      'https://images.unsplash.com/photo-1586363104862-3a5e2ab60d99?fit=crop&w=450&q=80',
-    stock: true,
-    qty: 1,
-    size: 'M',
-    price: 200,
-  },
-  {
-    id: 5,
-    title: 'Orange Jacket',
-    description: 'Mustard About Me - South Africa',
-    image:
-      'https://images.unsplash.com/photo-1599407950360-8b8642d423dc?fit=crop&w=450&q=80',
-    stock: true,
-    qty: 1,
-    size: 'M',
-    price: 489,
-  },
-];
-
-// shopping basket
-export const BASKET: IBasket = {
-  subtotal: 750,
-  recommendations: BASKET_RECOMMENDATIONS,
-  items: [
-    {
-      id: 1,
-      title: 'Leather Jacket',
-      description: 'Impeccably tailored in Italy from lightweight navy.',
-      image:
-        'https://images.unsplash.com/photo-1562751361-ac86e0a245d1?fit=crop&w=450&q=80',
-      stock: true,
-      qty: 1,
-      size: 'M',
-      price: 250,
-      qtys: [1, 2, 3, 4, 5],
-      sizes: ['xs', 's', 'm', 'l', 'xl', 'xxl'],
-    },
-    {
-      id: 2,
-      title: 'Dark T-Shirt',
-      description: 'Dark-grey slub wool, pintucked notch lapels.',
-      image:
-        'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?fit=crop&w=450&q=80',
-      stock: true,
-      qty: 1,
-      size: 'l',
-      price: 150,
-      qtys: [1, 2, 3, 4, 5],
-      sizes: ['xs', 's', 'm', 'l', 'xl', 'xxl'],
-    },
-    {
-      id: 3,
-      title: 'Leather Handbag',
-      description: "Immaculate tailoring is TOM FORD's forte",
-      image:
-        'https://images.unsplash.com/photo-1608060434411-0c3fa9049e7b?fit=crop&w=450&q=80',
-      stock: true,
-      qty: 1,
-      size: 'm',
-      price: 350,
-      qtys: [1, 2, 3],
-      sizes: ['s', 'm', 'l'],
-    },
-  ],
-};
 
 export default {
   USERS,
