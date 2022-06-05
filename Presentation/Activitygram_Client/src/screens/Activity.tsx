@@ -1,22 +1,39 @@
-import React, {useLayoutEffect, useState, useCallback } from 'react';
-import {Platform, Linking} from 'react-native';
-import {Ionicons} from '@expo/vector-icons';
-import {useNavigation} from '@react-navigation/native';
-import {useHeaderHeight} from '@react-navigation/stack';
+import React, { useLayoutEffect, useState, useCallback, useEffect } from 'react';
+import { Platform, Linking } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import { useHeaderHeight } from '@react-navigation/stack';
 
 import { useData, useTheme, useTranslation } from '../hooks';
 import { Block, Button, Image, Text, Checkbox } from '../components';
 import 'react-native-gesture-handler';
+import { IActivity } from '../constants/types';
 
 const isAndroid = Platform.OS === 'android';
+export const baseUrl = Platform.OS === 'android' ? 'http://10.0.2.2:8080/' : 'http://127.0.0.1/8080/';
 
-const Activity = () => {
-  const {assets, sizes, colors } = useTheme();
+const Activity = ({ route }) => {
+  const { assets, sizes, colors } = useTheme();
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
-  const {user} = useData();
-  const {t} = useTranslation();
+  const { user } = useData();
+  const { t } = useTranslation();
+  const [activity, setActivity] = useState<IActivity>();
   const [isChecked, setIsChecked] = useState(false);
+  const { activityId } = route.params;
+
+  useEffect(() => {
+    fetch(baseUrl + 'getActivity?activity_id=' + activityId, {
+      method: 'GET'
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        setActivity(responseJson)
+      })
+      .catch((error) => {
+        console.error(error + " detected");
+      });
+  }, [activity])
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -39,13 +56,16 @@ const Activity = () => {
   const IMAGE_VERTICAL_MARGIN =
     (sizes.width - (IMAGE_VERTICAL_SIZE + sizes.sm) * 2) / 2;
 
+  const title = activity ? activity.title : '';
+  const description = activity ? activity.description : '';
+  const time = activity ? activity.date : '';
   return (
     <Block safe>
       <Block
         scroll
         paddingHorizontal={sizes.s}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingBottom: sizes.padding}}>
+        contentContainerStyle={{ paddingBottom: sizes.padding }}>
         <Block flex={0} paddingTop={sizes.l} paddingBottom={sizes.l}>
           <Image
             background
@@ -56,10 +76,10 @@ const Activity = () => {
             source={assets.background}>
             <Block flex={0} align="center">
               <Text h5 center white size={24} marginTop={sizes.sm}>
-                Activity Name
+                {title}
               </Text>
               <Text p center white marginBottom={sizes.md}>
-                Description
+              {description}
               </Text>
             </Block>
           </Image>
@@ -98,36 +118,36 @@ const Activity = () => {
           </Block>
 
           <Block paddingHorizontal={sizes.sm} marginTop={sizes.l}>
-          <Block row align="center" justify="space-between" marginBottom={sizes.l}>
-            <Text h5 semibold>
-            {t('activity.time')}
-            </Text>
-            <Text p secondary semibold>
+            <Block row align="center" justify="space-between" marginBottom={sizes.l}>
+              <Text h5 semibold>
+                {t('activity.time')}
+              </Text>
+              <Text p secondary semibold>
                 placeholder
-            </Text>
-          </Block>
-          <Block row align="center" justify="space-between" marginBottom={sizes.l}>
-            <Text h5 semibold>
-            {t('activity.createdBy')}
-            </Text>
-            <Text p secondary semibold>
+              </Text>
+            </Block>
+            <Block row align="center" justify="space-between" marginBottom={sizes.l}>
+              <Text h5 semibold>
+                {t('activity.createdBy')}
+              </Text>
+              <Text p secondary semibold>
                 placeholder
-            </Text>
-          </Block>
-          <Block row align="center" justify="space-between" marginBottom={sizes.l}>
-            <Text h5 semibold>
-            {t('activity.notes')}
-            </Text>
-            <Text p secondary semibold>
+              </Text>
+            </Block>
+            <Block row align="center" justify="space-between" marginBottom={sizes.l}>
+              <Text h5 semibold>
+                {t('activity.notes')}
+              </Text>
+              <Text p secondary semibold>
                 placeholder
-            </Text>
-          </Block>
-          <Block row marginBottom={sizes.l}>
-              <Checkbox checked={isChecked} onPress={() => setIsChecked(!isChecked)}/>
+              </Text>
+            </Block>
+            <Block row marginBottom={sizes.l}>
+              <Checkbox checked={isChecked} onPress={() => setIsChecked(!isChecked)} />
               <Text p marginLeft={sizes.sm}>
-                 I want to be a manager
-            </Text>
-          </Block>
+                I want to be a manager
+              </Text>
+            </Block>
           </Block>
         </Block>
       </Block>
