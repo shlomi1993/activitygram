@@ -149,21 +149,25 @@ async function createNewTag(client, newTag) {
 
 // search events
 module.exports.searchActivity = async function(keyword, userState, activitiesState, groupsState) {
-	console.log(`\nin searchActivity = async function(keyword, boxData)`)
+	console.log(`\nin searchActivity = async function(keyword, userState, activitiesState, groupsState)`)
 	console.log(`keyword = ${JSON.stringify(keyword)}`)
 	console.log(`userState = ${JSON.stringify(userState)}`)
 	console.log(`activitiesState = ${JSON.stringify(activitiesState)}`)
 	console.log(`groupsStatetate = ${JSON.stringify(groupsState)}`)
 
 	// searching in database...
-	if(userState == true){
+	if(JSON.stringify(userState).localeCompare("true")){
 		const usersFound = users.find({$or:[{firstName: "Shir", lastName: "Shir"}]}).toArray();
+		console.log(`usersFound ${usersFound}`)
+		console.log(`found ${usersFound.length} users`)
 	}
-	if(activitiesState == true){
+	if(JSON.stringify(activitiesState).localeCompare("true")){
 		const activitiesFound = activities.find({$or:[{description: "Shir", title: "Shir"}]}).toArray();
+		console.log(`found ${activitiesFound.length} activities`)
 	}
-	if(groupsState == true){
+	if(JSON.stringify(groupsState).localeCompare("true")){
 		const groupsFound = groups.find({$or:[{name: "Shir", description: "Shir"}]}).toArray();
+		console.log(`found ${groupsFound.length} groups`)
 	}
 
 	// get all found data together and return it
