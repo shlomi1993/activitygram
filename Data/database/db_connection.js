@@ -148,21 +148,27 @@ async function createNewTag(client, newTag) {
 }
 
 // search events
-module.exports.searchActivity = async function(keyword, boxData) {
-	console.log(`boxData = ${JSON.stringify(boxData)}`)
-	// retunedData = {}
-	// for(var key in boxData) {
-	// 	var value = dict[key];
-	// 	if (value){
+module.exports.searchActivity = async function(keyword, userState, activitiesState, groupsState) {
+	console.log(`\nin searchActivity = async function(keyword, boxData)`)
+	console.log(`keyword = ${JSON.stringify(keyword)}`)
+	console.log(`userState = ${JSON.stringify(userState)}`)
+	console.log(`activitiesState = ${JSON.stringify(activitiesState)}`)
+	console.log(`groupsStatetate = ${JSON.stringify(groupsState)}`)
 
-	// 	}
-	console.log(`\nsearchActivity, Keyword to search is ${keyword}\n`);
-	const result = await users.find({ firstName: "Shir" }).toArray();
-	console.log(`\nfirstName is ${result[0].firstName}\n`)
-	console.log(`\nlastName is ${result[0].lastName}\n`)
-	// console.log(`\nresult is ${(JSON.stringify(result[0]))}\n`)
-	const found = users.find({$or:[{firstName: "Shir", lastName: "Shir"}]}).toArray();
-	return result[0]
+	// searching in database...
+	if(userState == true){
+		const usersFound = users.find({$or:[{firstName: "Shir", lastName: "Shir"}]}).toArray();
+	}
+	if(activitiesState == true){
+		const activitiesFound = activities.find({$or:[{description: "Shir", title: "Shir"}]}).toArray();
+	}
+	if(groupsState == true){
+		const groupsFound = groups.find({$or:[{name: "Shir", description: "Shir"}]}).toArray();
+	}
+
+	// get all found data together and return it
+
+	return 0
 };
 
 //creat NewEvent
