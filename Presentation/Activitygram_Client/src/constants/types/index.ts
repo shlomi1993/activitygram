@@ -54,6 +54,7 @@ export interface ICard {
   linkLabel?: string;
   type: 'vertical' | 'horizontal';
   imageInRow?: number;
+  onPress?: (event?: any) => void;
 }
 export interface ILocation {
   id?: number;
@@ -83,8 +84,6 @@ export interface IUseData {
   setArticles: (data?: IBigCard[]) => void;
   article: IBigCard;
   handleArticle: (data?: IBigCard) => void;
-  notifications: INotification[];
-  handleNotifications: (data?: INotification[]) => void;
 }
 
 export interface ITranslate {
@@ -138,6 +137,5 @@ export interface INotification {
   | 'payment'
   | 'notification'
   | 'profile'
-  | 'extras'
   | 'office';
 }
