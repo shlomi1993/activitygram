@@ -60,7 +60,10 @@ export const ICONS: ThemeIcons = {
   warning: require('../assets/icons/warning.png'),
   like: require('../assets/icons/like.png'),
   unlike: require('../assets/icons/unlike.png'),
-  success: require('../assets/icons/success.png')
+  success: require('../assets/icons/success.png'),
+  heart: require('../assets/icons/heart.png'),
+  post: require('../assets/icons/post.png'),
+  user: require('../assets/icons/user.png'),
 };
 
 export const ASSETS: ThemeAssets = {
