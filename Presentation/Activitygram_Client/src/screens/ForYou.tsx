@@ -9,7 +9,7 @@ import {IBigCard, ICategory} from '../constants/types';
 import {Block, Image, Button, BigCard, Text } from '../components';
 import 'react-native-gesture-handler';
 
-const Explore = () => {
+const ForYou = () => {
   const data = useData();
   const [selected, setSelected] = useState<ICategory>();
   const [articles, setArticles] = useState<IBigCard[]>([]);
@@ -98,4 +98,4 @@ const Explore = () => {
   );
 };
 
-export default Explore;
+export default ForYou;

@@ -202,14 +202,19 @@ app.post('/generateActivityQRCode', (req, res) => {
 });
 
 app.get('/getActivity', (req, res) => {
-	let eid = req.query.event_id;
-	database.getActivityById(eid).then((event) => res.send(event));
+	let aid = req.query.activity_id;
+	database.getActivityById(aid).then((event) => res.send(event));
 });
 
 app.get('/searchActivity', (req, res) => {
 	console.log('NOT YET IMPLEMENTED.');
 	// let keyword = req.query.keyword;
 	// database.searchActivity(keyword).then((eventList) => res.send(eventList));
+});
+
+app.get('/getAllActivities', (req, res) => {
+
+	database.getAllActivities().then((activities) => {res.send(activities)});
 });
 
 /** GROUPS */

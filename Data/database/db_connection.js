@@ -173,3 +173,9 @@ module.exports.getActivityById = async function(eventId) {
 	const result = await activities.find({ _id: ObjectId(eventId) }).toArray();
 	return result[0];
 };
+
+//get All activities
+module.exports.getAllActivities = async function() {
+	const result = await activities.find().toArray();
+	return result;
+};
