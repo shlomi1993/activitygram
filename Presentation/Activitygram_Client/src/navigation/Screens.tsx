@@ -2,7 +2,7 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import {Components, Home, Profile, Post, Search, Explore } from '../screens';
+import {Components, Home, Profile, Post, Search, Explore, Activity } from '../screens';
 import {useScreenOptions, useTranslation} from '../hooks';
 const Stack = createStackNavigator();
 const HomeStack = createStackNavigator();
@@ -18,6 +18,7 @@ function HomeStackScreen() {
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen name="Home" component={Home}/>
+      <HomeStack.Screen name="Activity" component={Activity}/>
     </HomeStack.Navigator>
   )
 }
