@@ -12,14 +12,15 @@ var boxData = { "Users": false,
                 "Activities": false,
                 "Groups": false}
 
-async function storeCheckData(boxName, state) {
-  boxData[boxName] = state
-  console.log(`boxData: ${JSON.stringify(boxData)}`)
-}
+var searchUsers = {"Users": false}
+var searchActivities = {"Activities": false}
+var searchGroups = {"Groups": false}
+
+
 async function onPressSearch(params) {
+  console.log(`\nin onPressSearch(params)`)
 	var formBody = [];
   // let formBody: any;
-	console.log("in onPressSearch func")
 	for (var property in params) {
 		var encodedKey = encodeURIComponent(property);
 		var encodedValue = encodeURIComponent(params[property]);
@@ -204,6 +205,24 @@ const Search = () => {
   const [form, setForm] = useState<IEventForm>();
   const [isChecked, setIsChecked] = useState(false);
 
+  async function storeCheckData(boxName, state) {
+    console.log(`\nin storeCheckData(boxName, state)`)
+    boxData[boxName] = state
+    if (boxName == "Users"){
+      searchUsers[boxName] = state
+      setForm(prevState => ({...prevState, Users : state}));
+    }
+    else if(boxName == "Activities"){
+      searchActivities[boxName] = state
+      setForm(prevState => ({...prevState, Activities : state}));
+    }
+    else{
+      searchGroups[boxName] = state
+      setForm(prevState => ({...prevState, Groups : state}));
+    }
+    console.log(`form: ${JSON.stringify(form)}`)
+  }
+
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -243,9 +262,8 @@ const Search = () => {
         <Text>Groups</Text>
 
         <Button flex={1} gradient={gradients.info} marginBottom={sizes.base} onPress={() => {
-					console.log('search clicked!!\n');
-          // form['boxData'] = boxData
-          // console.log(`form = ${JSON.stringify(form)}`);
+					console.log('\nsearch clicked!');
+          console.log(`form = ${JSON.stringify(form)}`);
 					onPressSearch(form);
 				}}>
           <Text white bold transform="uppercase">

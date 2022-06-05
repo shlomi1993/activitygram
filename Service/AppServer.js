@@ -207,17 +207,16 @@ app.get('/getActivity', (req, res) => {
 });
 
 app.post('/search', (req, res) => {
-	boxData = Object(req.body['boxData'])
-	console.log(`/search boxData = ${JSON.stringify(req.body)}`)
-	console.log(`got ${JSON.stringify(req.body)}\n`);
-	let name_to_search = req.body.keyword
-	// console.log(`name_to_search = ${name_to_search} from request`);
-	// let data = database.searchActivity(name_to_search)
-	// console.log(`data is ${data}`)
-	let result = database.searchActivity(name_to_search, boxData)
+	console.log(`\nin app.post('/search', (req, res)`)
+	console.log(`req.body ${JSON.stringify(req.body)}\n`);
+	const name_to_search = req.body.keyword
+	const userState = req.body.Users
+	const activitiesState = req.body.Activities
+	const groupState = req.body.Groups
+
+	let result = database.searchActivity(name_to_search, userState, activitiesState, groupState)
 	// console.log(`result is ${result}`)
 	res.send(result);
-	// res.send("res.send")
 
 });
 
