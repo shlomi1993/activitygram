@@ -2,7 +2,7 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import {Components, Home, Profile, Post, Search, Explore, Activity } from '../screens';
+import {Components, Home, Profile, Post, Search, ForYou, Activity } from '../screens';
 import {useScreenOptions, useTranslation} from '../hooks';
 const Stack = createStackNavigator();
 const HomeStack = createStackNavigator();
@@ -10,7 +10,7 @@ const ComponentsStack = createStackNavigator();
 const ProfileStack = createStackNavigator();
 const PostStack = createStackNavigator();
 const SearchStack = createStackNavigator();
-const ExploreStack = createStackNavigator();
+const ForYouStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 // const {t} = useTranslation();
 
@@ -55,11 +55,11 @@ function SearchStackScreen() {
   )
 }
 
-function ExploreStackScreen() {
+function ForYouStackScreen() {
   return (
-    <ExploreStack.Navigator>
-      <ExploreStack.Screen name="Explore" component={Explore} />
-    </ExploreStack.Navigator>
+    <ForYouStack.Navigator>
+      <ForYouStack.Screen name="For You" component={ForYou} />
+    </ForYouStack.Navigator>
   )
 }
 
@@ -70,7 +70,7 @@ export default () => {
   return (
     <Tab.Navigator screenOptions={{ headerShown: false }}>
         <Tab.Screen name="Home" component={HomeStackScreen} />
-        <Tab.Screen name="Explore" component={ExploreStackScreen}/>
+        <Tab.Screen name="For You" component={ForYouStackScreen}/>
         <Tab.Screen name="Post" component={PostStackScreen}/>
         <Tab.Screen name="Search" component={SearchStackScreen}/>
         <Tab.Screen name="Profile" component={ProfileStackScreen}/>
