@@ -12,7 +12,7 @@ import { IActivity } from '../constants/types';
 const isAndroid = Platform.OS === 'android';
 export const baseUrl = Platform.OS === 'android' ? 'http://10.0.2.2:8080/' : 'http://127.0.0.1/8080/';
 
-const Activity = ({ activityId }) => {
+const Activity = ({ route }) => {
   const { assets, sizes, colors } = useTheme();
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
@@ -20,11 +20,10 @@ const Activity = ({ activityId }) => {
   const { t } = useTranslation();
   const [activity, setActivity] = useState<IActivity>();
   const [isChecked, setIsChecked] = useState(false);
-
+  const { activityId } = route.params;
 
   useEffect(() => {
-    const activity_id = '627b86c204058d69f26770a9';
-    fetch(baseUrl + 'getActivity?activity_id=' + activity_id, {
+    fetch(baseUrl + 'getActivity?activity_id=' + activityId, {
       method: 'GET'
     })
       .then((response) => response.json())
@@ -57,9 +56,9 @@ const Activity = ({ activityId }) => {
   const IMAGE_VERTICAL_MARGIN =
     (sizes.width - (IMAGE_VERTICAL_SIZE + sizes.sm) * 2) / 2;
 
-  const title = activity ? activity.title : 'title';
-  const description = activity ? activity.description : 'description';
-  const time = activity ? activity.date : 'date';
+  const title = activity ? activity.title : '';
+  const description = activity ? activity.description : '';
+  const time = activity ? activity.date : '';
   return (
     <Block safe>
       <Block

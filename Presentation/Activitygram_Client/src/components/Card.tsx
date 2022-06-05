@@ -17,7 +17,6 @@ const Card = ({ image, _id, title, type, linkLabel, imageInRow }: ICard) => {
   const isHorizontal = type !== 'vertical';
   const num = imageInRow ? imageInRow : 2
   const CARD_WIDTH = (sizes.width - sizes.padding * 2 - sizes.sm) / num;
-
   return (
     <Block
       card
@@ -41,7 +40,7 @@ const Card = ({ image, _id, title, type, linkLabel, imageInRow }: ICard) => {
         <Text p marginBottom={sizes.s}>
           {title}
         </Text>
-        <TouchableOpacity onPress={() => {navigation.navigate('Activity')}}>
+        <TouchableOpacity onPress={() => {navigation.navigate('Activity', {activityId: _id})}}>
           <Block row flex={0} align="center">
             <Text
               p
@@ -49,7 +48,7 @@ const Card = ({ image, _id, title, type, linkLabel, imageInRow }: ICard) => {
               semibold
               size={sizes.linkSize}
               marginRight={sizes.s}>
-              {t('common.register')}
+              {t('common.more')}
             </Text>
             <Image source={assets.arrow} color={colors.link} />
           </Block>
