@@ -208,7 +208,7 @@ app.get('/getActivity', (req, res) => {
 
 app.post('/search', (req, res) => {
 	console.log(`\nin app.post('/search', (req, res)`)
-	console.log(`req.body ${JSON.stringify(req.body)}\n`);
+	console.log(`req.body ${JSON.stringify(req.body)}`);
 	const name_to_search = req.body.keyword
 	const userState = req.body.Users
 	const activitiesState = req.body.Activities
