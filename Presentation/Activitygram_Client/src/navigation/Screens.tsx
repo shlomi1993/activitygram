@@ -1,9 +1,9 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
+import { Image } from '../components'
 import {Components, Home, Profile, Post, Search, ForYou, Activity } from '../screens';
-import {useScreenOptions, useTranslation} from '../hooks';
+import {useScreenOptions, useTranslation, useTheme } from '../hooks';
 const Stack = createStackNavigator();
 const HomeStack = createStackNavigator();
 const ComponentsStack = createStackNavigator();
@@ -66,14 +66,30 @@ function ForYouStackScreen() {
 export default () => {
   const {t} = useTranslation();
   const screenOptions = useScreenOptions();
+  const {assets, colors, gradients, sizes} = useTheme();
 
   return (
     <Tab.Navigator screenOptions={{ headerShown: false }}>
-        <Tab.Screen name="Home" component={HomeStackScreen} />
-        <Tab.Screen name="For You" component={ForYouStackScreen}/>
-        <Tab.Screen name="Post" component={PostStackScreen}/>
-        <Tab.Screen name="Search" component={SearchStackScreen}/>
-        <Tab.Screen name="Profile" component={ProfileStackScreen}/>
+        <Tab.Screen name="Home" component={HomeStackScreen}
+        options={{
+          tabBarIcon: () => (<Image source={assets.home} height={25} width={25} color={colors.black}/>)
+      }} />
+        <Tab.Screen name="For You" component={ForYouStackScreen}
+        options={{
+          tabBarIcon: () => (<Image source={assets.heart} height={25} width={25} color={colors.black}/>)
+      }}/>
+        <Tab.Screen name="Post" component={PostStackScreen}
+        options={{
+          tabBarIcon: () => (<Image source={assets.post} height={25} width={25} color={colors.black}/>)
+      }}/>
+        <Tab.Screen name="Search" component={SearchStackScreen}
+        options={{
+          tabBarIcon: () => (<Image source={assets.search} height={25} width={25} color={colors.black}/>)
+      }}/>
+        <Tab.Screen name="Profile" component={ProfileStackScreen}
+        options={{
+          tabBarIcon: () => (<Image source={assets.user} height={25} width={25} color={colors.black}/>)
+      }}/>
         <Tab.Screen name="Components" component={ComponentsStackScreen} options={screenOptions.components} />
     </Tab.Navigator>
   );
