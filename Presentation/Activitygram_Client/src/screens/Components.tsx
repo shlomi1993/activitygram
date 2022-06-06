@@ -98,7 +98,7 @@ const Buttons = () => {
       <Modal visible={showModal} onRequestClose={() => setModal(false)}>
         <FlatList
           keyExtractor={(index) => `${index}`}
-          data={['01', '02', '03', '04', '05']}
+          data={['08', '02', '03', '04', '05']}
           renderItem={({item}) => (
             <Button
               marginBottom={sizes.sm}

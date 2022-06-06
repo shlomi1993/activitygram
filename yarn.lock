@@ -1791,6 +1791,11 @@ react-is@^16.8.1:
   resolved "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
+react-native-bing-maps@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-bing-maps/-/react-native-bing-maps-0.1.1.tgz#86c9ee2c4f54035680c8f419659936cfd87949fa"
+  integrity sha512-SJB0feJ068ugC/ALQdPkogptIfP/Fdm8XF1ebnUOfjc3RDDbwm+NY9P6MyRBxjWZi2ae7RjCe2q5cENIOWgsOQ==
+
 react-native-dialog-input@^1.0.8:
   version "1.0.8"
   resolved "https://registry.npmjs.org/react-native-dialog-input/-/react-native-dialog-input-1.0.8.tgz"
