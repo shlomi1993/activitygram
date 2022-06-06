@@ -6,6 +6,7 @@
     "json2csv": "^5.0.7",
     "mongodb": "^4.5.0",
     "native-base": "^3.3.7",
+    "react-native-bing-maps": "^0.1.1",
     "react-native-dialog-input": "^1.0.8",
     "react-native-push-notification": "^8.1.1"
   }
