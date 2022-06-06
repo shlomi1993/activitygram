@@ -2,11 +2,13 @@ const fs = require('fs');
 const express = require('express');
 const database = require('../Data/database/db_connection');
 const recommender = require('../Data/recommender/recommenderApi');
+const geocoder = require('../Data/geocoder/geocodeApi')
 const { PythonShell } = require('python-shell');
 const crypto = require('crypto');
 const hash = crypto.createHash('sha512');
 const conn = JSON.parse(fs.readFileSync('connections.json'));
-const python = new PythonShell('../Data/recommender/recommender.py');
+const recommenderService = new PythonShell('../Data/recommender/recommender.py');
+const geocoderService = new PythonShell('../Data/geocoder/geocoder.py');
 const app = express();
 
 var ratingsSize = 0;
@@ -26,8 +28,12 @@ async function refreshUserModel(uid, currentUserModelSize) {
 	}
 }
 
-python.on('message', (message) => {
+recommenderService.on('message', (message) => {
 	console.log('Recommender: ' + message);
+});
+
+geocoderService.on('message', (message) => {
+	console.log('Geocoder: ' + message);
 });
 
 app.use(
@@ -40,6 +46,15 @@ app.get('/', (req, res) => {
 	let msg = 'AppServer is listening';
 	res.send(msg);
 	console.log(msg);
+});
+
+app.get('/geocode', (req, res) => {
+    geocoder.geocode(req.query.address).then((result) => res.send(result));
+});
+
+app.get('/geocodeReverse', (req, res) => {
+    geocoder.reverse(req.query.latitude, req.query.longitude)
+        .then((result) => { res.send(result) });
 });
 
 /** USERS */

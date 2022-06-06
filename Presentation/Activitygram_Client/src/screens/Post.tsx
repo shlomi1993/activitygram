@@ -5,15 +5,13 @@ import { useHeaderHeight } from '@react-navigation/stack';
 import { IEventForm } from '../constants/types/forms';
 import { useTheme } from '../hooks';
 import { Block, Image, Text, Input, Button } from '../components';
-import 'react-native-gesture-handler';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Moment from 'moment';
 import { TextInput } from 'react-native-paper';
 import Switch from '../components/Switch'
 import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
-// import BingMapsView from 'react-native-bing-maps';
 
-export const baseUrl = Platform.OS === 'android' ? 'http://10.0.2.2:8080/' : 'http://127.0.0.1/8080/';
+export const baseUri = Platform.OS === 'android' ? 'http://10.0.2.2:8080/' : 'http://127.0.0.1/8080/';
 
 async function sendNewActivity(params) {
   let formBody: any;
@@ -23,7 +21,7 @@ async function sendNewActivity(params) {
     formBody.push(encodedKey + '=' + encodedValue);
   }
   formBody = formBody.join('&');
-  await fetch(baseUrl + 'createActivity', {
+  await fetch(baseUri + 'createActivity', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
@@ -62,6 +60,23 @@ const Form = () => {
 
   const [selectedCategory, setSelectedCategory] = useState(null);
 
+  const [geolocation, setGeolocation] = useState(null);
+  const [geolocationError, setGeolocationError] = useState(false);
+
+  async function geocode(address: string) {
+    try {
+      let res = await fetch(baseUri + `geocode?address=${address}`)
+      let json = await res.json();
+      setGeolocationError(false)
+      setGeolocation({
+        'latitude': json.latitude,
+        'longitude': json.longitude
+      });
+    } catch (error) {
+      setGeolocation(null)
+      setGeolocationError(true);
+    }
+  }
 
   const createDateObject = (date, time) => {
     let dateArray = date.split(', ')[1].split('.')
@@ -252,11 +267,10 @@ const Form = () => {
         </Block>
 
         <Block marginBottom={sizes.sm}>
-          <TextInput label='Location' mode='outlined' autoComplete={false}
+          <TextInput label='Location' mode='outlined' autoComplete={false} error={geolocationError}
             onChangeText={(newText) => {
-              // Read mode: https://github.com/GeekyAnts/react-native-bing-maps
-              let fixedLocation = { lat: 12.9010875, long: 77.6095084, zoom: 15 }  // Need to set-up Bing maps!
-              setForm(prevState => ({ ...prevState, geolocation: fixedLocation }));
+              geocode(newText)
+              // setForm(prevState => ({ ...prevState, geolocation: geolocation }));  // do it before sending the form.
             }}
           />
         </Block>
