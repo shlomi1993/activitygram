@@ -37,6 +37,7 @@ async function sendNewActivity(params) {
 }
 
 const Form = () => {
+
   const { assets, colors, sizes, gradients } = useTheme();
   const [form, setForm] = useState<IEventForm>();
 
@@ -69,6 +70,7 @@ const Form = () => {
       let json = await res.json();
       setGeolocationError(false)
       setGeolocation({
+        'address': address,
         'latitude': json.latitude,
         'longitude': json.longitude
       });
@@ -297,22 +299,7 @@ const Form = () => {
         </Block>
 
 
-        {/* <Input placeholder="Start time" marginBottom={sizes.sm}
-          onChangeText={(newText) => {
-            setForm(prevState => ({ ...prevState, startTime: newText }));
-          }} />
-        <Input placeholder="End time" marginBottom={sizes.sm} onChangeText={(newText) => {
-          setForm(prevState => ({ ...prevState, endTime: newText }));
-        }} />
-        <Input placeholder="Recurrent" marginBottom={sizes.sm} onChangeText={(newText) => {
-          setForm(prevState => ({ ...prevState, recurrent: newText }));
-        }} />
-        <Input placeholder="Location" marginBottom={sizes.sm} onChangeText={(newText) => {
-          setForm(prevState => ({ ...prevState, location: newText }));
-        }} />
-        <Input placeholder="Description" marginBottom={sizes.sm} onChangeText={(newText) => {
-          setForm(prevState => ({ ...prevState, description: newText }));
-        }} />
+        {/*
         <Input placeholder="Interests" marginBottom={sizes.sm} onChangeText={(newText) => {
           setForm(prevState => ({ ...prevState, interests: newText }));
         }} />
