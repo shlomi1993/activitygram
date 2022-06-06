@@ -25,7 +25,7 @@ def reverse():
     longitude = request.args.get('longitude')
     location = geolocator.reverse(latitude + ', ' + longitude)
     return jsonify({
-        "address": location.address,
+        "address": location.address
     })
 
 if __name__ == '__main__':
