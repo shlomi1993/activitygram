@@ -11,11 +11,11 @@ import Moment from 'moment';
 import { TextInput } from 'react-native-paper';
 import Switch from '../components/Switch'
 import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
-
+// import BingMapsView from 'react-native-bing-maps';
 
 export const baseUrl = Platform.OS === 'android' ? 'http://10.0.2.2:8080/' : 'http://127.0.0.1/8080/';
 
-async function onPressCreate(params) {
+async function sendNewActivity(params) {
   let formBody: any;
   for (var property in params) {
     var encodedKey = encodeURIComponent(property);
@@ -242,7 +242,7 @@ const Form = () => {
 
         </Block>
 
-        <Block row flex={0} align="center" justify="space-between" marginBottom={sizes.sm}>
+        <Block row flex={0} align="center" justify="space-between" marginBottom={sizes.s}>
           <Text>Recurrent:</Text>
           <Block row flex={0}>
             <Text>{recurrentSwitch ? 'Yes   ' : 'No    '}</Text>
@@ -260,6 +260,19 @@ const Form = () => {
             }}
           />
         </Block>
+
+        {/* <BingMapsReact
+          bingMapsKey="AqdHYN8WZH0xzQR9RGgb264VJl087NRvLrj4tAwT292vwuakZhx2HuKiN_UR2kzS"
+          height="500px"
+          mapOptions={{
+            navigationBarMode: "square",
+          }}
+          width="500px"
+          viewOptions={{
+            center: { latitude: 42.360081, longitude: -71.058884 },
+            mapTypeId: "grayscale",
+          }}
+        /> */}
 
         <Block marginBottom={sizes.sm}>
           <TextInput label='Description' mode='outlined' autoComplete={false} multiline={true} numberOfLines={7}
@@ -316,7 +329,7 @@ const Form = () => {
         <Block paddingHorizontal={sizes.padding}>
           <Button flex={1} gradient={gradients.info} marginBottom={sizes.base} onPress={() => {
             console.log('clicked');
-            onPressCreate(form);
+            sendNewActivity(form);
           }}>
             <Text white bold transform="uppercase">
               Create
