@@ -10,6 +10,7 @@ import Moment from 'moment';
 import { TextInput } from 'react-native-paper';
 import Switch from '../components/Switch'
 import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
+import * as ImagePicker from 'expo-image-picker'
 
 export const baseUri = Platform.OS === 'android' ? 'http://10.0.2.2:8080/' : 'http://127.0.0.1/8080/';
 
@@ -59,6 +60,8 @@ const Form = () => {
   const [recurrentSwitch, setRecurrentSwitch] = useState(false);
 
   const [selectedCategory, setSelectedCategory] = useState(null);
+
+  const [photo, setPhoto] = useState(null);
 
   const [geolocation, setGeolocation] = useState(null);
   const [geolocationError, setGeolocationError] = useState(false);
@@ -159,6 +162,49 @@ const Form = () => {
     }
     setEndTime(newText);
     setEndTimePickerVisibility(false);
+  };
+
+  const handleChoosePhoto = () => {
+    ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.5,
+    }).then((data) => {
+      // console.log('chosen:', data)
+      setPhoto(data);
+    });
+  }
+
+
+  const handleUploadPhoto = () => {
+    console.log('HI:', photo)
+    const data = new FormData();
+    data.append('photo', {
+      name: photo.fileName,
+      type: photo.type,
+      uri: Platform.OS === 'ios' ? photo.uri.replace('file://', '') : photo.uri,
+    });
+    // let params = data
+    // let formBody: any;
+    // for (var property in params) {
+    //   var encodedKey = encodeURIComponent(property);
+    //   var encodedValue = encodeURIComponent(params[property]);
+    //   formBody.push(encodedKey + '=' + encodedValue);
+    // }
+    // formBody = formBody.join('&');
+
+    fetch(`${baseUri}/imageUpload`, {
+      method: 'POST',
+      body: data,  // TO UPDATE FROM CONTEXT
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        console.log('response:', response);
+      })
+      .catch((error) => {
+        console.log('error', error);
+      });
   };
 
   return (
@@ -275,25 +321,26 @@ const Form = () => {
           />
         </Block>
 
-        {/* <BingMapsReact
-          bingMapsKey="AqdHYN8WZH0xzQR9RGgb264VJl087NRvLrj4tAwT292vwuakZhx2HuKiN_UR2kzS"
-          height="500px"
-          mapOptions={{
-            navigationBarMode: "square",
-          }}
-          width="500px"
-          viewOptions={{
-            center: { latitude: 42.360081, longitude: -71.058884 },
-            mapTypeId: "grayscale",
-          }}
-        /> */}
-
         <Block marginBottom={sizes.sm}>
           <TextInput label='Description' mode='outlined' autoComplete={false} multiline={true} numberOfLines={7}
             onChangeText={(newText) => {
               setForm(prevState => ({ ...prevState, description: newText }));
             }}
           />
+        </Block>
+
+        <Block>
+          {photo && (<Image source={{ uri: photo.uri }} style={{ width: 100, height: 100 }} />)}
+          <Block row>
+            <Button flex={1} gradient={gradients.info} marginBottom={sizes.base} marginRight={sizes.sm / 2}
+              onPress={() => { handleChoosePhoto(); }}>
+              <Text white bold transform="uppercase">Choose Photo</Text>
+            </Button>
+            <Button flex={1} gradient={gradients.info} marginBottom={sizes.base} marginLeft={sizes.sm / 2}
+              onPress={() => { handleUploadPhoto(); }}>
+              <Text white bold transform="uppercase">Upload Photo</Text>
+            </Button>
+          </Block>
         </Block>
 
 
