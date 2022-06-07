@@ -179,3 +179,13 @@ module.exports.getAllActivities = async function() {
 	const result = await activities.find().toArray();
 	return result;
 };
+
+// Get All Interests
+module.exports.getAllInterests = async function() {
+    const result = await interests.find().toArray();
+    array = []
+    for (const item of result) {
+        array.push(item.title)
+    }
+	return array;
+};
