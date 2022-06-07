@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useState } from 'react';
-import { Platform, FlatList, View } from 'react-native';
+import { Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useHeaderHeight } from '@react-navigation/stack';
 import { IEventForm } from '../constants/types/forms';
@@ -38,7 +38,7 @@ async function sendNewActivity(params) {
 }
 
 const Form = () => {
-  const { assets, colors, sizes, gradients } = useTheme();
+  const { colors, sizes, gradients } = useTheme();
   const [form, setForm] = useState<IEventForm>();
 
   const [isStartDatePickerVisible, setStartDatePickerVisibility] = useState(false);
