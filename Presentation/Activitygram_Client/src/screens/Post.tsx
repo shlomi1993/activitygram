@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useState } from 'react';
-import { Platform } from 'react-native';
+import { Platform, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useHeaderHeight } from '@react-navigation/stack';
 import { IEventForm } from '../constants/types/forms';
@@ -9,7 +9,7 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Moment from 'moment';
 import { TextInput } from 'react-native-paper';
 import Switch from '../components/Switch'
-import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
+import Modal from '../components/Modal';
 import * as ImagePicker from 'expo-image-picker'
 
 export const baseUri = Platform.OS === 'android' ? 'http://10.0.2.2:8080/' : 'http://127.0.0.1/8080/';
@@ -38,7 +38,7 @@ async function sendNewActivity(params) {
 }
 
 const Form = () => {
-  const { colors, sizes, gradients } = useTheme();
+  const { assets, colors, sizes, gradients } = useTheme();
   const [form, setForm] = useState<IEventForm>();
 
   const [isStartDatePickerVisible, setStartDatePickerVisibility] = useState(false);
@@ -59,25 +59,24 @@ const Form = () => {
 
   const [recurrentSwitch, setRecurrentSwitch] = useState(false);
 
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState('Select a category');
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [categories, setCategories] = useState([]);
 
   const [photo, setPhoto] = useState(null);
 
   const [geolocation, setGeolocation] = useState(null);
   const [geolocationError, setGeolocationError] = useState(false);
 
-  async function geocode(address: string) {
+  async function getCategories() {
     try {
-      let res = await fetch(baseUri + `geocode?address=${address}`)
+      let res = await fetch(baseUri + `allInterests`)
       let json = await res.json();
-      setGeolocationError(false)
-      setGeolocation({
-        'latitude': json.latitude,
-        'longitude': json.longitude
-      });
+      setCategories(json)
+      setShowCategoryModal(true)
     } catch (error) {
-      setGeolocation(null)
-      setGeolocationError(true);
+      setCategories([])
+      setShowCategoryModal(false)
     }
   }
 
@@ -164,6 +163,21 @@ const Form = () => {
     setEndTimePickerVisibility(false);
   };
 
+  async function geocode(address: string) {
+    try {
+      let res = await fetch(baseUri + `geocode?address=${address}`)
+      let json = await res.json();
+      setGeolocationError(false)
+      setGeolocation({
+        'latitude': json.latitude,
+        'longitude': json.longitude
+      });
+    } catch (error) {
+      setGeolocation(null)
+      setGeolocationError(true);
+    }
+  }
+
   const handleChoosePhoto = () => {
     ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -176,15 +190,13 @@ const Form = () => {
     });
   }
 
-
   const handleUploadPhoto = () => {
-    console.log('HI:', photo)
-    const data = new FormData();
-    data.append('photo', {
-      name: photo.fileName,
-      type: photo.type,
-      uri: Platform.OS === 'ios' ? photo.uri.replace('file://', '') : photo.uri,
-    });
+    // const data = new FormData();
+    // data.append('photo', {
+    //   name: photo.fileName,
+    //   type: photo.type,
+    //   uri: Platform.OS === 'ios' ? photo.uri.replace('file://', '') : photo.uri,
+    // });
     // let params = data
     // let formBody: any;
     // for (var property in params) {
@@ -215,9 +227,7 @@ const Form = () => {
       paddingTop={sizes.m}
       paddingHorizontal={sizes.padding}>
 
-      <Text p semibold marginBottom={sizes.s}>
-        Please fill details below
-      </Text>
+      <Text p semibold marginBottom={sizes.s}>Please fill details below</Text>
 
       <Block>
 
@@ -225,21 +235,33 @@ const Form = () => {
           <Input value={'Initiator placeholder'} editable={false} disabled />
         </Block>
 
-        <AutocompleteDropdown
-          clearOnFocus={false}
-          closeOnBlur={true}
-          closeOnSubmit={false}
-          initialValue={{ id: '2' }} // or just '2'
-          onSelectItem={setSelectedCategory}
-          dataSet={[
-            { id: '1', title: 'Alpha' },
-            { id: '2', title: 'Beta' },
-            { id: '3', title: 'Gamma' },
-            { id: '4', title: 'Delta' }
-          ]}
-        />
+        <Block marginBottom={sizes.sm}>
+          <Button row gradient={gradients.dark} onPress={() => { getCategories() }}>
+            <Block row align="center" justify="space-between" paddingHorizontal={sizes.sm}>
+              <Text white bold marginRight={sizes.sm}>
+                {selectedCategory}
+              </Text>
+              <Image source={assets.arrow} color={colors.white} transform={[{ rotate: '90deg' }]} />
+            </Block>
+          </Button>
+          <Modal visible={showCategoryModal} onRequestClose={() => setShowCategoryModal(false)}>
+            <FlatList keyExtractor={(index) => `${index}`}
+              data={categories}
+              renderItem={({item}) => (
+                <Button
+                  marginBottom={sizes.sm}
+                  onPress={() => {
+                    setSelectedCategory(item);
+                    setShowCategoryModal(false);
+                  }}>
+                  <Text p white semibold transform="uppercase">{item}</Text>
+                </Button>
+              )}
+            />
+          </Modal>
+        </Block>
 
-        <Block marginBottom={sizes.sm} marginTop={sizes.sm}>
+        <Block marginBottom={sizes.sm}>
           <TextInput label='Activity title' mode='outlined' autoComplete={false}
             onChangeText={(newText) => {
               setForm(prevState => ({ ...prevState, title: newText }));
@@ -251,12 +273,12 @@ const Form = () => {
 
           <Block marginRight={sizes.sm / 2}>
             <TextInput label='Start date' mode='outlined' autoComplete={false} showSoftInputOnFocus={false} error={startDateError}
-              onPressIn={() => setStartDatePickerVisibility(true)} value={startDate} />
+              onPressOut={() => setStartDatePickerVisibility(true)} value={startDate} />
           </Block>
 
           <Block marginLeft={sizes.sm / 2}>
             <TextInput label='Start time' mode='outlined' autoComplete={false} showSoftInputOnFocus={false} disabled={startTimeDisable} error={startTimeError}
-              onPressIn={() => setStartTimePickerVisibility(true)} value={startTime} />
+              onPressOut={() => setStartTimePickerVisibility(true)} value={startTime} />
           </Block>
 
           <DateTimePickerModal
@@ -279,12 +301,12 @@ const Form = () => {
 
           <Block marginRight={sizes.sm / 2}>
             <TextInput label='End date' mode='outlined' autoComplete={false} showSoftInputOnFocus={false} error={endDateError}
-              onPressIn={() => setEndDatePickerVisibility(true)} value={endDate} />
+              onPressOut={() => setEndDatePickerVisibility(true)} value={endDate} />
           </Block>
 
           <Block marginLeft={sizes.sm / 2}>
             <TextInput label='End time' mode='outlined' autoComplete={false} showSoftInputOnFocus={false} disabled={endTimeDisable} error={endTimeError}
-              onPressIn={() => setEndTimePickerVisibility(true)} value={endTime} />
+              onPressOut={() => setEndTimePickerVisibility(true)} value={endTime} />
           </Block>
 
           <DateTimePickerModal
@@ -331,36 +353,20 @@ const Form = () => {
 
         <Block>
           {photo && (<Image source={{ uri: photo.uri }} style={{ width: 100, height: 100 }} />)}
-          <Block row>
-            <Button flex={1} gradient={gradients.info} marginBottom={sizes.base} marginRight={sizes.sm / 2}
+          <Block row paddingHorizontal={sizes.xs}>
+            <Button flex={1} gradient={gradients.dark} marginBottom={sizes.base} marginRight={sizes.sm / 2}
               onPress={() => { handleChoosePhoto(); }}>
-              <Text white bold transform="uppercase">Choose Photo</Text>
+              <Text white bold>Choose Photo</Text>
             </Button>
-            <Button flex={1} gradient={gradients.info} marginBottom={sizes.base} marginLeft={sizes.sm / 2}
+            <Button flex={1} gradient={gradients.dark} marginBottom={sizes.base} marginLeft={sizes.sm / 2}
               onPress={() => { handleUploadPhoto(); }}>
-              <Text white bold transform="uppercase">Upload Photo</Text>
+              <Text white bold>Upload Photo</Text>
             </Button>
           </Block>
         </Block>
 
 
-        {/* <Input placeholder="Start time" marginBottom={sizes.sm}
-          onChangeText={(newText) => {
-            setForm(prevState => ({ ...prevState, startTime: newText }));
-          }} />
-        <Input placeholder="End time" marginBottom={sizes.sm} onChangeText={(newText) => {
-          setForm(prevState => ({ ...prevState, endTime: newText }));
-        }} />
-        <Input placeholder="Recurrent" marginBottom={sizes.sm} onChangeText={(newText) => {
-          setForm(prevState => ({ ...prevState, recurrent: newText }));
-        }} />
-        <Input placeholder="Location" marginBottom={sizes.sm} onChangeText={(newText) => {
-          setForm(prevState => ({ ...prevState, location: newText }));
-        }} />
-        <Input placeholder="Description" marginBottom={sizes.sm} onChangeText={(newText) => {
-          setForm(prevState => ({ ...prevState, description: newText }));
-        }} />
-        <Input placeholder="Interests" marginBottom={sizes.sm} onChangeText={(newText) => {
+        {/* <Input placeholder="Interests" marginBottom={sizes.sm} onChangeText={(newText) => {
           setForm(prevState => ({ ...prevState, interests: newText }));
         }} />
         <Input placeholder="Preconditions" marginBottom={sizes.sm} onChangeText={(newText) => {
@@ -387,14 +393,12 @@ const Form = () => {
         <Input placeholder="Status" marginBottom={sizes.sm} onChangeText={(newText) => {
           setForm(prevState => ({ ...prevState, status: newText }));
         }} /> */}
-        <Block paddingHorizontal={sizes.padding}>
-          <Button flex={1} gradient={gradients.info} marginBottom={sizes.base} onPress={() => {
+        <Block>
+          <Button flex={1} gradient={gradients.primary} marginBottom={sizes.base} onPress={() => {
             console.log('clicked');
             sendNewActivity(form);
           }}>
-            <Text white bold transform="uppercase">
-              Create
-            </Text>
+            <Text white bold transform="uppercase">Create</Text>
           </Button>
         </Block>
       </Block>
