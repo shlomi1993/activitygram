@@ -77,8 +77,8 @@ app.get('/geocode', (req, res) => {
             console.log('geocode request succeeded.');
         })
         .catch((error) => {
-            let msg = 'geocode request failed. Status: ' + error.response.statusText;
-            res.status(error.response.status).send(msg);
+            let msg = 'geocode request failed.';
+            res.status(500).send(msg);
             console.error(msg);
         });
 });
@@ -90,8 +90,8 @@ app.get('/geocodeReverse', (req, res) => {
             console.log('geocodeReverse request succeeded.');
         })
         .catch((error) => {
-            let msg = 'geocodeReverse request failed. Status: ' + error.response.statusText;
-            res.status(error.response.status).send(msg);
+            let msg = 'geocodeReverse request failed.';
+            res.status(500).send(msg);
             console.error(msg);
         });
 });
@@ -141,8 +141,8 @@ app.post('/createUser', (req, res) => {
             console.log('createUser request succeeded.');
         })
         .catch((error) => {
-            let msg = 'createUser request failed. Status: ' + error.response.statusText;
-            res.status(error.response.status).send(msg);
+            let msg = 'createUser request failed.';
+            res.status(500).send(msg);
             console.error(msg);
         });
 });
@@ -150,32 +150,19 @@ app.post('/createUser', (req, res) => {
 /** ACTIVITIES */
 
 app.post('/createActivity', (req, res) => {
-    newActivity = {
-        title: req.body.title,
-        startTime: req.body.startTime,
-        endTime: req.body.endTime,
-        recurrent: req.body.recurrent,
-        location: req.body.location,
-        description: req.body.description,
-        interests: req.body.interests,
-        preconditions: req.body.preconditions,
-        initiator: req.body.initiator,
-        managers: req.body.managers,
-        participants: req.body.participants,
-        images: req.body.images,
-        qrCode: req.body.qr,
-        tags: req.body.tags,
-        status: req.body.status,
-        creationTime: Date()
-    };
+    newActivity = {}
+    for (const key in req.body) {
+        newActivity[key] = req.body[key]
+    }
+    newActivity['creationTime'] = Date();
     database.createNewActivity(newActivity)
         .then((result) => {
             res.status(200).send(result);
             console.log('createActivity request succeeded.');
         })
         .catch((error) => {
-            let msg = 'createActivity request failed. Status: ' + error.response.statusText;
-            res.status(error.response.status).send(msg);
+            let msg = 'createActivity request failed.';
+            res.status(500).send(msg);
             console.error(msg);
         });
 });
@@ -191,8 +178,23 @@ app.get('/searchActivity', (req, res) => {
 });
 
 app.get('/getAllActivities', (req, res) => {
-
     database.getAllActivities().then((activities) => { res.send(activities) });
+});
+
+/** Interests */
+
+app.get('/allInterests', (req, res) => {
+    database.getAllInterests()
+        .then((result) => {
+            res.status(200).send(result);
+            console.log('allInterests request succeeded.');
+        })
+        .catch((error) => {
+            let msg = 'allInterests request failed.';
+            res.status(500).send(msg);
+            console.error(msg);
+        });
+
 });
 
 /** GROUPS */
@@ -227,8 +229,8 @@ app.get('/getInterestPrediction', (req, res) => {
             console.log('getInterestPrediction request succeeded.');
         })
         .catch((error) => {
-            let msg = 'getInterestPrediction request failed. Status: ' + error.response.statusText;
-            res.status(error.response.status).send(msg);
+            let msg = 'getInterestPrediction request failed.';
+            res.status(500).send(msg);
             console.error(msg);
         });
 });

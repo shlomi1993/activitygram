@@ -95,5 +95,24 @@
     "time": "Time",
     "createdBy": "Created by",
     "notes": "Notes"
+  },
+  "Post": {
+      "PleaseFill": "Please fill details below",
+      "Category": "Category",
+      "SelectCategory": "Select a category",
+      "ActivityTitle": "Activity title",
+      "StartDate": "Start date",
+      "StartTime": "Start time",
+      "EndDate": "End date",
+      "EndTime": "End time",
+      "Recurrent": "Recurrent:",
+      "RecurrentYes": "Yes   ",
+      "RecurrentNo": "No    ",
+      "Location": "Location",
+      "Description": "Description",
+      "AddImage": "Add Image",
+      "Change": "Change",
+      "Create": "Create",
+      "TryAgain": "Please fill the following fields and try again:"
   }
 }
