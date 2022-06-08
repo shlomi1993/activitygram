@@ -107,6 +107,9 @@ app.post('/templatePost', (req, res) => {
 });
 
 /** USERS */
+app.get('/getUser', (req, res) => {
+    database.getUserById(req.query.user_id).then((user) => res.send(user));
+});
 
 app.post('/createUser', (req, res) => {
     newUser = {
@@ -163,6 +166,20 @@ app.post('/createActivity', (req, res) => {
         .catch((error) => {
             let msg = 'createActivity request failed.';
             res.status(500).send(msg);
+            console.error(msg);
+        });
+});
+
+app.post('/updateActivityParticipants', (req, res) => {
+    const participants = JSON.parse(decodeURIComponent(req.query.participants))
+    database.updateActivityParticipants(req.query.activity_id, participants)
+        .then((result) => {
+            res.status(200).send(result);
+            console.log('updateActivityParticipants request succeeded.');
+        })
+        .catch((error) => {
+            let msg = 'updateActivityParticipants request failed. Status: ' + error.response.statusText;
+            res.status(error.response.status).send(msg);
             console.error(msg);
         });
 });
