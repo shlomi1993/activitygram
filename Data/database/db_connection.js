@@ -85,45 +85,56 @@ module.exports.createUser = async function(newUser) {
 	return `New user created with the id: ${uid}`;
 };
 
+//get User by ID
+module.exports.getUserById = async function(userId) {
+	const result = await users.find({ _id: ObjectId(userId) }).toArray();
+	return result[0];
+};
+
+
 //Update functions
-async function changeFirstName(curr_user, firstName) {
+async function changeUserFirstName(curr_user, firstName) {
 	const result = await users.updateOne({ _id: curr_user.id }, { $set: { firstName: firstName } });
 }
 
-async function changeLastName(curr_user, lastName) {
+async function changeUserLastName(curr_user, lastName) {
 	const result = await users.updateOne({ _id: curr_user.id }, { $set: { lastName: lastName } });
 }
 
-async function changeDateOfBirth(curr_user, dateOfBirth) {
+async function changeUserDateOfBirth(curr_user, dateOfBirth) {
 	const result = await users.updateOne({ _id: curr_user.id }, { $set: { dateOfBirth: dateOfBirth } });
 }
 
-async function changeAge(curr_user, age) {
+async function changeUserAge(curr_user, age) {
 	const result = await users.updateOne({ _id: curr_user.id }, { $set: { age: age } });
 }
 
-async function changeCountry(curr_user, country) {
+async function changeUserCountry(curr_user, country) {
 	const result = await users.updateOne({ _id: curr_user.id }, { $set: { country: country } });
 }
 
-async function changeProfileImage(curr_user, profileImage) {
+async function changeUserProfileImage(curr_user, profileImage) {
 	const result = await users.updateOne({ _id: curr_user.id }, { $set: { profileImage: profileImage } });
 }
 
-async function changeBio(curr_user, bio) {
+async function changeUserBio(curr_user, bio) {
 	const result = await users.updateOne({ _id: curr_user.id }, { $set: { bio: bio } });
 }
 
-async function changeFriendsList(curr_user, friendsList) {
+async function changeUserFriendsList(curr_user, friendsList) {
 	const result = await users.updateOne({ _id: curr_user.id }, { $set: { friendsList: friendsList } });
 }
 
-async function changeIntrests(curr_user, intrests) {
+async function changeUserIntrests(curr_user, intrests) {
 	const result = await users.updateOne({ _id: curr_user.id }, { $set: { intrests: intrests } });
 }
 
-async function changeActivityLog(curr_user, activityLog) {
+async function changeUserActivityLog(curr_user, activityLog) {
 	const result = await users.updateOne({ _id: curr_user.id }, { $set: { activityLog: activityLog } });
+}
+
+module.exports.updateActivityParticipants = async function(activityId, participantsArr) {
+	await activities.updateOne({ _id: ObjectId(activityId) }, { $set: { participants: participantsArr } });
 }
 
 // print databases
@@ -169,8 +180,8 @@ async function createNewGroup(client, newGroup) {
 }
 
 //get Activity by ID
-module.exports.getActivityById = async function(eventId) {
-	const result = await activities.find({ _id: ObjectId(eventId) }).toArray();
+module.exports.getActivityById = async function(activityId) {
+	const result = await activities.find({ _id: ObjectId(activityId) }).toArray();
 	return result[0];
 };
 
