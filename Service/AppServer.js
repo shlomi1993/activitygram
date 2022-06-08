@@ -150,24 +150,11 @@ app.post('/createUser', (req, res) => {
 /** ACTIVITIES */
 
 app.post('/createActivity', (req, res) => {
-    newActivity = {
-        title: req.body.title,
-        startTime: req.body.startTime,
-        endTime: req.body.endTime,
-        recurrent: req.body.recurrent,
-        location: req.body.location,
-        description: req.body.description,
-        interests: req.body.interests,
-        preconditions: req.body.preconditions,
-        initiator: req.body.initiator,
-        managers: req.body.managers,
-        participants: req.body.participants,
-        images: req.body.images,
-        qrCode: req.body.qr,
-        tags: req.body.tags,
-        status: req.body.status,
-        creationTime: Date()
-    };
+    newActivity = {}
+    for (const key in req.body) {
+        newActivity[key] = req.body[key]
+    }
+    newActivity['creationTime'] = Date();
     database.createNewActivity(newActivity)
         .then((result) => {
             res.status(200).send(result);
