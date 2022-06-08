@@ -95,5 +95,10 @@
     "time": "Time",
     "createdBy": "Created by",
     "notes": "Notes"
+  },
+  "Post": {
+      "PleaseFill": "Please fill details below",
+      "ActivityTitle": "Activity title",
+      "SelectCategory": "Select a category"
   }
 }
