@@ -13,17 +13,33 @@ import Modal from '../components/Modal';
 import * as ImagePicker from 'expo-image-picker'
 import { userContext } from '../../App'
 import { useTranslation } from '../hooks';
-
+import Toast from 'react-native-toast-message'
 
 export const baseUri = Platform.OS === 'android' ? 'http://10.0.2.2:8080/' : 'http://127.0.0.1/8080/';
 const { t } = useTranslation();
 
 function validateInputs(params: object) {
+  let missing = []
   if (!params['category'] || params['category'] === t('Post.SelectCategory')) {
-    return
+    missing.push(t('Post.Category'));
   }
-
-
+  if (!params['title'] || params['title'] === '') {
+    missing.push(t('Post.ActivityTitle'));
+  }
+  if (!params['startDateTime']) {
+    missing.push(t('Post.StartDate'));
+    missing.push(t('Post.StartTime'));
+  }
+  if (!params['endDateTime'] || params['endDateTime'] < params['startDateTime']) {
+    params['endDateTime'] = new Date(params['startDateTime'].getTime());
+  }
+  if (!params['geolocation'] || params['geolocation'] === '') {
+    missing.push(t('Post.Location'));
+  }
+  if (!params['description'] || params['description'] === '') {
+    missing.push(t('Post.Description'));
+  }
+  return missing
 }
 
 async function sendNewActivity(params: object) {
@@ -51,16 +67,19 @@ async function sendNewActivity(params: object) {
 
 const Form = () => {
 
+  // Theme & Context
   const { assets, colors, sizes, gradients } = useTheme();
-
   const initiator = useContext(userContext)
 
+  // Category Modal
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(t('Post.SelectCategory'));
 
+  // Title
   const [title, setTitle] = useState('')
 
+  // Start Date and Time
   const startDateFocus = useRef();
   const [isStartDatePickerVisible, setStartDatePickerVisibility] = useState(false);
   const [startDate, setStartDate] = useState('')
@@ -71,6 +90,7 @@ const Form = () => {
   const [startDateError, setStartDateError] = useState(false)
   const [startTimeError, setStartTimeError] = useState(false)
 
+  // End Date and Time
   const endDateFocus = useRef();
   const [isEndDatePickerVisible, setEndDatePickerVisibility] = useState(false);
   const [endDate, setEndDate] = useState('')
@@ -81,16 +101,25 @@ const Form = () => {
   const [endDateError, setEndDateError] = useState(false)
   const [endTimeError, setEndTimeError] = useState(false)
 
+  // Recurrent
   const [recurrentSwitch, setRecurrentSwitch] = useState(false);
 
+  // Location
   const [geolocationError, setGeolocationError] = useState(false);
   const [geolocation, setGeolocation] = useState(null);
 
+  // Description
   const [description, setDescription] = useState('');
-  const [photo, setPhoto] = useState(null);
 
+  // Images
+  const [imageButtonText1, setImageButtonText1] = useState(t('Post.AddImage'));
+  const [imageButtonText2, setImageButtonText2] = useState(t('Post.AddImage'));
+  const [imageButtonText3, setImageButtonText3] = useState(t('Post.AddImage'));
+  const [image1, setImage1] = useState(null);
+  const [image2, setImage2] = useState(null);
+  const [image3, setImage3] = useState(null);
 
-
+  // Fetch categories for Category Modal
   useEffect(() => {
     fetch(baseUri + `allInterests`)
       .then((result) => result.json())
@@ -98,17 +127,23 @@ const Form = () => {
       .catch(() => setCategories([]));
   }, []);
 
-  const createDateObject = (date, time) => {
-    let dateArray = date.split(', ')[1].split('.')
-    let timeArray = time.split(':')
-    let sY = Number(dateArray[2])
-    let sM = Number(dateArray[1]) - 1
-    let sD = Number(dateArray[0])
-    let sh = Number(timeArray[0])
-    let sm = Number(timeArray[1])
-    return new Date(sY, sM, sD, sh, sm)
+  // Creates Date object out of date and time strings (or null).
+  const createDateObject = (date: string, time: string) => {
+    try {
+      let dateArray = date.split(', ')[1].split('.');
+      let timeArray = time.split(':');
+      let sY = Number(dateArray[2]);
+      let sM = Number(dateArray[1]) - 1;
+      let sD = Number(dateArray[0]);
+      let sh = Number(timeArray[0]);
+      let sm = Number(timeArray[1]);
+      return new Date(sY, sM, sD, sh, sm);
+    } catch (e) {
+      return null;
+    }
   }
 
+  // Start Date Confirm
   const handleStartDateConfirm = (date) => {
     Moment.locale('en');
     if (endDate) {
@@ -129,6 +164,7 @@ const Form = () => {
     setStartDatePickerVisibility(false);
   };
 
+  // Start Time Confirm
   const handleStartTimeConfirm = (time) => {
     Moment.locale('en');
     let newText = Moment(time).format('HH:mm');
@@ -147,6 +183,7 @@ const Form = () => {
     setStartTimePickerVisibility(false);
   };
 
+  // End Date Confirm
   const handleEndDateConfirm = (date) => {
     if (startDate) {
       let start = createDateObject(startDate, '00:00')
@@ -167,6 +204,7 @@ const Form = () => {
     setEndDatePickerVisibility(false);
   };
 
+  // End Time Confirm
   const handleEndTimeConfirm = (time) => {
     Moment.locale('en');
     let newText = Moment(time).format('HH:mm');
@@ -185,6 +223,7 @@ const Form = () => {
     setEndTimePickerVisibility(false);
   };
 
+  // Geocoding address to latitude and longitude
   async function geocode(address: string) {
     try {
       let res = await fetch(baseUri + `geocode?address=${address}`)
@@ -201,18 +240,43 @@ const Form = () => {
     }
   }
 
-  const handleChoosePhoto = () => {
+  // Image handler
+  const handleChooseImage = (imageNumber: Number) => {
     ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
       quality: 0.5,
     }).then((data) => {
-      // console.log('chosen:', data)
-      setPhoto(data);
+      console.log(data)
+      if (imageNumber == 1) {
+        setImage1(data);
+        setImageButtonText1(t('Post.Change'))
+      } else if (imageNumber == 2) {
+        setImage2(data);
+        setImageButtonText2(t('Post.Change'))
+      } else if (imageNumber == 3) {
+        setImage3(data);
+        setImageButtonText3(t('Post.Change'))
+      }
     });
   }
 
+  // Image remover
+  const removeImage = (imageNumber: Number) => {
+    if (imageNumber == 1) {
+      setImage1(null);
+      setImageButtonText1(t('Post.AddImage'))
+    } else if (imageNumber == 2) {
+      setImage2(null);
+      setImageButtonText2(t('Post.AddImage'))
+    } else if (imageNumber == 3) {
+      setImage3(null);
+      setImageButtonText3(t('Post.AddImage'))
+    }
+  }
+
+  // Rendering
   return (
 
     <Block
@@ -261,14 +325,14 @@ const Form = () => {
         <Block row marginBottom={sizes.sm}>
 
           <Block marginRight={sizes.sm / 2}>
-            <TextInput label='Start date' mode='outlined' value={startDate} error={startDateError} autoComplete={false}
+            <TextInput label={t('Post.StartDate')} mode='outlined' value={startDate} error={startDateError} autoComplete={false}
               showSoftInputOnFocus={false} ref={startDateFocus}
               onFocus={() => { setStartDatePickerVisibility(true); startDateFocus.current.blur(); }}
             />
           </Block>
 
           <Block marginLeft={sizes.sm / 2}>
-            <TextInput label='Start time' mode='outlined' value={startTime} error={startTimeError} autoComplete={false}
+            <TextInput label={t('Post.StartTime')} mode='outlined' value={startTime} error={startTimeError} autoComplete={false}
               showSoftInputOnFocus={false} ref={startTimeFocus} disabled={startTimeDisable}
               onFocus={() => { setStartTimePickerVisibility(true); startTimeFocus.current.blur(); }} />
           </Block>
@@ -292,13 +356,13 @@ const Form = () => {
         <Block row marginBottom={sizes.sm}>
 
           <Block marginRight={sizes.sm / 2}>
-            <TextInput label='End date' mode='outlined' value={endDate} error={endDateError} autoComplete={false}
+            <TextInput label={t('Post.EndDate')} mode='outlined' value={endDate} error={endDateError} autoComplete={false}
               showSoftInputOnFocus={false} ref={endDateFocus}
               onFocus={() => { setEndDatePickerVisibility(true); endDateFocus.current.blur(); }} />
           </Block>
 
           <Block marginLeft={sizes.sm / 2}>
-            <TextInput label='End time' mode='outlined' value={endTime} error={endTimeError} autoComplete={false}
+            <TextInput label={t('Post.EndTime')} mode='outlined' value={endTime} error={endTimeError} autoComplete={false}
               showSoftInputOnFocus={false} ref={endTimeFocus} disabled={endTimeDisable}
               onFocus={() => { setEndTimePickerVisibility(true); endTimeFocus.current.blur(); }} />
           </Block>
@@ -320,34 +384,76 @@ const Form = () => {
         </Block>
 
         <Block row flex={0} align="center" justify="space-between" marginBottom={sizes.s}>
-          <Text>Recurrent:</Text>
+          <Text>{t('Post.Recurrent')}</Text>
           <Block row flex={0}>
-            <Text>{recurrentSwitch ? 'Yes   ' : 'No    '}</Text>
+            <Text>{recurrentSwitch ? t('Post.RecurrentYes') : t('Post.RecurrentNo')}</Text>
             <Switch checked={recurrentSwitch} onPress={(checked) => setRecurrentSwitch(checked)} />
           </Block>
 
         </Block>
 
         <Block marginBottom={sizes.sm}>
-          <TextInput label='Location' mode='outlined' error={geolocationError} autoComplete={false}
+          <TextInput label={t('Post.Location')} mode='outlined' error={geolocationError} autoComplete={false}
             onChangeText={(newText) => { geocode(newText) }} />
         </Block>
 
         <Block marginBottom={sizes.sm}>
-          <TextInput label='Description' mode='outlined' autoComplete={false} multiline={true} numberOfLines={7}
+          <TextInput label={t('Post.Description')} mode='outlined' autoComplete={false} multiline={true} numberOfLines={7}
             onChangeText={(newText) => { setDescription(newText) }} />
         </Block>
 
-        <Block>
-          {photo && (<Image source={{ uri: photo.uri }} style={{ width: 100, height: 100 }} />)}
-          <Block row paddingHorizontal={sizes.xs}>
-            <Button flex={1} gradient={gradients.dark} marginBottom={sizes.base}
-              onPress={() => { handleChoosePhoto(); }}>
-              <Text white bold>Choose Photo</Text>
-            </Button>
+        <Block row marginBottom={sizes.s} align='center'>
+          <Block>
+            {image1 && (<Block align='flex-start' marginRight={sizes.xs}>
+              <Image
+                source={{ uri: image1.uri }}
+                style={{ width: 100, height: 100, borderColor: 'black', borderWidth: 1 }} />
+            </Block>)}
           </Block>
+
+          <Block>
+            {image2 && (<Block align='center' marginHorizontal={sizes.xs}>
+              <Image
+                source={{ uri: image2.uri }}
+                style={{ width: 100, height: 100, borderColor: 'black', borderWidth: 1 }} />
+            </Block>)}
+          </Block>
+
+          <Block>
+            {image3 && (<Block align='flex-end' marginLeft={sizes.xs}>
+              <Image
+                source={{ uri: image3.uri }}
+                style={{ width: 100, height: 100, borderColor: 'black', borderWidth: 1 }} />
+            </Block>)}
+          </Block>
+
         </Block>
 
+        <Block row marginBottom={sizes.sm}>
+          <Block marginRight={sizes.xs}>
+            <Button flex={1} gradient={gradients.dark}
+              onPress={() => handleChooseImage(1)} onLongPress={() => removeImage(1)}>
+              <Text white bold>{imageButtonText1}</Text>
+            </Button>
+          </Block>
+          <Block marginHorizontal={sizes.xs}>
+            <Button flex={1} gradient={gradients.dark}
+              onPress={() => handleChooseImage(2)} onLongPress={() => removeImage(2)}>
+              <Text white bold>{imageButtonText2}</Text>
+            </Button>
+          </Block>
+          <Block marginLeft={sizes.xs}>
+            <Button flex={1} gradient={gradients.dark}
+              onPress={() => handleChooseImage(3)} onLongPress={() => removeImage(3)}>
+              <Text white bold>{imageButtonText3}</Text>
+            </Button>
+          </Block>
+
+        </Block>
+
+      </Block>
+
+      <Block>
 
         {/* <Input placeholder="Preconditions" marginBottom={sizes.sm} onChangeText={(newText) => {
           setForm(prevState => ({ ...prevState, preconditions: newText }));
@@ -370,25 +476,35 @@ const Form = () => {
 
         <Block>
           <Button flex={1} gradient={gradients.primary} marginBottom={sizes.base} onPress={() => {
-            if (validateInputs) {
-              sendNewActivity({
-                initiator: initiator.uid,
-                category: selectedCategory,
-                title: title,
-                startDateTime: createDateObject(startDate, startTime),
-                endDateTime: createDateObject(endDate, endTime),
-                recurrent: recurrentSwitch.toString(),
-                geolocation: geolocation,
-                description: description
-              });
+            let params = {
+              initiator: initiator.uid,
+              category: selectedCategory,
+              title: title,
+              startDateTime: Date(), //createDateObject(startDate, startTime),
+              endDateTime: Date(), //createDateObject(endDate, endTime),
+              recurrent: recurrentSwitch.toString(),
+              geolocation: geolocation,
+              description: description
+            }
+            let missing = validateInputs(params);
+            if (missing.length === 0) {
+              sendNewActivity(params);
+              // MOVE TO SUCCESS SCREEN
             } else {
-              console.warn('some error')
+              Toast.show({
+                type: 'error',
+                text1: t('Post.TryAgain'),
+                text2: missing.join(', ')
+              });
             }
 
           }}>
-            <Text white bold transform="uppercase">Create</Text>
+            <Text white bold transform="uppercase">{t('Post.Create')}</Text>
           </Button>
         </Block>
+
+        <Toast position='bottom' bottomOffset={80} onPress={() => Toast.hide()} />
+
       </Block>
     </Block >
   );
