@@ -94,7 +94,8 @@
     "inTotal": "In total",
     "time": "Time",
     "createdBy": "Created by",
-    "notes": "Notes"
+    "notes": "Notes",
+    "join": "Join"
   },
   "Post": {
       "PleaseFill": "Please fill details below",

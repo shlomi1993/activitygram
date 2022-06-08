@@ -7,18 +7,20 @@ import { useHeaderHeight } from '@react-navigation/stack';
 import { useData, useTheme, useTranslation } from '../hooks';
 import { Block, Button, Image, Text, Checkbox } from '../components';
 import 'react-native-gesture-handler';
-import { IActivity } from '../constants/types';
+import { IActivity, IUser } from '../constants/types';
 
 const isAndroid = Platform.OS === 'android';
 export const baseUrl = Platform.OS === 'android' ? 'http://10.0.2.2:8080/' : 'http://127.0.0.1/8080/';
 
 const Activity = ({ route }) => {
-  const { assets, sizes, colors } = useTheme();
+  const { assets, sizes, colors, gradients } = useTheme();
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
-  const { user } = useData();
+  // const { user } = useData();
   const { t } = useTranslation();
   const [activity, setActivity] = useState<IActivity>();
+  const [user, setUser] = useState<IUser>();
+  // const [participants, setParticipants] = useState();
   const [isChecked, setIsChecked] = useState(false);
   const { activityId } = route.params;
 
@@ -59,6 +61,30 @@ const Activity = ({ route }) => {
   const title = activity ? activity.title : '';
   const description = activity ? activity.description : '';
   const time = activity ? activity.date : '';
+
+  const onPressJoin = () => {
+    const userId = '627659c91fbdd7e2c67d5e11';
+    fetch(baseUrl + 'getUser?user_id=' + userId, {
+      method: 'GET'
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        setUser(responseJson);
+      })
+      .then(() => {
+        let updatedParticipants: string[] = activity.participants ? activity.participants : [];
+        updatedParticipants.push(userId);
+        fetch(baseUrl + 'updateActivityParticipants?activity_id=' + activity._id + '&participants=' + encodeURIComponent(JSON.stringify(updatedParticipants)), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+          },
+        })
+      })
+      .catch((error) => {
+        console.error(error + " detected");
+      });
+  }
   return (
     <Block safe>
       <Block
@@ -116,8 +142,15 @@ const Activity = ({ route }) => {
               </Block>
             </Block>
           </Block>
+          <Block align="center">
+            <Button light marginBottom={sizes.xs} marginTop={sizes.s} radius={15} paddingRight={sizes.l} paddingLeft={sizes.l} onPress={() => {onPressJoin()}}>
+          <Text bold transform="uppercase">
+            {t('activity.join')}
+          </Text>
+        </Button>
+            </Block>
 
-          <Block paddingHorizontal={sizes.sm} marginTop={sizes.l}>
+          <Block paddingHorizontal={sizes.sm} marginTop={sizes.sm}>
             <Block row align="center" justify="space-between" marginBottom={sizes.l}>
               <Text h5 semibold>
                 {t('activity.time')}

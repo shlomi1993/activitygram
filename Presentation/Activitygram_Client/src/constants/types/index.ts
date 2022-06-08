@@ -95,6 +95,20 @@ export interface IActivityComp {
   activityId: string;
 }
 
+export interface IUser {
+  _id: string,
+  activityLog: any[],
+  age: number,
+  bio: string,
+  country: string,
+  dateOfBirth: string,
+  firstName: string,
+  friendsList?: string,
+  intrests: string,
+  lastName: string,
+  profileImage?: any[],
+}
+
 export interface IActivity {
   _id: string;
   common_interest: string;
@@ -102,7 +116,7 @@ export interface IActivity {
   description: string;
   group_managers: any[];
   is_done: boolean;
-  paticipants: any[];
+  participants: any[];
   title: string;
 
 }
