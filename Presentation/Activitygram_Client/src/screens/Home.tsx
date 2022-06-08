@@ -17,7 +17,6 @@ const Home = () => {
   const [tab, setTab] = useState<number>(0);
   const [all, setAll] = useState([]);
   const [nearMe, setNearMe] = useState([]);
-  const {following, trending} = useData();
   const [products, setProducts] = useState(all);
 
   const {assets, sizes, colors, fonts, gradients } = useTheme();
@@ -29,7 +28,7 @@ const Home = () => {
       setTab(tab);
       setProducts(tab === 0 ? all : all);
     },
-    [all, trending, setTab, setProducts],
+    [all, setTab, setProducts],
   );
 
   useEffect(() => {
@@ -124,7 +123,7 @@ const Home = () => {
         <Block row wrap="wrap" justify="space-between" marginTop={sizes.sm}>
           {products?.map((product) => (
             // need to change title to id
-            <Card {...product} key={`card-${product?.title}`} type="vertical" />
+            <Card {...product} key={`card-${product?._id}`} type="vertical" />
           ))}
         </Block>
       </Block>
