@@ -95,7 +95,8 @@
     "time": "Time",
     "createdBy": "Created by",
     "notes": "Notes",
-    "join": "Join"
+    "join": "Join",
+    "joined": "You have joined successfully!"
   },
   "Post": {
       "PleaseFill": "Please fill details below",

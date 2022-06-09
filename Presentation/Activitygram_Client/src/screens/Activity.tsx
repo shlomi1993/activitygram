@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useHeaderHeight } from '@react-navigation/stack';
 
 import { useData, useTheme, useTranslation } from '../hooks';
-import { Block, Button, Image, Text, Checkbox } from '../components';
+import { Block, Button, Image, Text, Checkbox, Modal } from '../components';
 import 'react-native-gesture-handler';
 import { IActivity, IUser } from '../constants/types';
 import { BASE_URL } from '../constants/appConstants';
@@ -64,26 +64,30 @@ const Activity = ({ route }) => {
 
   const onPressJoin = () => {
     const userId = '627659c91fbdd7e2c67d5e11';
-    fetch(BASE_URL + 'getUser?user_id=' + userId, {
-      method: 'GET'
-    })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        setUser(responseJson);
-      })
-      .then(() => {
-        let updatedParticipants: string[] = activity.participants ? activity.participants : [];
-        updatedParticipants.push(userId);
-        fetch(BASE_URL + 'updateActivityParticipants?activity_id=' + activity._id + '&participants=' + encodeURIComponent(JSON.stringify(updatedParticipants)), {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-          },
-        })
-      })
-      .catch((error) => {
-        console.error(error + " detected");
-      });
+    setModal(true);
+    // fetch(BASE_URL + 'getUser?user_id=' + userId, {
+    //   method: 'GET'
+    // })
+    //   .then((response) => response.json())
+    //   .then((responseJson) => {
+    //     setUser(responseJson);
+    //   })
+    //   .then(() => {
+    //     let updatedParticipants: string[] = activity.participants ? activity.participants : [];
+    //     updatedParticipants.push(userId);
+    //     fetch(BASE_URL + 'updateActivityParticipants?activity_id=' + activity._id + '&participants=' + encodeURIComponent(JSON.stringify(updatedParticipants)), {
+    //       method: 'POST',
+    //       headers: {
+    //         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+    //       },
+    //     })
+    //   })
+    //   .then(() => {
+    //     setModal(true);
+    //   })
+    //   .catch((error) => {
+    //     console.error(error + " detected");
+    //   });
   }
   return (
     <Block safe>
@@ -144,11 +148,12 @@ const Activity = ({ route }) => {
           </Block>
           <Block align="center">
             <Button light marginBottom={sizes.xs} marginTop={sizes.s} radius={15} paddingRight={sizes.l} paddingLeft={sizes.l} onPress={() => {onPressJoin()}}>
-          <Text bold transform="uppercase">
-            {t('activity.join')}
-          </Text>
-        </Button>
-            </Block>
+              <Text bold transform="uppercase">
+                {t('activity.join')}
+              </Text>
+            </Button>
+          </Block>
+          
 
           <Block paddingHorizontal={sizes.sm} marginTop={sizes.sm}>
             <Block row align="center" justify="space-between" marginBottom={sizes.l}>
@@ -184,6 +189,9 @@ const Activity = ({ route }) => {
           </Block>
         </Block>
       </Block>
+      <Modal visible={showModal} onRequestClose={() => setModal(false)} style={{position: 'absolute', top: '50%', bottom:'50%'}}>
+            <Text h3 white marginBottom={sizes.xl} center>{t('activity.joined')}</Text>
+          </Modal>
     </Block>
   );
 };
