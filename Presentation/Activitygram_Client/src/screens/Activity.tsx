@@ -5,12 +5,11 @@ import { useNavigation } from '@react-navigation/native';
 import { useHeaderHeight } from '@react-navigation/stack';
 
 import { useData, useTheme, useTranslation } from '../hooks';
-import { Block, Button, Image, Text, Checkbox } from '../components';
+import { Block, Button, Image, Text, Checkbox, Modal } from '../components';
 import 'react-native-gesture-handler';
 import { IActivity, IUser } from '../constants/types';
-
+import { BASE_URL } from '../constants/appConstants';
 const isAndroid = Platform.OS === 'android';
-export const baseUrl = Platform.OS === 'android' ? 'http://10.0.2.2:8080/' : 'http://127.0.0.1/8080/';
 
 const Activity = ({ route }) => {
   const { assets, sizes, colors, gradients } = useTheme();
@@ -22,10 +21,11 @@ const Activity = ({ route }) => {
   const [user, setUser] = useState<IUser>();
   // const [participants, setParticipants] = useState();
   const [isChecked, setIsChecked] = useState(false);
+  const [showModal, setModal] = useState(false);
   const { activityId } = route.params;
 
   useEffect(() => {
-    fetch(baseUrl + 'getActivity?activity_id=' + activityId, {
+    fetch(BASE_URL + 'getActivity?activity_id=' + activityId, {
       method: 'GET'
     })
       .then((response) => response.json())
@@ -64,7 +64,7 @@ const Activity = ({ route }) => {
 
   const onPressJoin = () => {
     const userId = '627659c91fbdd7e2c67d5e11';
-    fetch(baseUrl + 'getUser?user_id=' + userId, {
+    fetch(BASE_URL + 'getUser?user_id=' + userId, {
       method: 'GET'
     })
       .then((response) => response.json())
@@ -74,12 +74,15 @@ const Activity = ({ route }) => {
       .then(() => {
         let updatedParticipants: string[] = activity.participants ? activity.participants : [];
         updatedParticipants.push(userId);
-        fetch(baseUrl + 'updateActivityParticipants?activity_id=' + activity._id + '&participants=' + encodeURIComponent(JSON.stringify(updatedParticipants)), {
+        fetch(BASE_URL + 'updateActivityParticipants?activity_id=' + activity._id + '&participants=' + encodeURIComponent(JSON.stringify(updatedParticipants)), {
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
           },
         })
+      })
+      .then(() => {
+        setModal(true);
       })
       .catch((error) => {
         console.error(error + " detected");
@@ -144,11 +147,12 @@ const Activity = ({ route }) => {
           </Block>
           <Block align="center">
             <Button light marginBottom={sizes.xs} marginTop={sizes.s} radius={15} paddingRight={sizes.l} paddingLeft={sizes.l} onPress={() => {onPressJoin()}}>
-          <Text bold transform="uppercase">
-            {t('activity.join')}
-          </Text>
-        </Button>
-            </Block>
+              <Text bold transform="uppercase">
+                {t('activity.join')}
+              </Text>
+            </Button>
+          </Block>
+          
 
           <Block paddingHorizontal={sizes.sm} marginTop={sizes.sm}>
             <Block row align="center" justify="space-between" marginBottom={sizes.l}>
@@ -184,6 +188,9 @@ const Activity = ({ route }) => {
           </Block>
         </Block>
       </Block>
+      <Modal visible={showModal} onRequestClose={() => setModal(false)} >
+            <Text h3 white marginBottom={sizes.xl} center>{t('activity.joined')}</Text>
+          </Modal>
     </Block>
   );
 };
