@@ -37,7 +37,7 @@
     "expo-modules-core": "~0.6.4",
     "expo-status-bar": "~1.2.0",
     "faker": "^6.6.6",
-    "firebase": "^9.6.11",
+    "firebase": "^9.8.2",
     "g": "^2.0.1",
     "galio-framework": "^0.8.0",
     "i18n-js": "^3.8.0",
