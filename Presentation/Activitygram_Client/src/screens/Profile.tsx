@@ -91,13 +91,16 @@ const Profile = () => {
     });
   }, [assets.background, navigation, sizes.width, headerHeight]);
 
-  const IMAGE_SIZE = (sizes.width - (sizes.padding + sizes.sm) * 2) / 3;
+  const IMAGE_SIZE = (sizes.width - (sizes.padding + sizes.sm) * 2) / 4;
   const IMAGE_VERTICAL_SIZE =
     (sizes.width - (sizes.padding + sizes.sm) * 2) / 2;
+  const IMAGE_MARGIN = (sizes.width - IMAGE_SIZE * 3 - sizes.padding * 2) / 2;
+  
 
   const fullName = profile ? profile.fullName : '';
   const username = profile ? profile.username : '';
   const bio = profile ? profile.bio : '';
+  const interests = profile ? profile.interests : [];
 
   return (
     <Block safe>
@@ -121,10 +124,10 @@ const Profile = () => {
                 marginBottom={sizes.sm}
                 source={assets.card1}
               />
-              <Text h5 center white>
+              <Text h2 semibold center white>
                 {fullName}
               </Text>
-              <Text p center white marginBottom={sizes.md}>
+              <Text h5 center white marginBottom={sizes.md}>
                 {username}
               </Text>
             </Block>
@@ -154,21 +157,38 @@ const Profile = () => {
 
           <Block paddingHorizontal={sizes.sm} marginTop={sizes.sm}>
           <Block row align="center" justify="space-between">
-            <Text h5 semibold>
+            <Text h4 semibold>
+            {t('profile.InterestsIn')}
+            </Text>
+            <Button>
+            </Button>
+          </Block>
+          <Block row justify="space-between" wrap="wrap">
+          {interests?.map((interest) => (
+            <Block key={`block-${interest}`}>
+              <Text key={`text-${interest}`} color={colors.secondary}>{interest}</Text>
+            <Image
+            key={`image-${interest}`}
+            resizeMode="cover"
+            source={assets?.[interest]}
+            marginBottom={IMAGE_MARGIN}
+            color={colors.secondary}
+            style={{
+              height: IMAGE_SIZE,
+              width: IMAGE_SIZE,
+              borderColor: 'black'
+            }}
+            />
+            </Block>
+          ))}
+
+          </Block>
+          
+          <Block row align="center" justify="space-between">
+            <Text h4 semibold>
             {t('profile.ParticipatedIn')}
             </Text>
             <Button onPress={() => {console.log('Pressed')}}>
-              <Text p primary semibold>
-                View all
-              </Text>
-            </Button>
-          </Block>
-          <ImageSeries/>
-          <Block row align="center" justify="space-between">
-            <Text h5 semibold>
-            {t('profile.InterestedIn')}
-            </Text>
-            <Button>
               <Text p primary semibold>
                 View all
               </Text>

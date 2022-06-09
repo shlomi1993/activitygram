@@ -92,7 +92,7 @@ export interface IUser {
   country: string,
   dateOfBirth: string,
   friendsList?: string,
-  intrests: string,
+  interests: string[],
   profileImage?: any[],
 }
 
