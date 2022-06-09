@@ -1,3 +1,4 @@
+apply from: 'secrets.gradle'
 apply plugin: "com.android.application"
 apply plugin: 'com.google.gms.google-services'
 
@@ -243,6 +244,10 @@ android {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
+    }
+
+    buildTypes.each {
+        it.buildConfigField "String", "CREDENTIALS_KEY", "\"$credentialsKey\""
     }
 
     // applicationVariants are e.g. debug, release

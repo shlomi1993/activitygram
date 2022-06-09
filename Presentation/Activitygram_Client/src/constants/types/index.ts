@@ -54,6 +54,7 @@ export interface ICard {
   linkLabel?: string;
   type: 'vertical' | 'horizontal';
   imageInRow?: number;
+  _id?: string;
 }
 export interface ILocation {
   id?: number;
@@ -69,8 +70,6 @@ export interface IUseData {
   users: IUser[];
   handleUser: (data?: IUser) => void;
   handleUsers: (data?: IUser[]) => void;
-  basket: IBasket;
-  handleBasket: (data?: IBasket) => void;
   following: ICard[];
   setFollowing: (data?: ICard[]) => void;
   trending: ICard[];
@@ -83,8 +82,6 @@ export interface IUseData {
   setArticles: (data?: IBigCard[]) => void;
   article: IBigCard;
   handleArticle: (data?: IBigCard) => void;
-  notifications: INotification[];
-  handleNotifications: (data?: INotification[]) => void;
 }
 
 export interface ITranslate {
@@ -93,51 +90,33 @@ export interface ITranslate {
   t: (scope?: i18n.Scope, options?: i18n.TranslateOptions) => string;
   translate: (scope?: i18n.Scope, options?: i18n.TranslateOptions) => string;
 }
-export interface IExtra {
-  id?: number;
-  name?: string;
-  time?: string;
-  image: ImageSourcePropType;
-  saved?: boolean;
-  booked?: boolean;
-  available?: boolean;
-  onBook?: () => void;
-  onSave?: () => void;
-  onTimeSelect?: (id?: number) => void;
+
+export interface IActivityComp {
+  activityId: string;
 }
 
-export interface IBasketItem {
-  id?: number;
-  image?: string;
-  title?: string;
-  description?: string;
-  stock?: boolean;
-  price?: number;
-  qty?: number;
-  qtys?: number[];
-  size?: number | string;
-  sizes?: number[] | string[];
+export interface IUser {
+  _id: string,
+  activityLog: any[],
+  age: number,
+  bio: string,
+  country: string,
+  dateOfBirth: string,
+  firstName: string,
+  friendsList?: string,
+  intrests: string,
+  lastName: string,
+  profileImage?: any[],
 }
 
-export interface IBasket {
-  subtotal?: number;
-  items?: IBasketItem[];
-  recommendations?: IBasketItem[];
-}
+export interface IActivity {
+  _id: string;
+  common_interest: string;
+  date: string;
+  description: string;
+  group_managers: any[];
+  is_done: boolean;
+  participants: any[];
+  title: string;
 
-export interface INotification {
-  id?: number;
-  subject?: string;
-  message?: string;
-  read?: boolean;
-  business?: boolean;
-  createdAt?: number | Date;
-  type:
-  | 'document'
-  | 'documentation'
-  | 'payment'
-  | 'notification'
-  | 'profile'
-  | 'extras'
-  | 'office';
 }

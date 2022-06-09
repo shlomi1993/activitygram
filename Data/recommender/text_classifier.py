@@ -157,25 +157,18 @@ def train_model(uid, train_file, n_epochs, save_plot=False):
     train_dataset, valid_dataset = preprocess_train_set(train_file)
     train_losses, train_accuracies = [], []
     valid_losses, valid_accuracies = [], []
-    print('Training epochs...')
     for e in range(n_epochs):
-        print(f'epoch {e + 1}/{n_epochs}:', end=' ')
 
         # Train:
         t_loss, t_accuracy = model.learn(train_dataset)
         train_losses.append(t_loss)
         train_accuracies.append(t_accuracy)
-        print(f'train loss: {str(round(t_loss, 4))}', end=', ')
-        print(f'train accuracy: {str(round(t_accuracy, 2))}%', end=', ')
 
         # Validate:
         v_loss, v_accuracy = model.validate(valid_dataset)
         valid_losses.append(v_loss)
         valid_accuracies.append(v_accuracy)
-        print(f'valid loss: {str(round(v_loss, 4))}', end=', ')
-        print(f'valid accuracy: {str(round(v_accuracy, 2))}%')
 
-    print('Training completed!')
     torch.save(model.state_dict(), MODEL_UID + str(uid))
     if save_plot:
         plot(train_losses, valid_losses, train_accuracies, valid_accuracies)
@@ -190,7 +183,6 @@ def predict(uid, test_file):
     for eid, x in zip(activity_ids, test_dataset):
         y_hat = model(x.unsqueeze(0)).max(1, keepdim=True)[1].item()
         predictions.append((eid, CLASSES[y_hat]))
-    print('Predictions calculated.')
     return predictions
 
 
