@@ -236,6 +236,9 @@ export interface ThemeIcons {
   like: ImageSourcePropType;
   unlike: ImageSourcePropType;
   success: ImageSourcePropType;
+  heart: ImageSourcePropType;
+  post: ImageSourcePropType;
+  user: ImageSourcePropType;
 }
 
 export interface ThemeAssets {
