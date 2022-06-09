@@ -64,30 +64,29 @@ const Activity = ({ route }) => {
 
   const onPressJoin = () => {
     const userId = '627659c91fbdd7e2c67d5e11';
-    setModal(true);
-    // fetch(BASE_URL + 'getUser?user_id=' + userId, {
-    //   method: 'GET'
-    // })
-    //   .then((response) => response.json())
-    //   .then((responseJson) => {
-    //     setUser(responseJson);
-    //   })
-    //   .then(() => {
-    //     let updatedParticipants: string[] = activity.participants ? activity.participants : [];
-    //     updatedParticipants.push(userId);
-    //     fetch(BASE_URL + 'updateActivityParticipants?activity_id=' + activity._id + '&participants=' + encodeURIComponent(JSON.stringify(updatedParticipants)), {
-    //       method: 'POST',
-    //       headers: {
-    //         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-    //       },
-    //     })
-    //   })
-    //   .then(() => {
-    //     setModal(true);
-    //   })
-    //   .catch((error) => {
-    //     console.error(error + " detected");
-    //   });
+    fetch(BASE_URL + 'getUser?user_id=' + userId, {
+      method: 'GET'
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        setUser(responseJson);
+      })
+      .then(() => {
+        let updatedParticipants: string[] = activity.participants ? activity.participants : [];
+        updatedParticipants.push(userId);
+        fetch(BASE_URL + 'updateActivityParticipants?activity_id=' + activity._id + '&participants=' + encodeURIComponent(JSON.stringify(updatedParticipants)), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+          },
+        })
+      })
+      .then(() => {
+        setModal(true);
+      })
+      .catch((error) => {
+        console.error(error + " detected");
+      });
   }
   return (
     <Block safe>
@@ -189,7 +188,7 @@ const Activity = ({ route }) => {
           </Block>
         </Block>
       </Block>
-      <Modal visible={showModal} onRequestClose={() => setModal(false)} style={{position: 'absolute', top: '50%', bottom:'50%'}}>
+      <Modal visible={showModal} onRequestClose={() => setModal(false)} >
             <Text h3 white marginBottom={sizes.xl} center>{t('activity.joined')}</Text>
           </Modal>
     </Block>
