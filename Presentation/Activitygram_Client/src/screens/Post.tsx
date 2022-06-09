@@ -66,6 +66,7 @@ async function sendNewActivity(params: object) {
 const Form = () => {
 
   // Theme & Context
+  const navigation = useNavigation();
   const { assets, colors, sizes, gradients } = useTheme();
   const initiator = useContext(userContext)
 
@@ -233,7 +234,7 @@ const Form = () => {
         'longitude': json.longitude
       });
     } catch (error) {
-      setGeolocation(null)
+      setGeolocation('unknown')
       setGeolocationError(true);
     }
   }
@@ -247,15 +248,17 @@ const Form = () => {
       aspect: [1, 1],
       quality: 0.5,
     }).then((data) => {
-      if (imageNumber == 1) {
-        setImage1(data);
-        setImageButtonText1(t('Post.Change'))
-      } else if (imageNumber == 2) {
-        setImage2(data);
-        setImageButtonText2(t('Post.Change'))
-      } else if (imageNumber == 3) {
-        setImage3(data);
-        setImageButtonText3(t('Post.Change'))
+      if (!data.cancelled) {
+        if (imageNumber == 1) {
+          setImage1(data);
+          setImageButtonText1(t('Post.Change'))
+        } else if (imageNumber == 2) {
+          setImage2(data);
+          setImageButtonText2(t('Post.Change'))
+        } else if (imageNumber == 3) {
+          setImage3(data);
+          setImageButtonText3(t('Post.Change'))
+        }
       }
     });
   }
@@ -272,6 +275,39 @@ const Form = () => {
       setImage3(null);
       setImageButtonText3(t('Post.AddImage'))
     }
+  }
+
+  const create = () => () => {
+    let images = []
+    if (image1) images.push(image1['base64'])
+    if (image2) images.push(image2['base64'])
+    if (image3) images.push(image3['base64'])
+    let params = {
+      initiator: initiator.uid,
+      category: selectedCategory,
+      title: title,
+      startDateTime: createDateObject(startDate, startTime),
+      endDateTime: createDateObject(endDate, endTime),
+      recurrent: recurrentSwitch.toString(),
+      geolocation: geolocation.toString(),
+      description: description,
+      imagesBase64: images,
+      managers: [initiator.uid],
+      participants: [initiator.uid],
+      status: 'open'
+    }
+    let missing = validateInputs(params);
+    if (missing.length === 0) {
+      sendNewActivity(params);
+      navigation.navigate('PostSuccess');
+    } else {
+      Toast.show({
+        type: 'error',
+        text1: t('Post.TryAgain'),
+        text2: missing.join(', ')
+      });
+    }
+
   }
 
   // Rendering
@@ -461,38 +497,7 @@ const Form = () => {
         */}
 
         <Block>
-          <Button flex={1} gradient={gradients.primary} marginBottom={sizes.base} onPress={() => {
-            let images = []
-            if (image1) images.push(image1['base64'])
-            if (image2) images.push(image2['base64'])
-            if (image3) images.push(image3['base64'])
-            let params = {
-              initiator: initiator.uid,
-              category: selectedCategory,
-              title: title,
-              startDateTime: createDateObject(startDate, startTime),
-              endDateTime: createDateObject(endDate, endTime),
-              recurrent: recurrentSwitch.toString(),
-              geolocation: geolocation.toString(),
-              description: description,
-              imagesBase64: images,
-              managers: [initiator.uid],
-              participants: [initiator.uid],
-              status: 'open'
-            }
-            let missing = validateInputs(params);
-            if (missing.length === 0) {
-              sendNewActivity(params);
-              // MOVE TO SUCCESS SCREEN
-            } else {
-              Toast.show({
-                type: 'error',
-                text1: t('Post.TryAgain'),
-                text2: missing.join(', ')
-              });
-            }
-
-          }}>
+          <Button flex={1} gradient={gradients.primary} marginBottom={sizes.base} onPress={create}>
             <Text white bold transform="uppercase">{t('Post.Create')}</Text>
           </Button>
         </Block>
