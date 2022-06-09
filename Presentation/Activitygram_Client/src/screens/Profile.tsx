@@ -1,4 +1,4 @@
-import React, {useLayoutEffect, useState, useCallback } from 'react';
+import React, {useLayoutEffect, useState, useCallback, useEffect } from 'react';
 import {Platform, Linking} from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 import {useNavigation} from '@react-navigation/native';
@@ -7,6 +7,9 @@ import {useHeaderHeight} from '@react-navigation/stack';
 import { useData, useTheme, useTranslation } from '../hooks';
 import { Block, Button, Image, Text } from '../components';
 import 'react-native-gesture-handler';
+import { IUser } from '../constants/types';
+
+import { BASE_URL } from '../constants/appConstants';
 
 const isAndroid = Platform.OS === 'android';
 
@@ -56,8 +59,23 @@ const Profile = () => {
   const {assets, sizes, colors } = useTheme();
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
-  const {user} = useData();
+  const [profile, setProfile] = useState<IUser>();
   const {t} = useTranslation();
+
+  useEffect(() => {
+    const userId = '627659c91fbdd7e2c67d5e11';
+    fetch(BASE_URL + 'getUser?user_id=' + userId, {
+      method: 'GET'
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        setProfile(responseJson);
+      })
+      .catch((error) => {
+        console.error(error + " detected");
+      });
+
+  }, [profile, setProfile])
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -76,9 +94,10 @@ const Profile = () => {
   const IMAGE_SIZE = (sizes.width - (sizes.padding + sizes.sm) * 2) / 3;
   const IMAGE_VERTICAL_SIZE =
     (sizes.width - (sizes.padding + sizes.sm) * 2) / 2;
-  const IMAGE_MARGIN = (sizes.width - IMAGE_SIZE * 3 - sizes.padding * 2) / 2;
-  const IMAGE_VERTICAL_MARGIN =
-    (sizes.width - (IMAGE_VERTICAL_SIZE + sizes.sm) * 2) / 2;
+
+  const fullName = profile ? profile.fullName : '';
+  const username = profile ? profile.username : '';
+  const bio = profile ? profile.bio : '';
 
   return (
     <Block safe>
@@ -103,10 +122,10 @@ const Profile = () => {
                 source={assets.card1}
               />
               <Text h5 center white>
-                Name
+                {fullName}
               </Text>
               <Text p center white marginBottom={sizes.md}>
-                Nickname
+                {username}
               </Text>
             </Block>
           </Image>
@@ -129,7 +148,7 @@ const Profile = () => {
               paddingHorizontal={sizes.l}
               renderToHardwareTextureAndroid>
                 <Text h5 center marginTop={sizes.sm}>{t('profile.bio')}</Text>
-                <Text center marginBottom={sizes.sm}>bio</Text>
+                <Text center marginBottom={sizes.sm}>{bio}</Text>
             </Block>
           </Block>
 
@@ -138,7 +157,7 @@ const Profile = () => {
             <Text h5 semibold>
             {t('profile.ParticipatedIn')}
             </Text>
-            <Button>
+            <Button onPress={() => {console.log('Pressed')}}>
               <Text p primary semibold>
                 View all
               </Text>

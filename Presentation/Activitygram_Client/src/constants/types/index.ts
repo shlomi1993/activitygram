@@ -5,16 +5,6 @@ import { ITheme } from './theme';
 export * from './components';
 export * from './theme';
 
-export interface IUser {
-  id: number | string;
-  name?: string;
-  department?: string;
-  avatar?: string;
-  stats?: { posts?: number; followers?: number; following?: number };
-  social?: { twitter?: string; dribbble?: string };
-  about?: string;
-}
-
 export interface ICategory {
   id?: number;
   name?: string;
@@ -94,15 +84,15 @@ export interface IActivityComp {
 
 export interface IUser {
   _id: string,
+  fullName: string,
+  username: string,
   activityLog: any[],
   age: number,
   bio: string,
   country: string,
   dateOfBirth: string,
-  firstName: string,
   friendsList?: string,
   intrests: string,
-  lastName: string,
   profileImage?: any[],
 }
 
