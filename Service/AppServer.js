@@ -198,6 +198,15 @@ app.get('/getAllActivities', (req, res) => {
     database.getAllActivities().then((activities) => { res.send(activities) });
 });
 
+app.get('/getMyActivities', (req, res) => {
+    database.getAllActivities().then((activities) => {
+        const userId = '627659c91fbdd7e2c67d5e11';
+        const filtered = 
+        activities.filter((act) => { return act.participants && Array.isArray(act.participants)})
+        .filter((act) => {return act.participants.find((p) => {return p === userId})}); 
+        res.send(filtered) });
+});
+
 /** Interests */
 
 app.get('/allInterests', (req, res) => {

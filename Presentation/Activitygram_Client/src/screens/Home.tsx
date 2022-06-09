@@ -8,41 +8,51 @@ import {useTheme, useTranslation, useData} from '../hooks';
 import {Block, Button, Input, Image, Switch, Modal, Text, Card} from '../components';
 import 'react-native-gesture-handler';
 import { DrawerContentScrollView } from '@react-navigation/drawer';
+import { BASE_URL } from '../constants/appConstants'
 
-export const baseUrl = Platform.OS === 'android' ? 'http://10.0.2.2:8080/' : 'http://127.0.0.1/8080/';
 
 const Home = () => {
 
   const {t} = useTranslation();
   const [tab, setTab] = useState<number>(0);
-  const [all, setAll] = useState([]);
-  const [nearMe, setNearMe] = useState([]);
-  const [products, setProducts] = useState(all);
+  const [allActivities, setAllActivities] = useState([]);
+  const [myActivities, setMyActivities] = useState([]);
+  const [renderedAct, setRenderedAct] = useState(allActivities);
 
   const {assets, sizes, colors, fonts, gradients } = useTheme();
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
 
-  const handleProducts = useCallback(
+  const handlerenderedAct = useCallback(
     (tab: number) => {
       setTab(tab);
-      setProducts(tab === 0 ? all : all);
+      setRenderedAct(tab === 0 ? allActivities : myActivities);
     },
-    [all, setTab, setProducts],
+    [allActivities, myActivities, setTab, setRenderedAct],
   );
 
   useEffect(() => {
-    fetch(baseUrl + 'getAllActivities', {
+    fetch(BASE_URL + 'getAllActivities', {
       method: 'GET'
    })
    .then((response) => response.json())
    .then((responseJson) => {
-      setAll(responseJson);
+      setAllActivities(responseJson);
    })
    .catch((error) => {
       console.error(error + " detected");
    });
-  })
+   fetch(BASE_URL + 'getMyActivities', {
+    method: 'GET'
+ })
+ .then((response) => response.json())
+ .then((responseJson) => {
+    setMyActivities(responseJson);
+ })
+ .catch((error) => {
+    console.error(error + " detected");
+ });
+  }, [allActivities, setAllActivities, myActivities, setMyActivities])
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -67,7 +77,7 @@ const Home = () => {
         justify="center"
         color={colors.card}
         paddingBottom={sizes.sm}>
-        <Button onPress={() => handleProducts(0)}>
+        <Button onPress={() => handlerenderedAct(0)}>
           <Block row align="center">
             <Block
               flex={0}
@@ -92,7 +102,7 @@ const Home = () => {
           marginHorizontal={sizes.sm}
           height={sizes.socialIconSize}
         />
-        <Button onPress={() => handleProducts(1)}>
+        <Button onPress={() => handlerenderedAct(1)}>
           <Block row align="center">
             <Block
               flex={0}
@@ -110,7 +120,7 @@ const Home = () => {
               />
             </Block>
             <Text p font={fonts?.[tab === 1 ? 'medium' : 'normal']}>
-              {t('home.nearme')}
+              {t('home.myActivities')}
             </Text>
           </Block>
         </Button>
@@ -121,9 +131,9 @@ const Home = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingBottom: sizes.l}}>
         <Block row wrap="wrap" justify="space-between" marginTop={sizes.sm}>
-          {products?.map((product) => (
+          {renderedAct?.map((activity) => (
             // need to change title to id
-            <Card {...product} key={`card-${product?._id}`} type="vertical" />
+            <Card {...activity} key={`card-${activity?._id}`} type="vertical" />
           ))}
         </Block>
       </Block>
