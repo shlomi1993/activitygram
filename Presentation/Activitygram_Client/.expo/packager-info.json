@@ -2,9 +2,9 @@
   "expoServerPort": 19000,
   "packagerPort": 19000,
   "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
+  "expoServerNgrokUrl": "https://nw-wnj.anonymous.activitygram-client.exp.direct",
+  "packagerNgrokUrl": "https://packager.nw-wnj.anonymous.activitygram-client.exp.direct",
+  "ngrokPid": 21224,
   "webpackServerPort": null,
   "devToolsPort": 19002
 }
