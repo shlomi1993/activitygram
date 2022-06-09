@@ -102,3 +102,5 @@ dist
 
 # TernJS port file
 .tern-port
+Presentation/Activitygram_Client/.expo/packager-info.json
+Data/recommender/__pycache__/collaborative_filtering.cpython-39.pyc
