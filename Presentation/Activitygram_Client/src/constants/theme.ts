@@ -82,7 +82,10 @@ export const ASSETS: ThemeAssets = {
   // cards
   card1: require('../assets/images/card1.png'),
   // gallery photos
-  photo1: require('../assets/images/photo1.png')
+  photo1: require('../assets/images/photo1.png'),
+  Basketball: require('../assets/images/basketball.png'),
+  Swimming: require('../assets/images/swimming.png'),
+  Party: require('../assets/images/party.png'),
 };
 
 export const FONTS: ThemeFonts = {
