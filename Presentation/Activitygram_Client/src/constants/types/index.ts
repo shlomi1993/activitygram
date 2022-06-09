@@ -72,16 +72,13 @@ export interface IUseData {
   handleUsers: (data?: IUser[]) => void;
   following: ICard[];
   setFollowing: (data?: ICard[]) => void;
-  trending: ICard[];
-  setTrending: (data?: ICard[]) => void;
   categories: ICategory[];
   setCategories: (data?: ICategory[]) => void;
-  recommendations: IBigCard[];
-  setRecommendations: (data?: IBigCard[]) => void;
   articles: IBigCard[];
   setArticles: (data?: IBigCard[]) => void;
-  article: IBigCard;
-  handleArticle: (data?: IBigCard) => void;
+  allActivities: IActivity[];
+  setAllActivities: (data?: IActivity[]) => void;
+  
 }
 
 export interface ITranslate {
