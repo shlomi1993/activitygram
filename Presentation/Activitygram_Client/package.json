@@ -64,6 +64,7 @@
     "react-native-keyboard-aware-scroll-view": "^0.9.4",
     "react-native-linear-gradient": "^2.5.6",
     "react-native-location": "^2.5.0",
+    "react-native-modal": "^13.0.1",
     "react-native-modal-datetime-picker": "^13.1.2",
     "react-native-pager-view": "5.4.9",
     "react-native-paper": "^4.12.1",
