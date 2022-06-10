@@ -1,11 +1,49 @@
-import React, {useLayoutEffect } from 'react';
-
-import {useNavigation} from '@react-navigation/native';
-import {useHeaderHeight} from '@react-navigation/stack';
-
-import {useTheme, useTranslation } from '../hooks';
-import {Block,  Image, Input, Text, Button } from '../components';
+import React, {useLayoutEffect, useState } from 'react';
+import { Platform } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { useHeaderHeight } from '@react-navigation/stack';
+import { useTheme, useTranslation } from '../hooks';
+import { Block, Image, Checkbox, Input, Text, Button } from '../components';
+import { IEventForm } from '../constants/types/forms';
 import 'react-native-gesture-handler';
+export const url = Platform.OS === 'android' ? 'http://10.0.2.2:8080/' : 'http://127.0.0.1/8080/';
+
+var boxData = { "Users": false,
+                "Activities": false,
+                "Groups": false}
+
+var searchUsers = {"Users": false}
+var searchActivities = {"Activities": false}
+var searchGroups = {"Groups": false}
+
+
+async function onPressSearch(params) {
+  console.log(`\nin onPressSearch(params)`)
+	var formBody = [];
+  // let formBody: any;
+	for (var property in params) {
+		var encodedKey = encodeURIComponent(property);
+		var encodedValue = encodeURIComponent(params[property]);
+		formBody.push(encodedKey + '=' + encodedValue);
+	}
+	formBody = formBody.join('&');
+  console.log(`form: ${formBody}`)
+
+	await fetch(url + 'search', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+		},
+		body: formBody
+	})
+		.then((res) => {
+			console.log('sent request');
+			// console.log(`res ${JSON.stringify(res)}`)
+		})
+		.catch((err) => {
+			console.log('error');
+		});
+}
 
 const Gallery = () => {
     const {assets, sizes} = useTheme();
@@ -160,10 +198,31 @@ const Gallery = () => {
   };
 
 const Search = () => {
-  const {assets, sizes, colors } = useTheme();
+  const {assets, sizes,gradients, colors } = useTheme();
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
   const {t} = useTranslation();
+  const [form, setForm] = useState<IEventForm>();
+  const [isChecked, setIsChecked] = useState(false);
+
+  async function storeCheckData(boxName, state) {
+    console.log(`\nin storeCheckData(boxName, state)`)
+    boxData[boxName] = state
+    if (boxName == "Users"){
+      searchUsers[boxName] = state
+      setForm(prevState => ({...prevState, Users : state}));
+    }
+    else if(boxName == "Activities"){
+      searchActivities[boxName] = state
+      setForm(prevState => ({...prevState, Activities : state}));
+    }
+    else{
+      searchGroups[boxName] = state
+      setForm(prevState => ({...prevState, Groups : state}));
+    }
+    console.log(`form: ${JSON.stringify(form)}`)
+  }
+
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -187,16 +246,40 @@ const Search = () => {
 
   return (
     <Block safe>
-    {/* search input */}
-      <Block color={colors.card} flex={0} padding={sizes.padding}>
-        <Input search placeholder={t('common.search')} />
+    {/* search input and button*/}
+    <Block justify="space-between" marginBottom={sizes.xxl} color={colors.card} flex={0.8} padding={sizes.base}>
+
+        <Input search placeholder={t('common.search')} marginBottom={sizes.sm} 				
+          onChangeText={(newText) => {
+            setForm(prevState => ({...prevState, keyword: newText}));
+        }}/>
+
+        <Checkbox checked={isChecked} onPress={() => {setIsChecked(!isChecked), storeCheckData('Users', !isChecked)}}/>
+        <Text>Users</Text>
+        <Checkbox checked={isChecked} onPress={() => {setIsChecked(!isChecked), storeCheckData('Activities', !isChecked)}}/>
+        <Text>Activities</Text>
+        <Checkbox checked={isChecked} onPress={() => {setIsChecked(!isChecked), storeCheckData('Groups', !isChecked)}}/>
+        <Text>Groups</Text>
+
+        <Button flex={1} gradient={gradients.info} marginBottom={sizes.base} onPress={() => {
+					console.log('\nsearch clicked!');
+          console.log(`form = ${JSON.stringify(form)}`);
+					onPressSearch(form);
+				}}>
+          <Text white bold transform="uppercase">
+            search
+          </Text>
+        </Button>
+
     </Block>
+
+    {/* submit */}
     <Block
         scroll
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingVertical: sizes.padding}}>
         <Block>
-          <Gallery />
+          <Gallery/>
         </Block>
       </Block>
     </Block>
