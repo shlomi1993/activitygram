@@ -188,6 +188,55 @@ app.get('/getActivity', (req, res) => {
     database.getActivityById(req.query.activity_id).then((event) => res.send(event));
 });
 
+app.post('/search', (req, res) => {
+	console.log(`\nin app.post('/search', (req, res)`)
+	console.log(`req.body ${JSON.stringify(req.body)}`);
+	const name_to_search = req.body.keyword
+	const userState = req.body.Users
+	const activitiesState = req.body.Activities
+	const groupState = req.body.Groups
+
+	let result = database.searchActivity(name_to_search, userState, activitiesState, groupState)
+	// console.log(`result is ${result}`)
+	res.send(result);
+
+});
+
+/** GROUPS */
+
+app.post('/createGroup', (req, res) => {
+	newGroup = {
+		title: req.body.title,
+		description: req.body.description,
+		commonInterests: req.body.commonInterests,
+		preconditions: req.body.preconditions,
+		initiator: req.body.initiator,
+		managers: req.body.managers,
+		participants: req.body.participants,
+		images: req.body.images,
+		qrCode: req.body.qrCode,
+		activityHistory: [],
+		creationTime: Date()
+	};
+	let result = database.createGroup(newGroup);
+	res.send(result);
+});
+
+app.post('/editGroup', (req, res) => {
+	console.log('NOT YET IMPLEMENTED.');
+});
+
+app.post('/addCommonInterest', (req, res) => {
+	console.log('NOT YET IMPLEMENTED.');
+});
+
+app.post('/removeCommonInterest', (req, res) => {
+	console.log('NOT YET IMPLEMENTED.');
+});
+
+app.post('/addGroupPrecondition', (req, res) => {
+	console.log('NOT YET IMPLEMENTED.');
+});
 app.get('/searchActivity', (req, res) => {
     console.log('NOT YET IMPLEMENTED.');
     // let keyword = req.query.keyword;
