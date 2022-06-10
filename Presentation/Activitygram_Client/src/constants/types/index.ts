@@ -5,16 +5,6 @@ import { ITheme } from './theme';
 export * from './components';
 export * from './theme';
 
-export interface IUser {
-  id: number | string;
-  name?: string;
-  department?: string;
-  avatar?: string;
-  stats?: { posts?: number; followers?: number; following?: number };
-  social?: { twitter?: string; dribbble?: string };
-  about?: string;
-}
-
 export interface ICategory {
   id?: number;
   name?: string;
@@ -72,16 +62,13 @@ export interface IUseData {
   handleUsers: (data?: IUser[]) => void;
   following: ICard[];
   setFollowing: (data?: ICard[]) => void;
-  trending: ICard[];
-  setTrending: (data?: ICard[]) => void;
   categories: ICategory[];
   setCategories: (data?: ICategory[]) => void;
-  recommendations: IBigCard[];
-  setRecommendations: (data?: IBigCard[]) => void;
   articles: IBigCard[];
   setArticles: (data?: IBigCard[]) => void;
-  article: IBigCard;
-  handleArticle: (data?: IBigCard) => void;
+  allActivities: IActivity[];
+  setAllActivities: (data?: IActivity[]) => void;
+  
 }
 
 export interface ITranslate {
@@ -97,15 +84,15 @@ export interface IActivityComp {
 
 export interface IUser {
   _id: string,
+  fullName: string,
+  username: string,
   activityLog: any[],
   age: number,
   bio: string,
   country: string,
   dateOfBirth: string,
-  firstName: string,
   friendsList?: string,
-  intrests: string,
-  lastName: string,
+  interests: string[],
   profileImage?: any[],
 }
 

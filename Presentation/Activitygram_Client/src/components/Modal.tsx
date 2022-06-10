@@ -16,7 +16,7 @@ const Modal = ({
   ...props
 }: IModalProps) => {
   const {assets, colors, sizes} = useTheme();
-  const modalStyles = StyleSheet.flatten([style, {}]) as ViewStyle;
+  const modalStyles = StyleSheet.flatten([style, {position: 'absolute', top: '50%', bottom:'50%'}]) as ViewStyle;
 
   // generate component testID or accessibilityLabel based on Platform.OS
   const modalID =
@@ -31,7 +31,7 @@ const Modal = ({
       animationType="slide"
       onRequestClose={onRequestClose}>
       <Block justify="flex-end">
-        <Block safe card flex={0} color="rgba(0,0,0,0.8)">
+        <Block safe card flex={2} color="rgba(0,0,0,0.8)" bottom={'40%'} right={'2%'} left={'2%'} position="absolute">
           <Button
             top={0}
             right={0}

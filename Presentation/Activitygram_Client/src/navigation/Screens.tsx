@@ -1,9 +1,9 @@
 import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Image } from '../components'
-import {Components, Home, Profile, Post, Search, ForYou, Activity } from '../screens';
-import {useScreenOptions, useTranslation, useTheme } from '../hooks';
+import { Components, Home, Profile, Post, Search, ForYou, Activity, ActivityCreatedSuccessfully } from '../screens';
+import { useScreenOptions, useTranslation, useTheme } from '../hooks';
 const Stack = createStackNavigator();
 const HomeStack = createStackNavigator();
 const ComponentsStack = createStackNavigator();
@@ -17,8 +17,8 @@ const Tab = createBottomTabNavigator();
 function HomeStackScreen() {
   return (
     <HomeStack.Navigator>
-      <HomeStack.Screen name="Home" component={Home}/>
-      <HomeStack.Screen name="Activity" component={Activity}/>
+      <HomeStack.Screen name="Home" component={Home} />
+      <HomeStack.Screen name="Activity" component={Activity} />
     </HomeStack.Navigator>
   )
 }
@@ -43,6 +43,7 @@ function PostStackScreen() {
   return (
     <PostStack.Navigator>
       <PostStack.Screen name="Post" component={Post} />
+      <PostStack.Screen name="PostSuccess" component={ActivityCreatedSuccessfully} />
     </PostStack.Navigator>
   )
 }
@@ -64,33 +65,33 @@ function ForYouStackScreen() {
 }
 
 export default () => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const screenOptions = useScreenOptions();
-  const {assets, colors, gradients, sizes} = useTheme();
+  const { assets, colors, gradients, sizes } = useTheme();
 
   return (
-    <Tab.Navigator screenOptions={{ headerShown: false }}>
-        <Tab.Screen name="Home" component={HomeStackScreen}
+    <Tab.Navigator screenOptions={{ headerShown: false, tabBarHideOnKeyboard: true, tabBarStyle: { height: 60 } }} >
+      <Tab.Screen name="Home" component={HomeStackScreen}
         options={{
-          tabBarIcon: () => (<Image source={assets.home} height={25} width={25} color={colors.black}/>)
-      }} />
-        <Tab.Screen name="For You" component={ForYouStackScreen}
+          tabBarIcon: () => (<Image source={assets.home} height={30} width={30} color={colors.black} />)
+        }} />
+      <Tab.Screen name="For You" component={ForYouStackScreen}
         options={{
-          tabBarIcon: () => (<Image source={assets.heart} height={25} width={25} color={colors.black}/>)
-      }}/>
-        <Tab.Screen name="Post" component={PostStackScreen}
+          tabBarIcon: () => (<Image source={assets.heart} height={30} width={30} color={colors.black} />)
+        }} />
+      <Tab.Screen name="Post" component={PostStackScreen}
         options={{
-          tabBarIcon: () => (<Image source={assets.post} height={25} width={25} color={colors.black}/>)
-      }}/>
-        <Tab.Screen name="Search" component={SearchStackScreen}
+          tabBarIcon: () => (<Image source={assets.post} height={30} width={30} color={colors.black} />)
+        }} />
+      <Tab.Screen name="Search" component={SearchStackScreen}
         options={{
-          tabBarIcon: () => (<Image source={assets.search} height={25} width={25} color={colors.black}/>)
-      }}/>
-        <Tab.Screen name="Profile" component={ProfileStackScreen}
+          tabBarIcon: () => (<Image source={assets.search} height={30} width={30} color={colors.black} />)
+        }} />
+      <Tab.Screen name="Profile" component={ProfileStackScreen}
         options={{
-          tabBarIcon: () => (<Image source={assets.user} height={25} width={25} color={colors.black}/>)
-      }}/>
-        <Tab.Screen name="Components" component={ComponentsStackScreen} options={screenOptions.components} />
+          tabBarIcon: () => (<Image source={assets.user} height={30} width={30} color={colors.black} />)
+        }} />
+      <Tab.Screen name="Components" component={ComponentsStackScreen} options={screenOptions.components} />
     </Tab.Navigator>
   );
 };

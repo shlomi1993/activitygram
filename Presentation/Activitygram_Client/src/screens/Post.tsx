@@ -1,8 +1,7 @@
 import React, { useEffect, useLayoutEffect, useState, useRef, useContext } from 'react';
-import { Platform, FlatList, Keyboard } from 'react-native';
+import { Platform, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useHeaderHeight } from '@react-navigation/stack';
-import { IEventForm } from '../constants/types/forms';
 import { useTheme } from '../hooks';
 import { Block, Image, Text, Input, Button } from '../components';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -39,6 +38,7 @@ function validateInputs(params: object) {
   if (!params['description'] || params['description'] === '') {
     missing.push(t('Post.Description'));
   }
+  // Insert here more tests...
   return missing
 }
 
@@ -52,22 +52,21 @@ async function sendNewActivity(params: object) {
   let formBody = formBodyArray.join('&');
   fetch(baseUri + 'createActivity', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-    },
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
     body: formBody
   })
     .then((res) => {
-      console.log('sent request');
+      console.log('New activity sent to', baseUri);
     })
     .catch((err) => {
-      console.log('error');
+      console.log('Error: could not reach', baseUri);
     });
 }
 
 const Form = () => {
 
   // Theme & Context
+  const navigation = useNavigation();
   const { assets, colors, sizes, gradients } = useTheme();
   const initiator = useContext(userContext)
 
@@ -235,29 +234,31 @@ const Form = () => {
         'longitude': json.longitude
       });
     } catch (error) {
-      setGeolocation(null)
+      setGeolocation('unknown')
       setGeolocationError(true);
     }
   }
 
   // Image handler
-  const handleChooseImage = (imageNumber: Number) => {
+  const chooseImage = (imageNumber: Number) => {
     ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      base64: true,
       allowsEditing: true,
       aspect: [1, 1],
       quality: 0.5,
     }).then((data) => {
-      console.log(data)
-      if (imageNumber == 1) {
-        setImage1(data);
-        setImageButtonText1(t('Post.Change'))
-      } else if (imageNumber == 2) {
-        setImage2(data);
-        setImageButtonText2(t('Post.Change'))
-      } else if (imageNumber == 3) {
-        setImage3(data);
-        setImageButtonText3(t('Post.Change'))
+      if (!data.cancelled) {
+        if (imageNumber == 1) {
+          setImage1(data);
+          setImageButtonText1(t('Post.Change'))
+        } else if (imageNumber == 2) {
+          setImage2(data);
+          setImageButtonText2(t('Post.Change'))
+        } else if (imageNumber == 3) {
+          setImage3(data);
+          setImageButtonText3(t('Post.Change'))
+        }
       }
     });
   }
@@ -274,6 +275,39 @@ const Form = () => {
       setImage3(null);
       setImageButtonText3(t('Post.AddImage'))
     }
+  }
+
+  const create = () => () => {
+    let images = []
+    if (image1) images.push(image1['base64'])
+    if (image2) images.push(image2['base64'])
+    if (image3) images.push(image3['base64'])
+    let params = {
+      initiator: initiator.uid,
+      category: selectedCategory,
+      title: title,
+      startDateTime: createDateObject(startDate, startTime),
+      endDateTime: createDateObject(endDate, endTime),
+      recurrent: recurrentSwitch.toString(),
+      geolocation: geolocation.toString(),
+      description: description,
+      imagesBase64: images,
+      managers: [initiator.uid],
+      participants: [initiator.uid],
+      status: 'open'
+    }
+    let missing = validateInputs(params);
+    if (missing.length === 0) {
+      sendNewActivity(params);
+      navigation.navigate('PostSuccess');
+    } else {
+      Toast.show({
+        type: 'error',
+        text1: t('Post.TryAgain'),
+        text2: missing.join(', ')
+      });
+    }
+
   }
 
   // Rendering
@@ -318,7 +352,7 @@ const Form = () => {
         </Block>
 
         <Block marginBottom={sizes.sm}>
-          <TextInput label={t('Post.ActivityTitle')} mode='outlined' autoComplete={false}
+          <TextInput label={t('Post.ActivityTitle')} mode='outlined' autoComplete={false} activeOutlineColor={colors.info}
             onChangeText={(newText) => { setTitle(newText) }} />
         </Block>
 
@@ -326,14 +360,14 @@ const Form = () => {
 
           <Block marginRight={sizes.sm / 2}>
             <TextInput label={t('Post.StartDate')} mode='outlined' value={startDate} error={startDateError} autoComplete={false}
-              showSoftInputOnFocus={false} ref={startDateFocus}
+              showSoftInputOnFocus={false} ref={startDateFocus} activeOutlineColor={colors.info}
               onFocus={() => { setStartDatePickerVisibility(true); startDateFocus.current.blur(); }}
             />
           </Block>
 
           <Block marginLeft={sizes.sm / 2}>
             <TextInput label={t('Post.StartTime')} mode='outlined' value={startTime} error={startTimeError} autoComplete={false}
-              showSoftInputOnFocus={false} ref={startTimeFocus} disabled={startTimeDisable}
+              showSoftInputOnFocus={false} ref={startTimeFocus} disabled={startTimeDisable} activeOutlineColor={colors.info}
               onFocus={() => { setStartTimePickerVisibility(true); startTimeFocus.current.blur(); }} />
           </Block>
 
@@ -357,13 +391,13 @@ const Form = () => {
 
           <Block marginRight={sizes.sm / 2}>
             <TextInput label={t('Post.EndDate')} mode='outlined' value={endDate} error={endDateError} autoComplete={false}
-              showSoftInputOnFocus={false} ref={endDateFocus}
+              showSoftInputOnFocus={false} ref={endDateFocus} activeOutlineColor={colors.info}
               onFocus={() => { setEndDatePickerVisibility(true); endDateFocus.current.blur(); }} />
           </Block>
 
           <Block marginLeft={sizes.sm / 2}>
             <TextInput label={t('Post.EndTime')} mode='outlined' value={endTime} error={endTimeError} autoComplete={false}
-              showSoftInputOnFocus={false} ref={endTimeFocus} disabled={endTimeDisable}
+              showSoftInputOnFocus={false} ref={endTimeFocus} disabled={endTimeDisable} activeOutlineColor={colors.info}
               onFocus={() => { setEndTimePickerVisibility(true); endTimeFocus.current.blur(); }} />
           </Block>
 
@@ -393,12 +427,12 @@ const Form = () => {
         </Block>
 
         <Block marginBottom={sizes.sm}>
-          <TextInput label={t('Post.Location')} mode='outlined' error={geolocationError} autoComplete={false}
+          <TextInput label={t('Post.Location')} mode='outlined' error={geolocationError} autoComplete={false} activeOutlineColor={colors.info}
             onChangeText={(newText) => { geocode(newText) }} />
         </Block>
 
         <Block marginBottom={sizes.sm}>
-          <TextInput label={t('Post.Description')} mode='outlined' autoComplete={false} multiline={true} numberOfLines={7}
+          <TextInput label={t('Post.Description')} mode='outlined' autoComplete={false} multiline={true} numberOfLines={7} activeOutlineColor={colors.info}
             onChangeText={(newText) => { setDescription(newText) }} />
         </Block>
 
@@ -428,77 +462,42 @@ const Form = () => {
           </Block>
 
         </Block>
-
         <Block row marginBottom={sizes.sm}>
           <Block marginRight={sizes.xs}>
             <Button flex={1} gradient={gradients.dark}
-              onPress={() => handleChooseImage(1)} onLongPress={() => removeImage(1)}>
+              onPress={() => chooseImage(1)} onLongPress={() => removeImage(1)}>
               <Text white bold>{imageButtonText1}</Text>
             </Button>
           </Block>
           <Block marginHorizontal={sizes.xs}>
             <Button flex={1} gradient={gradients.dark}
-              onPress={() => handleChooseImage(2)} onLongPress={() => removeImage(2)}>
+              onPress={() => chooseImage(2)} onLongPress={() => removeImage(2)}>
               <Text white bold>{imageButtonText2}</Text>
             </Button>
           </Block>
           <Block marginLeft={sizes.xs}>
             <Button flex={1} gradient={gradients.dark}
-              onPress={() => handleChooseImage(3)} onLongPress={() => removeImage(3)}>
+              onPress={() => chooseImage(3)} onLongPress={() => removeImage(3)}>
               <Text white bold>{imageButtonText3}</Text>
             </Button>
           </Block>
-
         </Block>
 
       </Block>
 
       <Block>
 
-        {/* <Input placeholder="Preconditions" marginBottom={sizes.sm} onChangeText={(newText) => {
-          setForm(prevState => ({ ...prevState, preconditions: newText }));
-        }} />
+        {/*
         <Input placeholder="Managers" marginBottom={sizes.sm} onChangeText={(newText) => {
           setForm(prevState => ({ ...prevState, managers: newText }));
         }} />
         <Input placeholder="Invited" marginBottom={sizes.sm} onChangeText={(newText) => {
           setForm(prevState => ({ ...prevState, invited: newText }));
         }} />
-        <Input placeholder="Images" marginBottom={sizes.sm} onChangeText={(newText) => {
-          setForm(prevState => ({ ...prevState, images: newText }));
-        }} />
-        <Input placeholder="QR" marginBottom={sizes.sm} onChangeText={(newText) => {
-          setForm(prevState => ({ ...prevState, QR: newText }));
-        }} />
-        <Input placeholder="Status" marginBottom={sizes.sm} onChangeText={(newText) => {
-          setForm(prevState => ({ ...prevState, status: newText }));
-        }} /> */}
+        */}
 
         <Block>
-          <Button flex={1} gradient={gradients.primary} marginBottom={sizes.base} onPress={() => {
-            let params = {
-              initiator: initiator.uid,
-              category: selectedCategory,
-              title: title,
-              startDateTime: Date(), //createDateObject(startDate, startTime),
-              endDateTime: Date(), //createDateObject(endDate, endTime),
-              recurrent: recurrentSwitch.toString(),
-              geolocation: geolocation,
-              description: description
-            }
-            let missing = validateInputs(params);
-            if (missing.length === 0) {
-              sendNewActivity(params);
-              // MOVE TO SUCCESS SCREEN
-            } else {
-              Toast.show({
-                type: 'error',
-                text1: t('Post.TryAgain'),
-                text2: missing.join(', ')
-              });
-            }
-
-          }}>
+          <Button flex={1} gradient={gradients.primary} marginBottom={sizes.base} onPress={create}>
             <Text white bold transform="uppercase">{t('Post.Create')}</Text>
           </Button>
         </Block>
