@@ -253,6 +253,9 @@ export interface ThemeAssets {
   card1: ImageSourcePropType;
 
   photo1: ImageSourcePropType;
+  Basketball: ImageSourcePropType;
+  Swimming: ImageSourcePropType;
+  Party: ImageSourcePropType;
 
   ios: ImageSourcePropType;
   android: ImageSourcePropType;
