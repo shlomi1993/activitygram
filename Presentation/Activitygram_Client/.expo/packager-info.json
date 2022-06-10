@@ -1,19 +1,10 @@
 {
-<<<<<<< HEAD
-  "devToolsPort": 19002,
   "expoServerPort": 19000,
   "packagerPort": 19000,
+  "packagerPid": null,
   "expoServerNgrokUrl": null,
   "packagerNgrokUrl": null,
   "ngrokPid": null,
-=======
-  "expoServerPort": 19000,
-  "packagerPort": 19000,
->>>>>>> a0986f8c4dd8a32d2c95f6b62035a11621f51580
-  "packagerPid": null,
-  "expoServerNgrokUrl": "https://nw-wnj.anonymous.activitygram-client.exp.direct",
-  "packagerNgrokUrl": "https://packager.nw-wnj.anonymous.activitygram-client.exp.direct",
-  "ngrokPid": 21224,
   "webpackServerPort": null,
   "devToolsPort": 19002
 }

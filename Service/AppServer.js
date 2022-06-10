@@ -188,7 +188,6 @@ app.get('/getActivity', (req, res) => {
     database.getActivityById(req.query.activity_id).then((event) => res.send(event));
 });
 
-<<<<<<< HEAD
 app.post('/search', (req, res) => {
 	console.log(`\nin app.post('/search', (req, res)`)
 	console.log(`req.body ${JSON.stringify(req.body)}`);
@@ -237,12 +236,11 @@ app.post('/removeCommonInterest', (req, res) => {
 
 app.post('/addGroupPrecondition', (req, res) => {
 	console.log('NOT YET IMPLEMENTED.');
-=======
+});
 app.get('/searchActivity', (req, res) => {
     console.log('NOT YET IMPLEMENTED.');
     // let keyword = req.query.keyword;
     // database.searchActivity(keyword).then((eventList) => res.send(eventList));
->>>>>>> a0986f8c4dd8a32d2c95f6b62035a11621f51580
 });
 
 app.get('/getAllActivities', (req, res) => {
