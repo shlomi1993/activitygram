@@ -196,9 +196,20 @@ app.post('/search', (req, res) => {
 	const activitiesState = req.body.searchActivities
 	const groupState = req.body.searchGroups
 
-	let result = database.searchActivity(name_to_search, userState, activitiesState, groupState)
+    database.searchActivity(name_to_search, userState, activitiesState, groupState)
+        .then((result) => {
+            res.status(200).send(result);
+            console.log('searchActivity request succeeded.');
+        })
+        .catch((error) => {
+            let msg = 'searchActivity request failed.';
+            res.status(500).send(msg);
+            console.error(msg);
+        });
+
+	// let result = database.searchActivity(name_to_search, userState, activitiesState, groupState)
 	// console.log(`result is ${result}`)
-	res.send(result);
+	// res.send(result);
 
 });
 

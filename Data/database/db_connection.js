@@ -159,31 +159,31 @@ async function createNewTag(client, newTag) {
 }
 
 // search events
-module.exports.searchActivity = async function(title, userState, activitiesState, groupsState) {
-	console.log(`\nin searchActivity = async function(title, userState, activitiesState, groupsState)`)
-	console.log(`title = ${title}`)
+module.exports.searchActivity = async function(keyword, userState, activitiesState, groupsState) {
+	console.log(`\nin searchActivity = async function(keyword, userState, activitiesState, groupsState)`)
+	console.log(`keyword = ${keyword}`)
 	console.log(`userState = ${userState}`)
 	console.log(`activitiesState = ${activitiesState}`)
 	console.log(`groupsState = ${groupsState}\n`)
 
 	// searching in database...
 	if(userState=="true"){
-		const usersFound = users.find({$or:[{firstName: title, lastName: title}]}).toArray();
+		const usersFound = users.find({$or:[{firstName: keyword, lastName: keyword, bio: keyword, city: keyword,state: keyword, school: keyword ,interests: keyword, activityLog: keyword}]}).toArray();
 		console.log(`usersFound ${usersFound}`)
 		console.log(`found ${usersFound.length} users`)
 	}
 	if(activitiesState=="true"){
-		const activitiesFound = activities.find({$or:[{description: title, title: title}]}).toArray();
+		const activitiesFound = activities.find({$or:[{ description: keyword, conditions: keyword, group_managers: keyword, participants: keyword, tags: keyword, title: keyword}]}).toArray();
 		console.log(`activitiesFound ${activitiesFound.length} activities`)
 	}
 	if(groupsState=="true"){
-		const groupsFound = groups.find({$or:[{name: title, description: title}]}).toArray();
+		const groupsFound = groups.find({$or:[{name: keyword, description: keyword}]}).toArray();
 		console.log(`groupsFound ${groupsFound.length} groups`)
 	}
 
 	// get all found data together and return it
 
-	return 0
+	return usersFound
 };
 
 //creat NewEvent
