@@ -191,10 +191,10 @@ app.get('/getActivity', (req, res) => {
 app.post('/search', (req, res) => {
 	console.log(`\nin app.post('/search', (req, res)`)
 	console.log(`req.body ${JSON.stringify(req.body)}`);
-	const name_to_search = req.body.keyword
-	const userState = req.body.Users
-	const activitiesState = req.body.Activities
-	const groupState = req.body.Groups
+	const name_to_search = req.body.title
+	const userState = req.body.searchUsers
+	const activitiesState = req.body.searchActivities
+	const groupState = req.body.searchGroups
 
 	let result = database.searchActivity(name_to_search, userState, activitiesState, groupState)
 	// console.log(`result is ${result}`)
