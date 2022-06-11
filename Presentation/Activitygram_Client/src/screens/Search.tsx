@@ -6,39 +6,27 @@ import { useTheme, useTranslation } from '../hooks';
 import { Block, Image, Checkbox, Input, Text, Button } from '../components';
 import { IEventForm } from '../constants/types/forms';
 import 'react-native-gesture-handler';
+import CheckboxList from 'rn-checkbox-list';
 export const url = Platform.OS === 'android' ? 'http://10.0.2.2:8080/' : 'http://127.0.0.1/8080/';
 
-var boxData = { "Users": false,
-                "Activities": false,
-                "Groups": false}
-
-var searchUsers = {"Users": false}
-var searchActivities = {"Activities": false}
-var searchGroups = {"Groups": false}
-
-
-async function onPressSearch(params) {
+async function sendNewSearch(params: object) {
   console.log(`\nin onPressSearch(params)`)
-	var formBody = [];
-  // let formBody: any;
-	for (var property in params) {
-		var encodedKey = encodeURIComponent(property);
-		var encodedValue = encodeURIComponent(params[property]);
-		formBody.push(encodedKey + '=' + encodedValue);
-	}
-	formBody = formBody.join('&');
+	let formBodyArray = [];
+  for (var property in params) {
+    var encodedKey = encodeURIComponent(property);
+    var encodedValue = encodeURIComponent(params[property]);
+    formBodyArray.push(encodedKey + '=' + encodedValue);
+  }
+	let formBody = formBodyArray.join('&');
   console.log(`form: ${formBody}`)
 
-	await fetch(url + 'search', {
+	fetch(url + 'search', {
 		method: 'POST',
-		headers: {
-			'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-		},
+		headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
 		body: formBody
 	})
 		.then((res) => {
 			console.log('sent request');
-			// console.log(`res ${JSON.stringify(res)}`)
 		})
 		.catch((err) => {
 			console.log('error');
@@ -197,30 +185,36 @@ const Gallery = () => {
     );
   };
 
+var boxData = { "Users": false,
+                "Activities": false,
+                "Groups": false}
+
 const Search = () => {
   const {assets, sizes,gradients, colors } = useTheme();
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
   const {t} = useTranslation();
   const [form, setForm] = useState<IEventForm>();
-  const [isChecked, setIsChecked] = useState(false);
+  const [isCheckedUsers, setIsCheckedUsers] = useState(false);
+  const [isCheckedActivities, setIsCheckedActivities] = useState(false);
+  const [isCheckedGroups, setIsCheckedGroups] = useState(false);
+  const [title, setTitle] = useState('')
 
+  const onPressSearch = () => {
+    console.log(`\nin const search`)
+    let params = {
+      title: title,
+      searchUsers : boxData["Users"],
+      searchActivities : boxData["Activities"],
+      searchGroups : boxData["Groups"]
+    }
+    console.log(`call and send params to onPressSearch(params) with ${JSON.stringify(params)}`)
+    sendNewSearch(params);
+  }
   async function storeCheckData(boxName, state) {
-    console.log(`\nin storeCheckData(boxName, state)`)
+    console.log(`\nin storeCheckData(boxName, state)`)    
+    console.log(`(boxName=${boxName}, state=${state})`)
     boxData[boxName] = state
-    if (boxName == "Users"){
-      searchUsers[boxName] = state
-      setForm(prevState => ({...prevState, Users : state}));
-    }
-    else if(boxName == "Activities"){
-      searchActivities[boxName] = state
-      setForm(prevState => ({...prevState, Activities : state}));
-    }
-    else{
-      searchGroups[boxName] = state
-      setForm(prevState => ({...prevState, Groups : state}));
-    }
-    console.log(`form: ${JSON.stringify(form)}`)
   }
 
 
@@ -250,22 +244,16 @@ const Search = () => {
     <Block justify="space-between" marginBottom={sizes.xxl} color={colors.card} flex={0.8} padding={sizes.base}>
 
         <Input search placeholder={t('common.search')} marginBottom={sizes.sm} 				
-          onChangeText={(newText) => {
-            setForm(prevState => ({...prevState, keyword: newText}));
-        }}/>
-
-        <Checkbox checked={isChecked} onPress={() => {setIsChecked(!isChecked), storeCheckData('Users', !isChecked)}}/>
+          onChangeText={(newText) => { setTitle(newText) }}/>
+          
+        <Checkbox checked={isCheckedUsers} onPress={() => {setIsCheckedUsers(!isCheckedUsers), storeCheckData('Users', !isCheckedUsers)}}/>
         <Text>Users</Text>
-        <Checkbox checked={isChecked} onPress={() => {setIsChecked(!isChecked), storeCheckData('Activities', !isChecked)}}/>
+        <Checkbox checked={isCheckedActivities} onPress={() => {setIsCheckedActivities(!isCheckedActivities), storeCheckData('Activities', !isCheckedActivities)}}/>
         <Text>Activities</Text>
-        <Checkbox checked={isChecked} onPress={() => {setIsChecked(!isChecked), storeCheckData('Groups', !isChecked)}}/>
+        <Checkbox checked={isCheckedGroups} onPress={() => {setIsCheckedGroups(!isCheckedGroups), storeCheckData('Groups', !isCheckedGroups)}}/>
         <Text>Groups</Text>
 
-        <Button flex={1} gradient={gradients.info} marginBottom={sizes.base} onPress={() => {
-					console.log('\nsearch clicked!');
-          console.log(`form = ${JSON.stringify(form)}`);
-					onPressSearch(form);
-				}}>
+        <Button flex={1} gradient={gradients.info} marginBottom={sizes.base} onPress={() => {onPressSearch()}}>
           <Text white bold transform="uppercase">
             search
           </Text>
