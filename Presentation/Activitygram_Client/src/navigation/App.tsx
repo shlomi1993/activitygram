@@ -6,6 +6,7 @@ import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 
 import Menu from './Menu';
 import {useData, ThemeProvider, TranslationProvider} from '../hooks';
+import RootStackScreen from '../loginScreens/RootStackNavigation';
 
 export default () => {
   const {isDark, theme, setTheme} = useData();
@@ -50,7 +51,8 @@ export default () => {
     <TranslationProvider>
       <ThemeProvider theme={theme} setTheme={setTheme}>
         <NavigationContainer theme={navigationTheme}>
-          <Menu />
+          <RootStackScreen/>
+          {/* <Menu /> */}
         </NavigationContainer>
       </ThemeProvider>
     </TranslationProvider>
