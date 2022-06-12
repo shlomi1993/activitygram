@@ -13,7 +13,7 @@ import {auth} from '../../firebase';
 const RootStack = createStackNavigator();
 
 
-const SignInScreen = () => {
+const SignUpScreen = () => {
   const {gradients, sizes} = useTheme();
   const navigation = useNavigation();
   const [data, setData] = useState({
@@ -204,4 +204,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default SignInScreen;
+export default SignUpScreen;
