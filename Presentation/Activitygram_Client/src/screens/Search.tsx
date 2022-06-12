@@ -18,8 +18,6 @@ async function sendNewSearch(params: object) {
     formBodyArray.push(encodedKey + '=' + encodedValue);
   }
 	let formBody = formBodyArray.join('&');
-  console.log(`form: ${formBody}`)
-
 	fetch(url + 'search', {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
@@ -194,7 +192,6 @@ const Search = () => {
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
   const {t} = useTranslation();
-  const [form, setForm] = useState<IEventForm>();
   const [isCheckedUsers, setIsCheckedUsers] = useState(false);
   const [isCheckedActivities, setIsCheckedActivities] = useState(false);
   const [isCheckedGroups, setIsCheckedGroups] = useState(false);
@@ -208,12 +205,9 @@ const Search = () => {
       searchActivities : boxData["Activities"],
       searchGroups : boxData["Groups"]
     }
-    console.log(`call and send params to onPressSearch(params) with ${JSON.stringify(params)}`)
     sendNewSearch(params);
   }
   async function storeCheckData(boxName, state) {
-    console.log(`\nin storeCheckData(boxName, state)`)    
-    console.log(`(boxName=${boxName}, state=${state})`)
     boxData[boxName] = state
   }
 
