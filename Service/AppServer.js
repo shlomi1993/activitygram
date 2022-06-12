@@ -107,6 +107,21 @@ app.post('/templatePost', (req, res) => {
 });
 
 /** USERS */
+
+app.get('/allUsers', (req, res) => {
+    database.getAllUsers()
+        .then((result) => {
+            res.status(200).send(result);
+            console.log('allUsers request succeeded.');
+        })
+        .catch((error) => {
+            let msg = 'allUsers request failed.';
+            res.status(500).send(msg);
+            console.error(msg);
+        });
+});
+
+
 app.get('/getUser', (req, res) => {
     database.getUserById(req.query.user_id).then((user) => res.send(user));
 });
@@ -269,7 +284,6 @@ app.get('/allInterests', (req, res) => {
             res.status(500).send(msg);
             console.error(msg);
         });
-
 });
 
 /** GROUPS */
