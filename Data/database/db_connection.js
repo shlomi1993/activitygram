@@ -7,6 +7,7 @@ const Event = require('./Event.js');
 const Group = require('./Group.js');
 const { MongoClient, ObjectId } = require('mongodb');
 const crypto = require('crypto');
+const { error } = require('console');
 const hash = crypto.createHash('sha512');
 
 const client = new MongoClient(conn.Database.uri);
@@ -161,29 +162,64 @@ async function createNewTag(client, newTag) {
 // search events
 module.exports.searchActivity = async function(keyword, userState, activitiesState, groupsState) {
 	console.log(`\nin searchActivity = async function(keyword, userState, activitiesState, groupsState)`)
-	console.log(`keyword = ${JSON.stringify(keyword)}`)
-	console.log(`userState = ${JSON.stringify(userState)}`)
-	console.log(`activitiesState = ${JSON.stringify(activitiesState)}`)
-	console.log(`groupsStatetate = ${JSON.stringify(groupsState)}`)
+	let usersFound = []
+	let activitiesFound = []
+	let groupsFound = []
 
 	// searching in database...
-	if(JSON.stringify(userState).localeCompare("true")){
-		const usersFound = users.find({$or:[{firstName: "Shir", lastName: "Shir"}]}).toArray();
-		console.log(`usersFound ${usersFound}`)
+	if(userState=="true"){
+		// const wheretoSearch = [firstName, lastName, bio, city, state, school, interests, activityLog]
+		console.log(`userState is true`)
+		const options = {$or:[
+			{firstName: keyword},
+			{lastName: keyword},
+			{bio: keyword},
+			{city: keyword},
+			{state: keyword},
+			{school: keyword},
+			{interests: keyword},
+			{country: keyword}
+		]}
+		usersFound = await users.find(options).toArray()
 		console.log(`found ${usersFound.length} users`)
+		console.log(`usersFound = ${JSON.stringify(usersFound)}`)
 	}
-	if(JSON.stringify(activitiesState).localeCompare("true")){
-		const activitiesFound = activities.find({$or:[{description: "Shir", title: "Shir"}]}).toArray();
+	if(activitiesState=="true"){
+		console.log(`activitiesState is true`)
+		const options = {$or:[
+			{description: keyword},
+			{conditions: keyword},
+			{group_managers: keyword},
+			{participants: keyword},
+			{tags: keyword},
+			{title: keyword}
+		]}
+		activitiesFound = await activities.find(options).toArray()
 		console.log(`found ${activitiesFound.length} activities`)
+		console.log(`activitiesFound = ${JSON.stringify(activitiesFound)}`)
 	}
-	if(JSON.stringify(groupsState).localeCompare("true")){
-		const groupsFound = groups.find({$or:[{name: "Shir", description: "Shir"}]}).toArray();
+	if(groupsState=="true"){
+		console.log(`activitiesState is true`)
+		const options = {$or:[
+			{description: keyword},
+			{conditions: keyword},
+			{group_managers: keyword},
+			{participants: keyword},
+			{tags: keyword},
+			{title: keyword}
+		]}
+		groupsFound = await groups.find(options).toArray()
 		console.log(`found ${groupsFound.length} groups`)
+		console.log(`groupsFound = ${JSON.stringify(groupsFound)}`)
 	}
 
 	// get all found data together and return it
-
-	return 0
+	console.log(`end of searchActivity\n`)
+	const allFoundObjects = []
+	allFoundObjects.push(usersFound)
+	allFoundObjects.push(activitiesFound)
+	allFoundObjects.push(groupsFound)
+	return allFoundObjects
 };
 
 //creat NewEvent
