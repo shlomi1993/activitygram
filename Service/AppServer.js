@@ -199,12 +199,14 @@ app.post('/search', (req, res) => {
     database.searchActivity(name_to_search, userState, activitiesState, groupState)
         .then((result) => {
             res.status(200).send(result);
+            // console.log
             console.log('searchActivity request succeeded.');
         })
         .catch((error) => {
             let msg = 'searchActivity request failed.';
             res.status(500).send(msg);
             console.error(msg);
+            console.error(error);
         });
 
 	// let result = database.searchActivity(name_to_search, userState, activitiesState, groupState)

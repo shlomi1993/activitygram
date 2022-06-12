@@ -7,6 +7,7 @@ const Event = require('./Event.js');
 const Group = require('./Group.js');
 const { MongoClient, ObjectId } = require('mongodb');
 const crypto = require('crypto');
+const { error } = require('console');
 const hash = crypto.createHash('sha512');
 
 const client = new MongoClient(conn.Database.uri);
@@ -165,24 +166,62 @@ module.exports.searchActivity = async function(keyword, userState, activitiesSta
 	console.log(`userState = ${userState}`)
 	console.log(`activitiesState = ${activitiesState}`)
 	console.log(`groupsState = ${groupsState}\n`)
-
+	let usersFound = []
 	// searching in database...
 	if(userState=="true"){
-		const usersFound = users.find({$or:[{firstName: keyword, lastName: keyword, bio: keyword, city: keyword,state: keyword, school: keyword ,interests: keyword, activityLog: keyword}]}).toArray();
-		console.log(`usersFound ${usersFound}`)
-		console.log(`found ${usersFound.length} users`)
+		// const wheretoSearch = [firstName, lastName, bio, city, state, school, interests, activityLog]
+		console.log(`userState is true`)
+
+		// {$or:[{firstName: keyword,
+		// 	lastName: keyword, 
+		// 	bio: keyword, 
+		// 	city: keyword, 
+		// 	state: keyword, 
+		// 	school: keyword ,
+		// 	interests: keyword}]}
+		// , (error, data) => {
+		// 	console.log(`if(error)`)
+		// 	if(error){
+		// 		console.log(error)
+		// 	}else{
+		// 		console.log(data)
+		// 		console.log(JSON.stringify(usersFound.toArray()));
+		// 		console.log(`usersFound ${JSON.stringify(usersFound)}`)
+		// 	}
+		// });
+		const options = {$or:[
+			{firstName: keyword}
+		]}
+		usersFound = await users.find(options).toArray()
+		console.log(`usersFound = ${usersFound}`)
+		console.log(`usersFound = ${JSON.stringify(usersFound)}`)
 	}
 	if(activitiesState=="true"){
-		const activitiesFound = activities.find({$or:[{ description: keyword, conditions: keyword, group_managers: keyword, participants: keyword, tags: keyword, title: keyword}]}).toArray();
+		console.log(`activitiesState is true`)
+		const activitiesFound = activities.find({$or:[{ description: keyword, 
+														conditions: keyword, 
+														group_managers: keyword, 
+														participants: keyword, 
+														tags: keyword, 
+														title: keyword}]},(error,data)=>{
+															if(error){
+																console.log(error)
+															}else{
+																console.log(data)
+															}
+														})
 		console.log(`activitiesFound ${activitiesFound.length} activities`)
 	}
 	if(groupsState=="true"){
-		const groupsFound = groups.find({$or:[{name: keyword, description: keyword}]}).toArray();
-		console.log(`groupsFound ${groupsFound.length} groups`)
+		console.log(`groupsState is true`)
+		const groupsFound = groups.find({$or:[{name: keyword, 
+											 	     description: keyword}]}).toArray();
+		console.log(JSON.stringify(groupsFound));
+		console.log(`found ${groupsFound.length} groups`)
 	}
 
 	// get all found data together and return it
-
+	console.log(`end of searchActivity\n`)
 	return usersFound
 };
 
