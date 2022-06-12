@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState, useContext} from 'react';
 import {View, Text, StyleSheet, Platform, TouchableOpacity, Dimensions, TextInput, StatusBar} from 'react-native';
 import { Button, Text as TextComp } from '../components';
 import * as Animatable from 'react-native-animatable';
@@ -10,9 +10,7 @@ import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import SignUpScreen from './SignUpScreen';
 import {auth} from '../../firebase';
-
-const RootStack = createStackNavigator();
-
+import { AuthContext } from '../navigation/App';
 
 const SignInScreen = () => {
   const {gradients, sizes} = useTheme();
@@ -116,6 +114,7 @@ const SignInScreen = () => {
             </View>
         </Animatable.View>
     </View>
+
   );
 };
 
