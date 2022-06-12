@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useState, useRef, useContext } from 'react';
-import { Platform, FlatList } from 'react-native';
+import { Platform, FlatList, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useHeaderHeight } from '@react-navigation/stack';
 import { useTheme } from '../hooks';
@@ -13,6 +13,9 @@ import * as ImagePicker from 'expo-image-picker'
 import { userContext } from '../../App'
 import { useTranslation } from '../hooks';
 import Toast from 'react-native-toast-message'
+import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
+import MultiSelect from 'react-native-multiple-select';
+
 
 export const baseUri = Platform.OS === 'android' ? 'http://10.0.2.2:8080/' : 'http://127.0.0.1/8080/';
 const { t } = useTranslation();
@@ -32,9 +35,9 @@ function validateInputs(params: object) {
   if (!params['endDateTime'] || params['endDateTime'] < params['startDateTime']) {
     params['endDateTime'] = new Date(params['startDateTime'].getTime());
   }
-  if (!params['geolocation'] || params['geolocation'] === '') {
-    missing.push(t('Post.Location'));
-  }
+  // if (!params['geolocation'] || params['geolocation'] === '') {
+  //   missing.push(t('Post.Location'));
+  // }
   if (!params['description'] || params['description'] === '') {
     missing.push(t('Post.Description'));
   }
@@ -74,6 +77,12 @@ const Form = () => {
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(t('Post.SelectCategory'));
+
+  // Users Drop-down
+  const [showUsersModal, setShowUsersModal] = useState(false);
+  const [users, setUsers] = useState([]);
+  const [selectedParticipants, setSelectedParticipants] = useState([]);
+  const [selectedManagers, setSelectedManagers] = useState([]);
 
   // Title
   const [title, setTitle] = useState('')
@@ -120,10 +129,35 @@ const Form = () => {
 
   // Fetch categories for Category Modal
   useEffect(() => {
-    fetch(baseUri + `allInterests`)
+    fetch(baseUri + 'allInterests')
       .then((result) => result.json())
-      .then((json) => setCategories(json))
+      .then((json) => {
+        let interestArray = []
+        for (const interest of json) {
+          let category = {
+            id: interest._id,
+            title: interest.title
+          }
+          interestArray.push(category);
+        }
+        setCategories(interestArray);
+      })
       .catch(() => setCategories([]));
+    fetch(baseUri + 'allUsers')
+      .then((result) => result.json())
+      .then((json) => {
+        let userArray = []
+        for (const user of json) {
+          var username = (user.username) ? user.username : user.firstName + ' ' + user.lastName;
+          let userObj = {
+            id: user._id,
+            title: username + ' | ' + user.bio
+          }
+          userArray.push(userObj);
+        }
+        setUsers(userArray)
+      })
+      .catch(() => setUsers([]));
   }, []);
 
   // Creates Date object out of date and time strings (or null).
@@ -143,7 +177,7 @@ const Form = () => {
   }
 
   // Start Date Confirm
-  const handleStartDateConfirm = (date) => {
+  const handleStartDateConfirm = (date: Date) => {
     Moment.locale('en');
     if (endDate) {
       let end = createDateObject(endDate, '23:59')
@@ -164,7 +198,7 @@ const Form = () => {
   };
 
   // Start Time Confirm
-  const handleStartTimeConfirm = (time) => {
+  const handleStartTimeConfirm = (time: string) => {
     Moment.locale('en');
     let newText = Moment(time).format('HH:mm');
     if (endTime) {
@@ -183,7 +217,7 @@ const Form = () => {
   };
 
   // End Date Confirm
-  const handleEndDateConfirm = (date) => {
+  const handleEndDateConfirm = (date: Date) => {
     if (startDate) {
       let start = createDateObject(startDate, '00:00')
       if (start > date) {
@@ -204,7 +238,7 @@ const Form = () => {
   };
 
   // End Time Confirm
-  const handleEndTimeConfirm = (time) => {
+  const handleEndTimeConfirm = (time: string) => {
     Moment.locale('en');
     let newText = Moment(time).format('HH:mm');
     if (startTime) {
@@ -282,6 +316,14 @@ const Form = () => {
     if (image1) images.push(image1['base64'])
     if (image2) images.push(image2['base64'])
     if (image3) images.push(image3['base64'])
+    let participants = [initiator.uid]
+    for (const p of selectedParticipants) {
+      participants.push(p.id)
+    }
+    let managers = [initiator.uid]
+    for (const m of selectedManagers) {
+      managers.push(m.id)
+    }
     let params = {
       initiator: initiator.uid,
       category: selectedCategory,
@@ -292,8 +334,8 @@ const Form = () => {
       geolocation: geolocation.toString(),
       description: description,
       imagesBase64: images,
-      managers: [initiator.uid],
-      participants: [initiator.uid],
+      managers: managers,
+      participants: participants,
       status: 'open'
     }
     let missing = validateInputs(params);
@@ -313,11 +355,7 @@ const Form = () => {
   // Rendering
   return (
 
-    <Block
-
-      color={colors.card}
-      paddingTop={sizes.m}
-      paddingHorizontal={sizes.padding}>
+    <Block color={colors.card} paddingTop={sizes.m} paddingHorizontal={sizes.padding}>
 
       <Text p semibold marginBottom={sizes.sm}>{t('Post.PleaseFill')}</Text>
 
@@ -327,7 +365,16 @@ const Form = () => {
           <Input value={initiator.uid} editable={false} disabled />
         </Block>
 
-        <Block marginBottom={sizes.sm} marginTop={sizes.xs}>
+        <Block marginBottom={sizes.xs}>
+          <Text p semibold>{t('Post.SelectCategory')}</Text>
+        </Block>
+        <AutocompleteDropdown showClear={true} closeOnBlur={true} closeOnSubmit={false} dataSet={categories}
+          direction={'down'} onSelectItem={(category) => {
+            if (category) { setSelectedCategory(category.title); }
+          }} />
+        <Block marginBottom={sizes.sm}></Block>
+
+        {/* <Block marginBottom={sizes.sm} marginTop={sizes.xs}>
           <Button row gradient={gradients.dark} onPress={() => setShowCategoryModal(true)}>
             <Block row align="center" justify="space-between" paddingHorizontal={sizes.sm}>
               <Text white bold marginRight={sizes.sm}>{selectedCategory}</Text>
@@ -335,85 +382,67 @@ const Form = () => {
             </Block>
           </Button>
           <Modal visible={showCategoryModal} onRequestClose={() => setShowCategoryModal(false)}>
-            <FlatList keyExtractor={(index) => `${index}`}
-              data={categories}
-              renderItem={({ item }) => (
-                <Button
-                  marginBottom={sizes.sm}
-                  onPress={() => {
-                    setSelectedCategory(item);
-                    setShowCategoryModal(false);
-                  }}>
-                  <Text p white semibold transform="uppercase">{item}</Text>
-                </Button>
-              )}
+            <FlatList keyExtractor={(index) => `${index}`} data={categories} renderItem={({ item }) => (
+              <Button marginBottom={sizes.sm} onPress={() => {
+                setSelectedCategory(item);
+                setShowCategoryModal(false);
+              }}>
+                <Text p white semibold transform="uppercase">{item}</Text>
+              </Button>
+            )}
             />
           </Modal>
-        </Block>
+        </Block> */}
 
         <Block marginBottom={sizes.sm}>
-          <TextInput label={t('Post.ActivityTitle')} mode='outlined' autoComplete={false} activeOutlineColor={colors.info}
-            onChangeText={(newText) => { setTitle(newText) }} />
+          <TextInput label={t('Post.ActivityTitle')} mode='outlined' autoComplete={false}
+            activeOutlineColor={colors.info} onChangeText={(newText) => { setTitle(newText) }} />
         </Block>
 
         <Block row marginBottom={sizes.sm}>
 
           <Block marginRight={sizes.sm / 2}>
-            <TextInput label={t('Post.StartDate')} mode='outlined' value={startDate} error={startDateError} autoComplete={false}
-              showSoftInputOnFocus={false} ref={startDateFocus} activeOutlineColor={colors.info}
+            <TextInput label={t('Post.StartDate')} mode='outlined' value={startDate} error={startDateError}
+              autoComplete={false} showSoftInputOnFocus={false} ref={startDateFocus} activeOutlineColor={colors.info}
               onFocus={() => { setStartDatePickerVisibility(true); startDateFocus.current.blur(); }}
             />
           </Block>
 
           <Block marginLeft={sizes.sm / 2}>
-            <TextInput label={t('Post.StartTime')} mode='outlined' value={startTime} error={startTimeError} autoComplete={false}
-              showSoftInputOnFocus={false} ref={startTimeFocus} disabled={startTimeDisable} activeOutlineColor={colors.info}
+            <TextInput label={t('Post.StartTime')} mode='outlined' value={startTime} error={startTimeError}
+              autoComplete={false} showSoftInputOnFocus={false} ref={startTimeFocus} activeOutlineColor={colors.info}
+              disabled={startTimeDisable}
               onFocus={() => { setStartTimePickerVisibility(true); startTimeFocus.current.blur(); }} />
           </Block>
 
-          <DateTimePickerModal
-            isVisible={isStartDatePickerVisible}
-            mode="date"
-            onConfirm={handleStartDateConfirm}
-            onCancel={() => setStartDatePickerVisibility(false)}
-          />
+          <DateTimePickerModal isVisible={isStartDatePickerVisible} mode="date" onConfirm={handleStartDateConfirm}
+            onCancel={() => setStartDatePickerVisibility(false)} />
 
-          <DateTimePickerModal
-            isVisible={isStartTimePickerVisible}
-            mode="time"
-            onConfirm={handleStartTimeConfirm}
-            onCancel={() => setStartTimePickerVisibility(false)}
-          />
+          <DateTimePickerModal isVisible={isStartTimePickerVisible} mode="time" onConfirm={handleStartTimeConfirm}
+            onCancel={() => setStartTimePickerVisibility(false)} />
 
         </Block>
 
         <Block row marginBottom={sizes.sm}>
 
           <Block marginRight={sizes.sm / 2}>
-            <TextInput label={t('Post.EndDate')} mode='outlined' value={endDate} error={endDateError} autoComplete={false}
-              showSoftInputOnFocus={false} ref={endDateFocus} activeOutlineColor={colors.info}
+            <TextInput label={t('Post.EndDate')} mode='outlined' value={endDate} error={endDateError}
+              autoComplete={false} showSoftInputOnFocus={false} ref={endDateFocus} activeOutlineColor={colors.info}
               onFocus={() => { setEndDatePickerVisibility(true); endDateFocus.current.blur(); }} />
           </Block>
 
           <Block marginLeft={sizes.sm / 2}>
-            <TextInput label={t('Post.EndTime')} mode='outlined' value={endTime} error={endTimeError} autoComplete={false}
-              showSoftInputOnFocus={false} ref={endTimeFocus} disabled={endTimeDisable} activeOutlineColor={colors.info}
+            <TextInput label={t('Post.EndTime')} mode='outlined' value={endTime} error={endTimeError}
+              autoComplete={false} showSoftInputOnFocus={false} ref={endTimeFocus} activeOutlineColor={colors.info}
+              disabled={endTimeDisable}
               onFocus={() => { setEndTimePickerVisibility(true); endTimeFocus.current.blur(); }} />
           </Block>
 
-          <DateTimePickerModal
-            isVisible={isEndDatePickerVisible}
-            mode="date"
-            onConfirm={handleEndDateConfirm}
-            onCancel={() => setEndDatePickerVisibility(false)}
-          />
+          <DateTimePickerModal isVisible={isEndDatePickerVisible} mode="date" onConfirm={handleEndDateConfirm}
+            onCancel={() => setEndDatePickerVisibility(false)} />
 
-          <DateTimePickerModal
-            isVisible={isEndTimePickerVisible}
-            mode="time"
-            onConfirm={handleEndTimeConfirm}
-            onCancel={() => setEndTimePickerVisibility(false)}
-          />
+          <DateTimePickerModal isVisible={isEndTimePickerVisible} mode="time" onConfirm={handleEndTimeConfirm}
+            onCancel={() => setEndTimePickerVisibility(false)} />
 
         </Block>
 
@@ -427,36 +456,34 @@ const Form = () => {
         </Block>
 
         <Block marginBottom={sizes.sm}>
-          <TextInput label={t('Post.Location')} mode='outlined' error={geolocationError} autoComplete={false} activeOutlineColor={colors.info}
-            onChangeText={(newText) => { geocode(newText) }} />
+          <TextInput label={t('Post.Location')} mode='outlined' error={geolocationError} autoComplete={false}
+            activeOutlineColor={colors.info} onChangeText={(newText) => { geocode(newText) }} />
         </Block>
 
         <Block marginBottom={sizes.sm}>
-          <TextInput label={t('Post.Description')} mode='outlined' autoComplete={false} multiline={true} numberOfLines={7} activeOutlineColor={colors.info}
+          <TextInput label={t('Post.Description')} mode='outlined' autoComplete={false} multiline={true}
+            numberOfLines={7} activeOutlineColor={colors.info}
             onChangeText={(newText) => { setDescription(newText) }} />
         </Block>
 
         <Block row marginBottom={sizes.s} align='center'>
           <Block>
             {image1 && (<Block align='flex-start' marginRight={sizes.xs}>
-              <Image
-                source={{ uri: image1.uri }}
+              <Image source={{ uri: image1.uri }}
                 style={{ width: 100, height: 100, borderColor: 'black', borderWidth: 1 }} />
             </Block>)}
           </Block>
 
           <Block>
             {image2 && (<Block align='center' marginHorizontal={sizes.xs}>
-              <Image
-                source={{ uri: image2.uri }}
+              <Image source={{ uri: image2.uri }}
                 style={{ width: 100, height: 100, borderColor: 'black', borderWidth: 1 }} />
             </Block>)}
           </Block>
 
           <Block>
             {image3 && (<Block align='flex-end' marginLeft={sizes.xs}>
-              <Image
-                source={{ uri: image3.uri }}
+              <Image source={{ uri: image3.uri }}
                 style={{ width: 100, height: 100, borderColor: 'black', borderWidth: 1 }} />
             </Block>)}
           </Block>
@@ -483,28 +510,41 @@ const Form = () => {
           </Block>
         </Block>
 
+        <Block marginBottom={sizes.xs}>
+          <Text p semibold>{t('Post.SelectParticipant')}</Text>
+        </Block>
+        <AutocompleteDropdown showClear={true} closeOnBlur={true} closeOnSubmit={false} dataSet={users}
+          direction={'up'} onSelectItem={(user) => {
+            if (user) {
+              let array = selectedParticipants;
+              array.push(user);
+              setSelectedParticipants(array);
+            }
+          }} />
+
+        <Block marginBottom={sizes.xs} marginTop={sizes.sm}>
+          <Text p semibold>{t('Post.SelectManagers')}</Text>
+        </Block>
+        <AutocompleteDropdown showClear={true} closeOnBlur={true} closeOnSubmit={false} dataSet={selectedParticipants}
+          direction={'up'} onSelectItem={(user) => {
+            if (user) {
+              let array = selectedManagers;
+              array.push(user);
+              setSelectedManagers(array);
+            }
+          }} />
+        <Block marginBottom={sizes.sm}></Block>
+
       </Block>
 
       <Block>
-
-        {/*
-        <Input placeholder="Managers" marginBottom={sizes.sm} onChangeText={(newText) => {
-          setForm(prevState => ({ ...prevState, managers: newText }));
-        }} />
-        <Input placeholder="Invited" marginBottom={sizes.sm} onChangeText={(newText) => {
-          setForm(prevState => ({ ...prevState, invited: newText }));
-        }} />
-        */}
-
-        <Block>
-          <Button flex={1} gradient={gradients.primary} marginBottom={sizes.base} onPress={create}>
-            <Text white bold transform="uppercase">{t('Post.Create')}</Text>
-          </Button>
-        </Block>
-
-        <Toast position='bottom' bottomOffset={80} onPress={() => Toast.hide()} />
-
+        <Button flex={1} gradient={gradients.primary} marginBottom={sizes.base} onPress={create}>
+          <Text white bold transform="uppercase">{t('Post.Create')}</Text>
+        </Button>
       </Block>
+
+      <Toast position='bottom' bottomOffset={80} onPress={() => Toast.hide()} />
+
     </Block >
   );
 };
@@ -517,13 +557,7 @@ const Post = () => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerBackground: () => (
-        <Image
-          radius={0}
-          resizeMode="cover"
-          width={sizes.width}
-          height={headerHeight}
-          source={assets.background}
-        />
+        <Image radius={0} resizeMode="cover" width={sizes.width} height={headerHeight} source={assets.background} />
       ),
     });
   }, [assets.background, navigation, sizes.width, headerHeight]);

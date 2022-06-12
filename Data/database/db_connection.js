@@ -220,3 +220,13 @@ module.exports.getAllInterests = async function() {
     }
 	return array;
 };
+
+// Get all users
+module.exports.getAllUsers = async function() {
+    const result = await users.find().toArray();
+    let array = []
+    for (const user of result) {
+        array.push(user)
+    }
+	return array;
+};
