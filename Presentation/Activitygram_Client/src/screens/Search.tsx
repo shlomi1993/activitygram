@@ -1,11 +1,35 @@
-import React, {useLayoutEffect } from 'react';
-
-import {useNavigation} from '@react-navigation/native';
-import {useHeaderHeight} from '@react-navigation/stack';
-
-import {useTheme, useTranslation } from '../hooks';
-import {Block,  Image, Input, Text, Button } from '../components';
+import React, {useLayoutEffect, useState } from 'react';
+import { Platform } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { useHeaderHeight } from '@react-navigation/stack';
+import { useTheme, useTranslation } from '../hooks';
+import { Block, Image, Checkbox, Input, Text, Button } from '../components';
+import { IEventForm } from '../constants/types/forms';
 import 'react-native-gesture-handler';
+import CheckboxList from 'rn-checkbox-list';
+export const url = Platform.OS === 'android' ? 'http://10.0.2.2:8080/' : 'http://127.0.0.1/8080/';
+
+async function sendNewSearch(params: object) {
+  console.log(`\nin onPressSearch(params)`)
+	let formBodyArray = [];
+  for (var property in params) {
+    var encodedKey = encodeURIComponent(property);
+    var encodedValue = encodeURIComponent(params[property]);
+    formBodyArray.push(encodedKey + '=' + encodedValue);
+  }
+	let formBody = formBodyArray.join('&');
+	fetch(url + 'search', {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+		body: formBody
+	})
+		.then((res) => {
+			console.log('sent request');
+		})
+		.catch((err) => {
+			console.log('error');
+		});
+}
 
 const Gallery = () => {
     const {assets, sizes} = useTheme();
@@ -159,11 +183,34 @@ const Gallery = () => {
     );
   };
 
+var boxData = { "Users": false,
+                "Activities": false,
+                "Groups": false}
+
 const Search = () => {
-  const {assets, sizes, colors } = useTheme();
+  const {assets, sizes,gradients, colors } = useTheme();
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
   const {t} = useTranslation();
+  const [isCheckedUsers, setIsCheckedUsers] = useState(false);
+  const [isCheckedActivities, setIsCheckedActivities] = useState(false);
+  const [isCheckedGroups, setIsCheckedGroups] = useState(false);
+  const [title, setTitle] = useState('')
+
+  const onPressSearch = () => {
+    console.log(`\nin const search`)
+    let params = {
+      title: title,
+      searchUsers : boxData["Users"],
+      searchActivities : boxData["Activities"],
+      searchGroups : boxData["Groups"]
+    }
+    sendNewSearch(params);
+  }
+  async function storeCheckData(boxName, state) {
+    boxData[boxName] = state
+  }
+
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -187,16 +234,34 @@ const Search = () => {
 
   return (
     <Block safe>
-    {/* search input */}
-      <Block color={colors.card} flex={0} padding={sizes.padding}>
-        <Input search placeholder={t('common.search')} />
+    {/* search input and button*/}
+    <Block justify="space-between" marginBottom={sizes.xxl} color={colors.card} flex={0.8} padding={sizes.base}>
+
+        <Input search placeholder={t('common.search')} marginBottom={sizes.sm} 				
+          onChangeText={(newText) => { setTitle(newText) }}/>
+          
+        <Checkbox checked={isCheckedUsers} onPress={() => {setIsCheckedUsers(!isCheckedUsers), storeCheckData('Users', !isCheckedUsers)}}/>
+        <Text>Users</Text>
+        <Checkbox checked={isCheckedActivities} onPress={() => {setIsCheckedActivities(!isCheckedActivities), storeCheckData('Activities', !isCheckedActivities)}}/>
+        <Text>Activities</Text>
+        <Checkbox checked={isCheckedGroups} onPress={() => {setIsCheckedGroups(!isCheckedGroups), storeCheckData('Groups', !isCheckedGroups)}}/>
+        <Text>Groups</Text>
+
+        <Button flex={1} gradient={gradients.info} marginBottom={sizes.base} onPress={() => {onPressSearch()}}>
+          <Text white bold transform="uppercase">
+            search
+          </Text>
+        </Button>
+
     </Block>
+
+    {/* submit */}
     <Block
         scroll
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingVertical: sizes.padding}}>
         <Block>
-          <Gallery />
+          <Gallery/>
         </Block>
       </Block>
     </Block>

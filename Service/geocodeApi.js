@@ -13,7 +13,7 @@ module.exports.geocode = async function(address) {
 			result = res.data;
 		})
 		.catch((error) => {
-			console.error('Error:', error.response.status, error.response.statusText);
+			console.error('geocode request failed:', error.response.status, error.response.statusText);
         });
 	return JSON.parse(JSON.stringify(result));
 };
@@ -27,7 +27,7 @@ module.exports.reverse = async function(latitude, longitude) {
 			result = res.data;
 		})
 		.catch((error) => {
-			console.error('Error:', error.response.status, error.response.statusText);
+			console.error('reverse request failed:', error.response.status, error.response.statusText);
         });
 	return JSON.parse(JSON.stringify(result));
 };
