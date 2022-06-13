@@ -107,6 +107,21 @@ app.post('/templatePost', (req, res) => {
 });
 
 /** USERS */
+
+app.get('/allUsers', (req, res) => {
+    database.getAllUsers()
+        .then((result) => {
+            res.status(200).send(result);
+            console.log('allUsers request succeeded.');
+        })
+        .catch((error) => {
+            let msg = 'allUsers request failed.';
+            res.status(500).send(msg);
+            console.error(msg);
+        });
+});
+
+
 app.get('/getUser', (req, res) => {
     database.getUserById(req.query.user_id).then((user) => res.send(user));
 });
@@ -189,12 +204,12 @@ app.get('/getActivity', (req, res) => {
 });
 
 app.post('/search', (req, res) => {
-	console.log(`\nin app.post('/search', (req, res)`)
-	console.log(`req.body ${JSON.stringify(req.body)}`);
-	const name_to_search = req.body.title
-	const userState = req.body.searchUsers
-	const activitiesState = req.body.searchActivities
-	const groupState = req.body.searchGroups
+    console.log(`\nin app.post('/search', (req, res)`)
+    console.log(`req.body ${JSON.stringify(req.body)}`);
+    const name_to_search = req.body.title
+    const userState = req.body.searchUsers
+    const activitiesState = req.body.searchActivities
+    const groupState = req.body.searchGroups
 
     database.searchActivity(name_to_search, userState, activitiesState, groupState)
         .then((result) => {
@@ -209,46 +224,46 @@ app.post('/search', (req, res) => {
             console.error(error);
         });
 
-	// let result = database.searchActivity(name_to_search, userState, activitiesState, groupState)
-	// console.log(`result is ${result}`)
-	// res.send(result);
+    // let result = database.searchActivity(name_to_search, userState, activitiesState, groupState)
+    // console.log(`result is ${result}`)
+    // res.send(result);
 
 });
 
 /** GROUPS */
 
 app.post('/createGroup', (req, res) => {
-	newGroup = {
-		title: req.body.title,
-		description: req.body.description,
-		commonInterests: req.body.commonInterests,
-		preconditions: req.body.preconditions,
-		initiator: req.body.initiator,
-		managers: req.body.managers,
-		participants: req.body.participants,
-		images: req.body.images,
-		qrCode: req.body.qrCode,
-		activityHistory: [],
-		creationTime: Date()
-	};
-	let result = database.createGroup(newGroup);
-	res.send(result);
+    newGroup = {
+        title: req.body.title,
+        description: req.body.description,
+        commonInterests: req.body.commonInterests,
+        preconditions: req.body.preconditions,
+        initiator: req.body.initiator,
+        managers: req.body.managers,
+        participants: req.body.participants,
+        images: req.body.images,
+        qrCode: req.body.qrCode,
+        activityHistory: [],
+        creationTime: Date()
+    };
+    let result = database.createGroup(newGroup);
+    res.send(result);
 });
 
 app.post('/editGroup', (req, res) => {
-	console.log('NOT YET IMPLEMENTED.');
+    console.log('NOT YET IMPLEMENTED.');
 });
 
 app.post('/addCommonInterest', (req, res) => {
-	console.log('NOT YET IMPLEMENTED.');
+    console.log('NOT YET IMPLEMENTED.');
 });
 
 app.post('/removeCommonInterest', (req, res) => {
-	console.log('NOT YET IMPLEMENTED.');
+    console.log('NOT YET IMPLEMENTED.');
 });
 
 app.post('/addGroupPrecondition', (req, res) => {
-	console.log('NOT YET IMPLEMENTED.');
+    console.log('NOT YET IMPLEMENTED.');
 });
 app.get('/searchActivity', (req, res) => {
     console.log('NOT YET IMPLEMENTED.');
@@ -263,10 +278,11 @@ app.get('/getAllActivities', (req, res) => {
 app.get('/getMyActivities', (req, res) => {
     database.getAllActivities().then((activities) => {
         const userId = '627659c91fbdd7e2c67d5e11';
-        const filtered = 
-        activities.filter((act) => { return act.participants && Array.isArray(act.participants)})
-        .filter((act) => {return act.participants.find((p) => {return p === userId})}); 
-        res.send(filtered) });
+        const filtered =
+            activities.filter((act) => { return act.participants && Array.isArray(act.participants) })
+                .filter((act) => { return act.participants.find((p) => { return p === userId }) });
+        res.send(filtered)
+    });
 });
 
 /** Interests */
@@ -282,7 +298,6 @@ app.get('/allInterests', (req, res) => {
             res.status(500).send(msg);
             console.error(msg);
         });
-
 });
 
 /** GROUPS */
