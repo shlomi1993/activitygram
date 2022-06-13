@@ -7,6 +7,7 @@ const Event = require('./Event.js');
 const Group = require('./Group.js');
 const { MongoClient, ObjectId } = require('mongodb');
 const crypto = require('crypto');
+const { error } = require('console');
 const hash = crypto.createHash('sha512');
 
 const client = new MongoClient(conn.Database.uri);
@@ -85,45 +86,56 @@ module.exports.createUser = async function(newUser) {
 	return `New user created with the id: ${uid}`;
 };
 
+//get User by ID
+module.exports.getUserById = async function(userId) {
+	const result = await users.find({ _id: ObjectId(userId) }).toArray();
+	return result[0];
+};
+
+
 //Update functions
-async function changeFirstName(curr_user, firstName) {
+async function changeUserFirstName(curr_user, firstName) {
 	const result = await users.updateOne({ _id: curr_user.id }, { $set: { firstName: firstName } });
 }
 
-async function changeLastName(curr_user, lastName) {
+async function changeUserLastName(curr_user, lastName) {
 	const result = await users.updateOne({ _id: curr_user.id }, { $set: { lastName: lastName } });
 }
 
-async function changeDateOfBirth(curr_user, dateOfBirth) {
+async function changeUserDateOfBirth(curr_user, dateOfBirth) {
 	const result = await users.updateOne({ _id: curr_user.id }, { $set: { dateOfBirth: dateOfBirth } });
 }
 
-async function changeAge(curr_user, age) {
+async function changeUserAge(curr_user, age) {
 	const result = await users.updateOne({ _id: curr_user.id }, { $set: { age: age } });
 }
 
-async function changeCountry(curr_user, country) {
+async function changeUserCountry(curr_user, country) {
 	const result = await users.updateOne({ _id: curr_user.id }, { $set: { country: country } });
 }
 
-async function changeProfileImage(curr_user, profileImage) {
+async function changeUserProfileImage(curr_user, profileImage) {
 	const result = await users.updateOne({ _id: curr_user.id }, { $set: { profileImage: profileImage } });
 }
 
-async function changeBio(curr_user, bio) {
+async function changeUserBio(curr_user, bio) {
 	const result = await users.updateOne({ _id: curr_user.id }, { $set: { bio: bio } });
 }
 
-async function changeFriendsList(curr_user, friendsList) {
+async function changeUserFriendsList(curr_user, friendsList) {
 	const result = await users.updateOne({ _id: curr_user.id }, { $set: { friendsList: friendsList } });
 }
 
-async function changeIntrests(curr_user, intrests) {
+async function changeUserIntrests(curr_user, intrests) {
 	const result = await users.updateOne({ _id: curr_user.id }, { $set: { intrests: intrests } });
 }
 
-async function changeActivityLog(curr_user, activityLog) {
+async function changeUserActivityLog(curr_user, activityLog) {
 	const result = await users.updateOne({ _id: curr_user.id }, { $set: { activityLog: activityLog } });
+}
+
+module.exports.updateActivityParticipants = async function(activityId, participantsArr) {
+	await activities.updateOne({ _id: ObjectId(activityId) }, { $set: { participants: participantsArr } });
 }
 
 // print databases
@@ -148,11 +160,66 @@ async function createNewTag(client, newTag) {
 }
 
 // search events
-module.exports.searchActivity = async function(keyword) {
-	events.createIndex({ title: 'text', description: 'text' });
-	query = { $text: { $search: keyword } };
-	const eventList = await events.find(query).toArray();
-	return eventList;
+module.exports.searchActivity = async function(keyword, userState, activitiesState, groupsState) {
+	console.log(`\nin searchActivity = async function(keyword, userState, activitiesState, groupsState)`)
+	let usersFound = []
+	let activitiesFound = []
+	let groupsFound = []
+
+	// searching in database...
+	if(userState=="true"){
+		// const wheretoSearch = [firstName, lastName, bio, city, state, school, interests, activityLog]
+		console.log(`userState is true`)
+		const options = {$or:[
+			{firstName: keyword},
+			{lastName: keyword},
+			{bio: keyword},
+			{city: keyword},
+			{state: keyword},
+			{school: keyword},
+			{interests: keyword},
+			{country: keyword}
+		]}
+		usersFound = await users.find(options).toArray()
+		console.log(`found ${usersFound.length} users`)
+		console.log(`usersFound = ${JSON.stringify(usersFound)}`)
+	}
+	if(activitiesState=="true"){
+		console.log(`activitiesState is true`)
+		const options = {$or:[
+			{description: keyword},
+			{conditions: keyword},
+			{group_managers: keyword},
+			{participants: keyword},
+			{tags: keyword},
+			{title: keyword}
+		]}
+		activitiesFound = await activities.find(options).toArray()
+		console.log(`found ${activitiesFound.length} activities`)
+		console.log(`activitiesFound = ${JSON.stringify(activitiesFound)}`)
+	}
+	if(groupsState=="true"){
+		console.log(`activitiesState is true`)
+		const options = {$or:[
+			{description: keyword},
+			{conditions: keyword},
+			{group_managers: keyword},
+			{participants: keyword},
+			{tags: keyword},
+			{title: keyword}
+		]}
+		groupsFound = await groups.find(options).toArray()
+		console.log(`found ${groupsFound.length} groups`)
+		console.log(`groupsFound = ${JSON.stringify(groupsFound)}`)
+	}
+
+	// get all found data together and return it
+	console.log(`end of searchActivity\n`)
+	const allFoundObjects = []
+	allFoundObjects.push(usersFound)
+	allFoundObjects.push(activitiesFound)
+	allFoundObjects.push(groupsFound)
+	return allFoundObjects
 };
 
 //creat NewEvent
@@ -169,8 +236,8 @@ async function createNewGroup(client, newGroup) {
 }
 
 //get Activity by ID
-module.exports.getActivityById = async function(eventId) {
-	const result = await activities.find({ _id: ObjectId(eventId) }).toArray();
+module.exports.getActivityById = async function(activityId) {
+	const result = await activities.find({ _id: ObjectId(activityId) }).toArray();
 	return result[0];
 };
 
@@ -178,4 +245,14 @@ module.exports.getActivityById = async function(eventId) {
 module.exports.getAllActivities = async function() {
 	const result = await activities.find().toArray();
 	return result;
+};
+
+// Get All Interests
+module.exports.getAllInterests = async function() {
+    const result = await interests.find().toArray();
+    array = []
+    for (const item of result) {
+        array.push(item.title)
+    }
+	return array;
 };
