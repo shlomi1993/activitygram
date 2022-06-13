@@ -1,21 +1,18 @@
 import React, { useEffect, useLayoutEffect, useState, useRef, useContext } from 'react';
-import { Platform, FlatList, ScrollView } from 'react-native';
+import { Platform, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useHeaderHeight } from '@react-navigation/stack';
-import { useTheme } from '../hooks';
-import { Block, Image, Text, Input, Button } from '../components';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
+
+import { useTheme, useTranslation } from '../hooks';
+import { Block, Image, Text, Input, Button, Switch, Modal } from '../components';
+import { userContext } from '../../App'
+
 import Moment from 'moment';
 import { TextInput } from 'react-native-paper';
-import Switch from '../components/Switch'
-import Modal from '../components/Modal';
 import * as ImagePicker from 'expo-image-picker'
-import { userContext } from '../../App'
-import { useTranslation } from '../hooks';
-import Toast from 'react-native-toast-message'
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
-import MultiSelect from 'react-native-multiple-select';
-
+import Toast from 'react-native-toast-message'
 
 export const baseUri = Platform.OS === 'android' ? 'http://10.0.2.2:8080/' : 'http://127.0.0.1/8080/';
 const { t } = useTranslation();
@@ -83,6 +80,8 @@ const Form = () => {
   const [users, setUsers] = useState([]);
   const [selectedParticipants, setSelectedParticipants] = useState([]);
   const [selectedManagers, setSelectedManagers] = useState([]);
+  const [showParticipantsModal, setShowParticipantsModal] = useState(false);
+  const [showManagersModal, setShowManagersModal] = useState(false);
 
   // Title
   const [title, setTitle] = useState('')
@@ -132,30 +131,13 @@ const Form = () => {
     fetch(baseUri + 'allInterests')
       .then((result) => result.json())
       .then((json) => {
-        let interestArray = []
-        for (const interest of json) {
-          let category = {
-            id: interest._id,
-            title: interest.title
-          }
-          interestArray.push(category);
-        }
-        setCategories(interestArray);
+        setCategories(json);
       })
       .catch(() => setCategories([]));
     fetch(baseUri + 'allUsers')
       .then((result) => result.json())
       .then((json) => {
-        let userArray = []
-        for (const user of json) {
-          var username = (user.username) ? user.username : user.firstName + ' ' + user.lastName;
-          let userObj = {
-            id: user._id,
-            title: username + ' | ' + user.bio
-          }
-          userArray.push(userObj);
-        }
-        setUsers(userArray)
+        setUsers(json)
       })
       .catch(() => setUsers([]));
   }, []);
@@ -311,7 +293,8 @@ const Form = () => {
     }
   }
 
-  const create = () => () => {
+  // Create a new activity instance in the DB
+  const create = () => {
     let images = []
     if (image1) images.push(image1['base64'])
     if (image2) images.push(image2['base64'])
@@ -360,41 +343,22 @@ const Form = () => {
       <Text p semibold marginBottom={sizes.sm}>{t('Post.PleaseFill')}</Text>
 
       <Block>
-
-        <Block marginBottom={sizes.sm}>
-          <Input value={initiator.uid} editable={false} disabled />
+        <Block row marginBottom={sizes.sm}>
+          <Image style={{ width: 60, height: 60 }} source={{ uri: initiator.image }} marginRight={sizes.sm} />
+          <Text p semibold marginTop={sizes.sm} align='center'>{initiator.username}</Text>
         </Block>
 
         <Block marginBottom={sizes.xs}>
           <Text p semibold>{t('Post.SelectCategory')}</Text>
         </Block>
-        <AutocompleteDropdown showClear={true} closeOnBlur={true} closeOnSubmit={false} dataSet={categories}
+        <AutocompleteDropdown closeOnBlur={true} closeOnSubmit={false} dataSet={categories} clearOnFocus={true}
           direction={'down'} onSelectItem={(category) => {
-            if (category) { setSelectedCategory(category.title); }
+            if (category && category.title) {
+              setSelectedCategory(category.title);
+            }
           }} />
-        <Block marginBottom={sizes.sm}></Block>
 
-        {/* <Block marginBottom={sizes.sm} marginTop={sizes.xs}>
-          <Button row gradient={gradients.dark} onPress={() => setShowCategoryModal(true)}>
-            <Block row align="center" justify="space-between" paddingHorizontal={sizes.sm}>
-              <Text white bold marginRight={sizes.sm}>{selectedCategory}</Text>
-              <Image source={assets.arrow} color={colors.white} transform={[{ rotate: '90deg' }]} />
-            </Block>
-          </Button>
-          <Modal visible={showCategoryModal} onRequestClose={() => setShowCategoryModal(false)}>
-            <FlatList keyExtractor={(index) => `${index}`} data={categories} renderItem={({ item }) => (
-              <Button marginBottom={sizes.sm} onPress={() => {
-                setSelectedCategory(item);
-                setShowCategoryModal(false);
-              }}>
-                <Text p white semibold transform="uppercase">{item}</Text>
-              </Button>
-            )}
-            />
-          </Modal>
-        </Block> */}
-
-        <Block marginBottom={sizes.sm}>
+        <Block marginBottom={sizes.sm} marginTop={sizes.sm}>
           <TextInput label={t('Post.ActivityTitle')} mode='outlined' autoComplete={false}
             activeOutlineColor={colors.info} onChangeText={(newText) => { setTitle(newText) }} />
         </Block>
@@ -510,10 +474,10 @@ const Form = () => {
           </Block>
         </Block>
 
-        <Block marginBottom={sizes.xs}>
+        <Block marginBottom={sizes.sm}>
           <Text p semibold>{t('Post.SelectParticipant')}</Text>
         </Block>
-        <AutocompleteDropdown showClear={true} closeOnBlur={true} closeOnSubmit={false} dataSet={users}
+        <AutocompleteDropdown closeOnBlur={true} closeOnSubmit={false} dataSet={users} clearOnFocus={true}
           direction={'up'} onSelectItem={(user) => {
             if (user) {
               let array = selectedParticipants;
@@ -521,11 +485,29 @@ const Form = () => {
               setSelectedParticipants(array);
             }
           }} />
+        <Block marginBottom={sizes.sm} marginTop={sizes.sm}>
+          <Button row gradient={gradients.dark} onPress={() => setShowParticipantsModal(true)}>
+            <Block align="center" paddingHorizontal={sizes.sm}>
+              <Text white bold marginRight={sizes.sm}>Participants List</Text>
+            </Block>
+          </Button>
+          <Modal visible={showParticipantsModal} onRequestClose={() => setShowParticipantsModal(false)}>
+            <FlatList keyExtractor={(index) => `${index}`} data={selectedParticipants} renderItem={({ item }) => (
+              <Button marginBottom={sizes.sm} onPress={() => {
+                console.warn('DISPLAY USER PROFILE...')
+                // navigation.navigate('')
+              }}>
+                <Text p white semibold transform="uppercase">{item.title}</Text>
+              </Button>
+            )}
+            />
+          </Modal>
+        </Block>
 
-        <Block marginBottom={sizes.xs} marginTop={sizes.sm}>
+        <Block marginBottom={sizes.sm}>
           <Text p semibold>{t('Post.SelectManagers')}</Text>
         </Block>
-        <AutocompleteDropdown showClear={true} closeOnBlur={true} closeOnSubmit={false} dataSet={selectedParticipants}
+        <AutocompleteDropdown closeOnBlur={true} closeOnSubmit={false} dataSet={selectedParticipants}
           direction={'up'} onSelectItem={(user) => {
             if (user) {
               let array = selectedManagers;
@@ -533,6 +515,26 @@ const Form = () => {
               setSelectedManagers(array);
             }
           }} />
+        <Block marginBottom={sizes.sm} marginTop={sizes.sm}>
+          <Button row gradient={gradients.dark} onPress={() => setShowManagersModal(true)}>
+            <Block align="center" paddingHorizontal={sizes.sm}>
+              <Text white bold marginRight={sizes.sm}>Managers List</Text>
+            </Block>
+          </Button>
+          <Modal visible={showManagersModal} onRequestClose={() => setShowManagersModal(false)}>
+            <FlatList keyExtractor={(index) => `${index}`} data={selectedManagers} renderItem={({ item }) => (
+              <Button marginBottom={sizes.sm} onPress={() => {
+                console.warn('DISPLAY MANAGER PROFILE...')
+                // navigation.navigate('')
+              }}>
+                <Text p white semibold transform="uppercase">{item.title}</Text>
+              </Button>
+            )}
+            />
+          </Modal>
+        </Block>
+
+
         <Block marginBottom={sizes.sm}></Block>
 
       </Block>
