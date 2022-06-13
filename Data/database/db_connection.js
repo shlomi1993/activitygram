@@ -248,11 +248,31 @@ module.exports.getAllActivities = async function() {
 };
 
 // Get All Interests
-module.exports.getAllInterests = async function() {
+module.exports.getAllInterests = async function () {
     const result = await interests.find().toArray();
     array = []
     for (const item of result) {
-        array.push(item.title)
+        if (item.title) {
+            array.push({
+                id: item._id.toString(),
+                title: item.title
+            })
+        }
     }
-	return array;
+    return array;
+};
+
+// Get all users
+module.exports.getAllUsers = async function () {
+    const result = await users.find().toArray();
+    let array = []
+    for (const item of result) {
+        if (item.firstName && item.lastName && item.bio) {
+            array.push({
+                id: item._id.toString(),
+                title: item.firstName + ' ' + item.lastName + ' | ' + item.bio
+            })
+        }
+    }
+    return array;
 };
