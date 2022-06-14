@@ -55,11 +55,7 @@ const ForYou = () => {
     <Block safe>
       {/* categories list */}
       <Block color={colors.card} row flex={0} paddingVertical={sizes.padding}>
-        <Block
-          scroll
-          horizontal
-          renderToHardwareTextureAndroid
-          showsHorizontalScrollIndicator={false}
+        <Block scroll horizontal renderToHardwareTextureAndroid showsHorizontalScrollIndicator={false}
           contentOffset={{ x: -sizes.padding, y: 0 }}>
           {categories?.map((category) => {
             const isSelected = category?.id === selected?.id;
