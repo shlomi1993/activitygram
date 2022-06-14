@@ -18,30 +18,6 @@ import * as Animatable from 'react-native-animatable';
 
 export const AuthContext = React.createContext(undefined as any);
 
-const handleSignIn = (email, password) => {
-  auth
-    .signInWithEmailAndPassword(email, password)
-    .then(userCredentials => {
-      const user = userCredentials.user;
-      console.log('Logged in with:', user.email);
-      return user;
-    })
-    .catch(error => alert(error.message));
-    return 'dummy-token'
-};
-
-const handleSignUp = (email, password) => {
-  auth
-    .createUserWithEmailAndPassword(email, password)
-    .then(userCredentials => {
-      const user = userCredentials.user;
-      console.log('Registered with:', user.email);
-      return user;
-    })
-    .catch(error => alert(error.message));
-    return 'dummy-token'
-
-};
 
 const SignInScreen = () => {
   const {gradients, sizes} = useTheme();
@@ -292,7 +268,7 @@ const RootStackScreen = () => {
 };
 export default () => {
   const {isDark, theme, setTheme} = useData();
-
+  const [user, setUser] = React.useState('');
   /* set the status bar based on isDark constant */
   // React.useEffect(() => {
   //   Platform.OS === 'android' && StatusBar.setTranslucent(true);
@@ -308,7 +284,8 @@ export default () => {
       let userToken;
 
       try {
-        userToken = await SecureStore.getItemAsync('userToken');
+        console.log(user)
+        userToken = await SecureStore.getItemAsync(user);
       } catch (e) {
         console.log(e)
       }
@@ -322,6 +299,33 @@ export default () => {
 
     bootstrapAsync();
   }, []);
+
+  const handleSignIn = (email, password) => {
+    auth
+      .signInWithEmailAndPassword(email, password)
+      .then(userCredentials => {
+        const user = userCredentials.user;
+        console.log('Logged in with:', user.email);
+        setUser(user.uid)
+        return user;
+      })
+      .catch(error => alert(error.message));
+      return 'dummy-token'
+  };
+  
+  const handleSignUp = (email, password) => {
+    auth
+      .createUserWithEmailAndPassword(email, password)
+      .then(userCredentials => {
+        const user = userCredentials.user;
+        console.log(userCredentials.user.getIdToken)
+        console.log('Registered with:', user.email);
+        return user.uid
+      })
+      .catch(error => alert(error.message));
+      return 'dummy-token'
+  
+  };
 
 
 
@@ -365,8 +369,10 @@ export default () => {
         // In the example, we'll use a dummy token
         console.log('signed in')
         const userToken = handleSignIn(data.email, data.password)
-        await SecureStore.setItemAsync('userToken', data.email);
-        dispatch({ type: 'SIGN_IN', token: 'userToken' });
+        setUser(userToken)
+        console.log(user)
+        await SecureStore.setItemAsync(user, user);
+        dispatch({ type: 'SIGN_IN', token: user });
       },
       signOut: () => {
         // auth.signOut(auth)
@@ -377,8 +383,10 @@ export default () => {
         // We will also need to handle errors if sign up failed
         // After getting token, we need to persist the token using `SecureStore`
         // In the example, we'll use a dummy token
+        setUser(data.email)
         console.log('signed up')
         const userToken = handleSignUp(data.email, data.password)
+        await SecureStore.setItemAsync(userToken, user);
         dispatch({ type: 'SIGN_IN', token: userToken });
       },
     }),
