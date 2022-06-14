@@ -119,7 +119,6 @@ const Form = () => {
   const [image3, setImage3] = useState(null);
 
   // Participants and Managers
-  const [showUsersModal, setShowUsersModal] = useState(false);
   const [users, setUsers] = useState([]);
   const [selectedParticipants, setSelectedParticipants] = useState([]);
   const [selectedManagers, setSelectedManagers] = useState([]);
@@ -138,9 +137,15 @@ const Form = () => {
     fetch(baseUri + 'allUsers')
       .then((result) => result.json())
       .then((json) => {
+        // for (const u of json) {
+        //   u.title = u.title.slice(0, 40) + '...'
+        // }
         setUsers(json)
       })
-      .catch(() => setUsers([]));
+      .catch(() => {
+        console.error('Could not fetch users from DB.');
+        setUsers([]);
+      });
   }, []);
 
   // Creates Date object out of date and time strings (or null).
