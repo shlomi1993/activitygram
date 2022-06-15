@@ -10,6 +10,7 @@ import 'react-native-gesture-handler';
 import { IUser } from '../constants/types';
 
 import { BASE_URL } from '../constants/appConstants';
+import { AuthContext } from '../navigation/App';
 
 const isAndroid = Platform.OS === 'android';
 
@@ -61,6 +62,7 @@ const Profile = () => {
   const headerHeight = useHeaderHeight();
   const [profile, setProfile] = useState<IUser>();
   const {t} = useTranslation();
+  const { signOut } = React.useContext(AuthContext);
 
   useEffect(() => {
     const userId = '627659c91fbdd7e2c67d5e11';
@@ -109,7 +111,8 @@ const Profile = () => {
         paddingHorizontal={sizes.s}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingBottom: sizes.padding}}>
-        <Block flex={0} marginTop={sizes.sm}>
+        <Block flex={0} marginTop={sizes.xs}>
+          <Button align='flex-end' onPress={() => {signOut()}}><Text secondary>Log out</Text></Button>
           <Image
             background
             resizeMode="cover"
