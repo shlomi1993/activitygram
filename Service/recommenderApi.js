@@ -12,12 +12,13 @@ module.exports.train_cf = async function(interests_csv, ratings_csv) {
 	await axios
 		.get(request)
 		.then((res) => {
-			result = res.data;
+            result = res.data;
+            console.log(result.result)
 		})
         .catch((error) => {
-			console.error('train_cf request failed:', error.response.status, error.response.statusText);
+			console.error('train_cf request failed');
 		});
-	return JSON.parse(result);
+	return result;
 };
 
 module.exports.predict_cf = async function(uid, k, userbased) {

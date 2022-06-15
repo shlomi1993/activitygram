@@ -19,8 +19,8 @@ var userActivityLogSizes = {};
 
 async function refreshPredMatrix(currentNumberOfRatings) {
     if (ratingsSize * 1.05 < currentNumberOfRatings) {
-        database.fetchDataForCF();
-        ratingsSize = currentNumberOfRatings;
+        ratingsSize = database.fetchDataForCF();
+        recommender.train_cf(database.interestsPath, database.ratingsPath);
         console.log('Prediction matrix refreshed.');
     } else {
         console.log('Prediction matrix is sufficiently updated.');
@@ -161,6 +161,7 @@ app.post('/createUser', (req, res) => {
         .then((result) => {
             res.status(200).send(result);
             console.log('createUser request succeeded.');
+            database.fetchDataForCF();
         })
         .catch((error) => {
             let msg = 'createUser request failed.';
@@ -348,6 +349,11 @@ app.get('/getActivityPrediction', (req, res) => {
     console.log('NOT YET IMPLEMENTED.');
     // let test = req.query.test; // test should hold all activities that their interests list contains the given interest.
     // recommender.predict_nn(uid, test).then((topk) => res.send(topk));
+});
+
+app.get('/refreshPredMatrix', (req, res) => {
+    database.fetchDataForCF(100000);
+    recommender.train_cf(database.interestsPath, database.ratingsPath);
 });
 
 app.listen(conn.App.port, () => {
