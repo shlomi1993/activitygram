@@ -14,6 +14,8 @@ const { PythonShell } = require('python-shell');
 const recommenderService = new PythonShell('../Data/recommender/recommender.py');
 const geocoderService = new PythonShell('../Data/geocoder/geocoder.py');
 
+let allActivities;
+
 var ratingsSize = 0;
 var userActivityLogSizes = {};
 
@@ -276,17 +278,45 @@ app.get('/searchActivity', (req, res) => {
 });
 
 app.get('/getAllActivities', (req, res) => {
-    database.getAllActivities().then((activities) => { res.send(activities) });
+    database.getAllActivities().then((activities) => {
+        allActivities = activities 
+        res.send(activities) 
+    });
 });
 
 app.get('/getMyActivities', (req, res) => {
-    database.getAllActivities().then((activities) => {
-        const userId = '627659c91fbdd7e2c67d5e11';
+    console.log(req.query.user_id)
+    if(allActivities) {
         const filtered =
-            activities.filter((act) => { return act.participants && Array.isArray(act.participants) })
-                .filter((act) => { return act.participants.find((p) => { return p === userId }) });
+        allActivities.filter((act) => { return act.participants && Array.isArray(act.participants) })
+            .filter((act) => { return act.participants.find((p) => { return p === req.query.user_id }) });
         res.send(filtered)
-    });
+    } else {
+        database.getAllActivities().then((activities) => {
+            const userId = req.query.user_id;
+            const filtered =
+                activities.filter((act) => { return act.participants && Array.isArray(act.participants) })
+                    .filter((act) => { return act.participants.find((p) => { return p === req.query.user_id }) });
+            res.send(filtered)
+        });
+    }
+});
+
+app.get('/getCreatedByUserActivities', (req, res) => {
+    if(allActivities) {
+        const filtered =
+        allActivities.filter((act) => { return act.managers && Array.isArray(act.managers) })
+            .filter((act) => { return act.managers.find((p) => { return p === req.query.user_id }) });
+        res.send(filtered)
+    } else {
+        database.getAllActivities().then((activities) => {
+            const filtered =
+                activities.filter((act) => { return act.managers && Array.isArray(act.managers) })
+                    .filter((act) => { return act.managers.find((p) => { return p === req.query.user_id }) });
+            res.send(filtered)
+        });       
+    }
+
 });
 
 /** Interests */

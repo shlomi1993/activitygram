@@ -32,6 +32,7 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
   const [article, setArticle] = useState<IBigCard>({});
   const [userEmail, setUserEmail] = useState<string>();
   const [allActivities, setAllActivities] = useState<IActivity[]>();
+  const [myActivities, setMyActivities] = useState<IActivity[]>();
 
   // get isDark mode from storage
   const getIsDark = useCallback(async () => {
@@ -141,7 +142,9 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
     setUserEmail,
     getUserEmail,
     allActivities,
-    setAllActivities
+    setAllActivities,
+    myActivities,
+    setMyActivities
   };
 
   return (

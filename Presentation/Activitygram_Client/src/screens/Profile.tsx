@@ -1,70 +1,40 @@
 import React, {useLayoutEffect, useState, useCallback, useEffect } from 'react';
 import {Platform, Linking} from 'react-native';
-import {Ionicons} from '@expo/vector-icons';
 import {useNavigation} from '@react-navigation/native';
 import {useHeaderHeight} from '@react-navigation/stack';
-import Storage from '@react-native-async-storage/async-storage';
 
 import { useData, useTheme, useTranslation } from '../hooks';
-import { Block, Button, Image, Text } from '../components';
+import { Block, Button, Image, Text, Card } from '../components';
 import 'react-native-gesture-handler';
-import { IUser } from '../constants/types';
+import { IActivity, IUser } from '../constants/types';
 
 import { BASE_URL } from '../constants/appConstants';
 import { AuthContext } from '../navigation/App';
 
 const isAndroid = Platform.OS === 'android';
 
-const ImageSeries = () => {
-  const {assets, sizes, colors } = useTheme();
-
-  const IMAGE_SIZE = (sizes.width - (sizes.padding + sizes.sm) * 2) / 3;
-  const IMAGE_VERTICAL_SIZE =
-    (sizes.width - (sizes.padding + sizes.sm) * 2) / 2;
-  const IMAGE_MARGIN = (sizes.width - IMAGE_SIZE * 3 - sizes.padding * 2) / 2;
-  const IMAGE_VERTICAL_MARGIN =
-    (sizes.width - (IMAGE_VERTICAL_SIZE + sizes.sm) * 2) / 2;
-
-  return(
-    <Block row justify="space-between" wrap="wrap">
-            <Image
-              resizeMode="cover"
-              source={assets?.background}
-              marginBottom={IMAGE_MARGIN}
-              style={{
-                height: IMAGE_SIZE,
-                width: IMAGE_SIZE,
-              }}
-            />
-            <Image
-              resizeMode="cover"
-              source={assets?.background}
-              marginBottom={IMAGE_MARGIN}
-              style={{
-                height: IMAGE_SIZE,
-                width: IMAGE_SIZE,
-              }}
-            />
-            <Image
-              resizeMode="cover"
-              source={assets?.background}
-              marginBottom={IMAGE_MARGIN}
-              style={{
-                height: IMAGE_SIZE,
-                width: IMAGE_SIZE,
-              }}
-            />
-    </Block>
-  )
-}
 const Profile = () => {
   const {assets, sizes, colors } = useTheme();
-  const { user } = useData();
+  const { user, myActivities, allActivities } = useData();
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
   const [profile, setProfile] = useState<IUser>();
+  const [createdByUser, setCreatedByUser] = useState<IActivity[]>();
   const {t} = useTranslation();
   const { signOut } = React.useContext(AuthContext);
+
+ useEffect(() => {
+  (fetch(BASE_URL + 'getCreatedByUserActivities?user_id=' + user._id.toString(), {
+    method: 'GET'
+ })
+ .then((response) => response.json())
+ .then((responseJson) => {
+   setCreatedByUser(responseJson)
+ })
+ .catch((error) => {
+    console.error(error + " detected");
+ }))
+ }, []);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -79,7 +49,7 @@ const Profile = () => {
       ),
     });
   }, [assets.background, navigation, sizes.width, headerHeight]);
-
+  
   const IMAGE_SIZE = (sizes.width - (sizes.padding + sizes.sm) * 2) / 4;
   const IMAGE_MARGIN = (sizes.width - IMAGE_SIZE * 3 - sizes.padding * 2) / 2;
 
@@ -141,14 +111,12 @@ const Profile = () => {
                 <Text center marginBottom={sizes.sm}>{bio}</Text>
             </Block>
           </Block>
-
+          {/* interests in */}
           <Block paddingHorizontal={sizes.sm} marginTop={sizes.sm}>
           <Block row align="center" justify="space-between">
             <Text h4 semibold>
             {t('profile.InterestsIn')}
             </Text>
-            <Button>
-            </Button>
           </Block>
           <Block row justify="space-between" wrap="wrap">
           {interests?.map((interest) => (
@@ -170,22 +138,45 @@ const Profile = () => {
           ))}
 
           </Block>
-          
+          {/* participated in */}
           <Block row align="center" justify="space-between">
-            <Text h4 semibold>
+            <Text h4 semibold marginBottom={sizes.s}>
             {t('profile.ParticipatedIn')}
             </Text>
-            <Button onPress={() => {console.log('Pressed')}}>
-              <Text p primary semibold>
-                View all
-              </Text>
-            </Button>
           </Block>
-          <ImageSeries/>
+          <Block
+          scroll
+          horizontal
+          renderToHardwareTextureAndroid
+          showsHorizontalScrollIndicator={false}
+          contentOffset={{x: -sizes.padding, y: 0}}>
+          {myActivities?.map((activity) => (
+            // need to change title to id
+            <Card {...activity} key={`card-${activity?._id}`} type="vertical" isProfile={true} />
+          ))}
+          </Block>
+                    
+          {/* Created by user */}
+            <Block row align="center" justify="space-between">
+            <Text h4 semibold marginBottom={sizes.s}>
+            {t('profile.createdByUser')}
+            </Text>
+          </Block>
+          <Block
+          scroll
+          horizontal
+          renderToHardwareTextureAndroid
+          showsHorizontalScrollIndicator={false}
+          contentOffset={{x: -sizes.padding, y: 0}}>
+          {createdByUser?.map((activity) => (
+            // need to change title to id
+            <Card {...activity} key={`card-${activity?._id}`} type="vertical" isProfile={true} />
+          ))}
           </Block>
         </Block>
       </Block>
     </Block>
+  </Block>
   );
 };
 
