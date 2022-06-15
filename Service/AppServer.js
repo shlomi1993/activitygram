@@ -127,7 +127,6 @@ app.get('/getUser', (req, res) => {
 });
 
 app.get('/getUserByEmail', (req, res) => {
-    console.log(req.query.user_email)
     database.getUserByEmail(req.query.user_email).then((user) => res.send(user));
 });
 

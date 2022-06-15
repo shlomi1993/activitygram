@@ -31,7 +31,7 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
   const [articles, setArticles] = useState<IBigCard[]>(ARTICLES);
   const [article, setArticle] = useState<IBigCard>({});
   const [userEmail, setUserEmail] = useState<string>();
-  const [activities, setActivities] = useState<IActivity>();
+  const [allActivities, setAllActivities] = useState<IActivity[]>();
 
   // get isDark mode from storage
   const getIsDark = useCallback(async () => {
@@ -46,7 +46,6 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
 
   const getUserEmail = useCallback(async () => {
     const userEmail = await Storage.getItem('userEmail');
-    console.log(userEmail)
     if (userEmail !== null) {
       setUserEmail(userEmail);
       fetch(BASE_URL + 'getUserByEmail?user_email=' + userEmail.toString(), {
@@ -107,10 +106,6 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
 
   useEffect(() => {
   }, [isDark]);
-
-  useEffect(() => {
-    getUserEmail();
-  }, []);
 
   useEffect(() => {
     getUserEmail();
