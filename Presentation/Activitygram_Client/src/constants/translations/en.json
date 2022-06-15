@@ -87,7 +87,8 @@
     "bio": "Bio",
     "ParticipatedIn": "Participated in",
     "InterestsIn": "Interests in",
-    "logout": "Log Out"
+    "logout": "Log Out",
+    "createdByUser": "Created by user"
   },
   "activity": {
     "going": "Going",
