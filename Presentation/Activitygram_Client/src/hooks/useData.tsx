@@ -8,6 +8,7 @@ import {
   IUser,
   IUseData,
   ITheme,
+  IActivity,
 } from '../constants/types';
 
 import {
@@ -18,19 +19,19 @@ import {
   ARTICLES,
 } from '../constants/mocks';
 import {light} from '../constants';
+import { BASE_URL } from '../constants/appConstants';
 
 export const DataContext = React.createContext({});
 
 export const DataProvider = ({children}: {children: React.ReactNode}) => {
   const [isDark, setIsDark] = useState(false);
   const [theme, setTheme] = useState<ITheme>(light);
-  const [user, setUser] = useState<IUser>(USERS[0]);
-  const [users, setUsers] = useState<IUser[]>(USERS);
-  const [following, setFollowing] = useState<ICard[]>(FOLLOWING);
-  const [trending, setTrending] = useState<ICard[]>(TRENDING);
+  const [user, setUser] = useState<IUser>();
   const [categories, setCategories] = useState<ICategory[]>(CATEGORIES);
   const [articles, setArticles] = useState<IBigCard[]>(ARTICLES);
   const [article, setArticle] = useState<IBigCard>({});
+  const [userEmail, setUserEmail] = useState<string>();
+  const [allActivities, setAllActivities] = useState<IActivity[]>();
 
   // get isDark mode from storage
   const getIsDark = useCallback(async () => {
@@ -43,6 +44,24 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
     }
   }, [setIsDark]);
 
+  const getUserEmail = useCallback(async () => {
+    const userEmail = await Storage.getItem('userEmail');
+    if (userEmail !== null) {
+      setUserEmail(userEmail);
+      fetch(BASE_URL + 'getUserByEmail?user_email=' + userEmail.toString(), {
+        method: 'GET'
+      })
+        .then((response) => response.json())
+        .then((responseJson) => {
+          setUser(responseJson);
+        })
+        .catch((error) => {
+          console.error(error + " detected");
+        });
+  
+    }
+  }, [user, setUser, setUserEmail]);
+
   // handle isDark mode
   const handleIsDark = useCallback(
     (payload: boolean) => {
@@ -53,18 +72,6 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
     },
     [setIsDark],
   );
-
-  // handle users / profiles
-  const handleUsers = useCallback(
-    (payload: IUser[]) => {
-      // set users / compare if has updated
-      if (JSON.stringify(payload) !== JSON.stringify(users)) {
-        setUsers({...users, ...payload});
-      }
-    },
-    [users, setUsers],
-  );
-
   // handle user
   const handleUser = useCallback(
     (payload: IUser) => {
@@ -97,25 +104,29 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
     setTheme(isDark ? light : light);
   }, [isDark]);
 
+  useEffect(() => {
+  }, [isDark]);
+
+  useEffect(() => {
+    getUserEmail();
+  }, []);
+
   const contextValue = {
     isDark,
     handleIsDark,
     theme,
     setTheme,
     user,
-    users,
-    handleUsers,
     handleUser,
-    following,
-    setFollowing,
-    trending,
-    setTrending,
     categories,
     setCategories,
     articles,
     setArticles,
     article,
     handleArticle,
+    userEmail,
+    setUserEmail,
+    getUserEmail
   };
 
   return (

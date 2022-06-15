@@ -57,18 +57,17 @@ export interface IUseData {
   theme: ITheme;
   setTheme: (theme?: ITheme) => void;
   user: IUser;
-  users: IUser[];
   handleUser: (data?: IUser) => void;
-  handleUsers: (data?: IUser[]) => void;
-  following: ICard[];
-  setFollowing: (data?: ICard[]) => void;
   categories: ICategory[];
   setCategories: (data?: ICategory[]) => void;
   articles: IBigCard[];
   setArticles: (data?: IBigCard[]) => void;
   allActivities: IActivity[];
   setAllActivities: (data?: IActivity[]) => void;
-  
+  userEmail: string;
+  setUserEmail: (data?: string) => void;
+  getUserEmail: () => string;
+
 }
 
 export interface ITranslate {
@@ -84,7 +83,8 @@ export interface IActivityComp {
 
 export interface IUser {
   _id: string,
-  fullName: string,
+  firstName: string,
+  lastName: string,
   username: string,
   activityLog: any[],
   age: number,

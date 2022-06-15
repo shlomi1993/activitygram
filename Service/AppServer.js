@@ -126,6 +126,10 @@ app.get('/getUser', (req, res) => {
     database.getUserById(req.query.user_id).then((user) => res.send(user));
 });
 
+app.get('/getUserByEmail', (req, res) => {
+    database.getUserByEmail(req.query.user_email).then((user) => res.send(user));
+});
+
 app.post('/createUser', (req, res) => {
     newUser = {
         username: req.body.username,
