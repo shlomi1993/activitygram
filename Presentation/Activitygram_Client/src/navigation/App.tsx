@@ -3,6 +3,7 @@ import * as SecureStore from 'expo-secure-store';
 import {useFonts} from 'expo-font';
 import AppLoading from 'expo-app-loading';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {View, Text, Platform, TouchableOpacity, Dimensions, TextInput, StatusBar, StyleSheet} from 'react-native';
 import { Button, Text as TextComp } from '../components';
 import Menu from './Menu';
@@ -29,16 +30,6 @@ const SignInScreen = () => {
       secureTextEntry: true
   })
   const { signIn } = React.useContext(AuthContext);
-//   useEffect(() => {
-//     const unsubscribe = auth.onAuthStateChanged(user => {
-//       if (user) {
-//         console.log('onAuthStateChanged')
-//         // navigation.navigate('Home');
-//       }
-//     });
-
-//     return unsubscribe;
-//   }, []);
 
   const textInputChange = (val) => {
       if(val.length !== 0) {
@@ -79,7 +70,7 @@ const SignInScreen = () => {
 
   return (
       <View style={styles.container}>
-        <StatusBar backgroundColor='#0abde3' barStyle='light-content'></StatusBar>
+        {/* <StatusBar backgroundColor='#fff' barStyle='light-content'></StatusBar> */}
         <View style={styles.header}>
             <Text style={styles.text_header}>Welcome</Text>
         </View>
@@ -133,17 +124,6 @@ const SignUpScreen = () => {
       confirm_secureTextEntry: true,
   })
   const { signUp } = React.useContext(AuthContext);
-
-//   useEffect(() => {
-//     const unsubscribe = auth.onAuthStateChanged(user => {
-//       if (user) {
-//         console.log('onAuthStateChanged')
-//         // navigation.navigate('Home');
-//       }
-//     });
-
-//     return unsubscribe;
-//   }, []);
 
   const callToSignUp = () => {
     const email = data.email;
@@ -200,7 +180,7 @@ const SignUpScreen = () => {
 
   return (
     <View style={styles.container}>
-        <StatusBar backgroundColor='#0abde3' barStyle='light-content'></StatusBar>
+        {/* <StatusBar backgroundColor='#fff' barStyle='light-content'></StatusBar> */}
         <View style={styles.header}>
             <Text style={styles.text_header}>Register now</Text>
         </View>
@@ -269,23 +249,14 @@ const RootStackScreen = () => {
 export default () => {
   const {isDark, theme, setTheme} = useData();
   const [user, setUser] = React.useState('');
-  /* set the status bar based on isDark constant */
-  // React.useEffect(() => {
-  //   Platform.OS === 'android' && StatusBar.setTranslucent(true);
-  //   StatusBar.setBarStyle(isDark ? 'light-content' : 'dark-content');
-  //   return () => {
-  //     StatusBar.setBarStyle('default');
-  //   };
-  // }, [isDark]);
 
   React.useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
       let userToken;
-
+      userToken = null;
       try {
-        console.log(user)
-        userToken = await SecureStore.getItemAsync(user);
+        userToken = await AsyncStorage.getItem('userToken')
       } catch (e) {
         console.log(e)
       }
@@ -301,6 +272,7 @@ export default () => {
   }, []);
 
   const handleSignIn = (email, password) => {
+    const token = email.replace('@', '.')
     auth
       .signInWithEmailAndPassword(email, password)
       .then(userCredentials => {
@@ -310,10 +282,11 @@ export default () => {
         return user;
       })
       .catch(error => alert(error.message));
-      return 'dummy-token'
+    return token;
   };
   
   const handleSignUp = (email, password) => {
+    const token = email.replace('@', '.')
     auth
       .createUserWithEmailAndPassword(email, password)
       .then(userCredentials => {
@@ -323,7 +296,7 @@ export default () => {
         return user.uid
       })
       .catch(error => alert(error.message));
-      return 'dummy-token'
+    return token;
   
   };
 
@@ -355,7 +328,7 @@ export default () => {
     },
     {
       isLoading: true,
-      isSignout: false,
+      // isSignout: false,
       userToken: null,
     }
   );
@@ -363,30 +336,33 @@ export default () => {
   const authContext = React.useMemo(
     () => ({
       signIn: async (data) => {
-        // In a production app, we need to send some data (usually username, password) to server and get a token
-        // We will also need to handle errors if sign in failed
-        // After getting token, we need to persist the token using `SecureStore`
-        // In the example, we'll use a dummy token
         console.log('signed in')
         const userToken = handleSignIn(data.email, data.password)
-        setUser(userToken)
-        console.log(user)
-        await SecureStore.setItemAsync(user, user);
-        dispatch({ type: 'SIGN_IN', token: user });
+        try {
+          await AsyncStorage.setItem('userToken', userToken);
+        } catch(e) {
+          console.log(e)
+        }
+        dispatch({ type: 'SIGN_IN', token: userToken });
       },
-      signOut: () => {
-        // auth.signOut(auth)
-        // .then(() => console.log('signed out'))
-        dispatch({ type: 'SIGN_OUT' })},
+      signOut: async () => {
+        auth.signOut()
+        .then(() => console.log('signed out'))
+        try {
+          await AsyncStorage.removeItem('userToken');
+        } catch(e) {
+          console.log(e)
+        }
+        dispatch({ type: 'SIGN_OUT' })
+      },
       signUp: async (data) => {
-        // In a production app, we need to send user data to server and get a token
-        // We will also need to handle errors if sign up failed
-        // After getting token, we need to persist the token using `SecureStore`
-        // In the example, we'll use a dummy token
-        setUser(data.email)
         console.log('signed up')
         const userToken = handleSignUp(data.email, data.password)
-        await SecureStore.setItemAsync(userToken, user);
+        try {
+          await AsyncStorage.setItem('userToken', userToken);
+        } catch(e) {
+          console.log(e)
+        }
         dispatch({ type: 'SIGN_IN', token: userToken });
       },
     }),
