@@ -12,14 +12,12 @@ import { BASE_URL } from '../constants/appConstants'
 
 
 const Home = () => {
-
+  const { allActivities } = useData()
   const {t} = useTranslation();
   const [tab, setTab] = useState<number>(0);
-  const [allActivities, setAllActivities] = useState([]);
   const [myActivities, setMyActivities] = useState([]);
   const [firstTime, setFirstTime] = useState(true);
   const [renderedAct, setRenderedAct] = useState(allActivities);
-
   const {assets, sizes, colors, fonts, gradients } = useTheme();
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
@@ -49,19 +47,6 @@ const Home = () => {
     },
     [allActivities, myActivities, setTab, setRenderedAct],
   );
-
-  useEffect(() => {
-    fetch(BASE_URL + 'getAllActivities', {
-      method: 'GET'
-   })
-   .then((response) => response.json())
-   .then((responseJson) => {
-      setAllActivities(responseJson);
-   })
-   .catch((error) => {
-      console.error(error + " detected");
-   });
-  }, [allActivities, setAllActivities])
 
   useLayoutEffect(() => {
     navigation.setOptions({

@@ -91,7 +91,6 @@ export default () => {
         options={{
           tabBarIcon: () => (<Image source={assets.user} height={30} width={30} color={colors.black} />)
         }} />
-      <Tab.Screen name="Components" component={ComponentsStackScreen} options={screenOptions.components} />
     </Tab.Navigator>
   );
 };

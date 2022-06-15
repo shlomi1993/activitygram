@@ -99,6 +99,19 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
     getIsDark();
   }, [getIsDark]);
 
+  useEffect(() => {
+    fetch(BASE_URL + 'getAllActivities', {
+      method: 'GET'
+   })
+   .then((response) => response.json())
+   .then((responseJson) => {
+      setAllActivities(responseJson);
+   })
+   .catch((error) => {
+      console.error(error + " detected");
+   });
+  }, [allActivities, setAllActivities]);
+
   // change theme based on isDark updates
   useEffect(() => {
     setTheme(isDark ? light : light);
@@ -126,7 +139,9 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
     handleArticle,
     userEmail,
     setUserEmail,
-    getUserEmail
+    getUserEmail,
+    allActivities,
+    setAllActivities
   };
 
   return (
