@@ -9,144 +9,131 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import {auth} from '../../firebase';
+import { AuthContext } from '../navigation/App';
 
 const RootStack = createStackNavigator();
 
 
 const SignUpScreen = () => {
-  const {gradients, sizes} = useTheme();
-  const navigation = useNavigation();
-  const [data, setData] = useState({
-      email: '',
-      password: '',
-      confirm_password: '',
-      check_textInputChange: false,
-      secureTextEntry: true,
-      confirm_secureTextEntry: true,
-  })
-
-//   useEffect(() => {
-//     const unsubscribe = auth.onAuthStateChanged(user => {
-//       if (user) {
-//         console.log('onAuthStateChanged')
-//         // navigation.navigate('Home');
-//       }
-//     });
-
-//     return unsubscribe;
-//   }, []);
-
-  const handleSignUp = () => {
-    auth
-      .createUserWithEmailAndPassword(data.email, data.password)
-      .then(userCredentials => {
-        const user = userCredentials.user;
-        console.log('Registered with:', user.email);
-      })
-      .catch(error => alert(error.message));
-  };
-
-  const textInputChange = (val) => {
-      if(val.length !== 0) {
+    const {gradients, sizes} = useTheme();
+    const navigation = useNavigation();
+    const [data, setData] = React.useState({
+        email: '',
+        password: '',
+        confirm_password: '',
+        check_textInputChange: false,
+        secureTextEntry: true,
+        confirm_secureTextEntry: true,
+    })
+    const { signUp } = React.useContext(AuthContext);
+  
+    const callToSignUp = () => {
+      const email = data.email;
+      const password = data.password;
+      signUp({ email, password })
+    };
+  
+    const textInputChange = (val) => {
+        if(val.length !== 0) {
+            setData({
+                ...data,
+                email: val,
+                check_textInputChange: true
+            })
+        } else {
           setData({
               ...data,
               email: val,
               check_textInputChange: true
           })
-      } else {
-        setData({
-            ...data,
-            email: val,
-            check_textInputChange: true
-        })
-      }
-  } 
-
-  const handlePasswordChange = (val) => {
-        setData({
-            ...data,
-            password: val,
-            check_textInputChange: true
-        })
+        }
     } 
+  
+    const handlePasswordChange = (val) => {
+          setData({
+              ...data,
+              password: val,
+              check_textInputChange: true
+          })
+      } 
+  
+      const handleConfirmPasswordChange = (val) => {
+          setData({
+              ...data,
+              confirm_password: val,
+              check_textInputChange: true
+          })
+      } 
+  
+   const updateSecureTextEntry = () => {
+      setData({
+          ...data,
+          secureTextEntry: !data.secureTextEntry
+      })
+   }
+  
+  
+   const updateConfirmSecureTextEntry = () => {
+      setData({
+          ...data,
+          confirm_secureTextEntry: !data.confirm_secureTextEntry
+      })
+   }
+  
+    return (
+      <View style={styles.container}>
+          {/* <StatusBar backgroundColor='#fff' barStyle='light-content'></StatusBar> */}
+          <View style={styles.header}>
+              <Text style={styles.text_header}>Register now</Text>
+          </View>
+          <Animatable.View animation="fadeInUpBig" style={styles.footer}>
+              <Text style={styles.text_footer}>Email</Text>
+              <View style={styles.action}>
+                  <FontAwesome name="user-o" color='#05375a' size={20}/>
+                  <TextInput placeholder='Your Email' style={styles.textInput} autoCapitalize='none' 
+                   onChangeText={(val)=>textInputChange(val)}/>
+                  {data.check_textInputChange ? 
+                  <Animatable.View animation="bounceIn">
+                      <Feather name='check-circle' color='green' size={20}/> 
+                  </Animatable.View>
+                  
+                  : null}
+                  
+              </View>
+              <Text style={[styles.text_footer, { marginTop: 35}]}>Password</Text>
+              <View style={styles.action}>
+                  <FontAwesome name="lock" color='#05375a' size={20}/>
+                  <TextInput placeholder='Your Password' style={styles.textInput} autoCapitalize='none' secureTextEntry={data.secureTextEntry ? true : false}
+                   onChangeText={(val)=>handlePasswordChange(val)}/>
+                   <TouchableOpacity onPress={updateSecureTextEntry}>
+                       {data.secureTextEntry ? <Feather name='eye-off' color='grey' size={20}/>
+                       : <Feather name='eye' color='grey' size={20}/>}
+                   </TouchableOpacity>         
+              </View>
+              <Text style={[styles.text_footer, { marginTop: 35}]}>Confirm password</Text>
+              <View style={styles.action}>
+                  <FontAwesome name="lock" color='#05375a' size={20}/>
+                  <TextInput placeholder='Confirm Your Password' style={styles.textInput} autoCapitalize='none' secureTextEntry={data.secureTextEntry ? true : false}
+                   onChangeText={(val)=>handleConfirmPasswordChange(val)}/>
+                   <TouchableOpacity onPress={updateConfirmSecureTextEntry}>
+                       {data.secureTextEntry ? <Feather name='eye-off' color='grey' size={20}/>
+                       : <Feather name='eye' color='grey' size={20}/>}
+                   </TouchableOpacity>         
+              </View>
+              <View style={styles.button}>
+                  <Button info onPress={() => callToSignUp()} style={styles.signIn}>
+                      <TextComp h5 white semibold>Sign Up</TextComp>
+                  </Button>
+                  <Button white onPress={() => navigation.goBack()} style={styles.signIn} marginTop={sizes.sm}>
+                      <TextComp h5 info semibold>Sign In</TextComp>
+                  </Button>     
+              </View>
+          </Animatable.View>
+      </View>
+    );
+  };
 
-    const handleConfirmPasswordChange = (val) => {
-        setData({
-            ...data,
-            confirm_password: val,
-            check_textInputChange: true
-        })
-    } 
-
- const updateSecureTextEntry = () => {
-    setData({
-        ...data,
-        secureTextEntry: !data.secureTextEntry
-    })
- }
-
-
- const updateConfirmSecureTextEntry = () => {
-    setData({
-        ...data,
-        confirm_secureTextEntry: !data.confirm_secureTextEntry
-    })
- }
-
-  return (
-    <View style={styles.container}>
-        <StatusBar backgroundColor='#0abde3' barStyle='light-content'></StatusBar>
-        <View style={styles.header}>
-            <Text style={styles.text_header}>Register now</Text>
-        </View>
-        <Animatable.View animation="fadeInUpBig" style={styles.footer}>
-            <Text style={styles.text_footer}>Email</Text>
-            <View style={styles.action}>
-                <FontAwesome name="user-o" color='#05375a' size={20}/>
-                <TextInput placeholder='Your Email' style={styles.textInput} autoCapitalize='none' 
-                 onChangeText={(val)=>textInputChange(val)}/>
-                {data.check_textInputChange ? 
-                <Animatable.View animation="bounceIn">
-                    <Feather name='check-circle' color='green' size={20}/> 
-                </Animatable.View>
-                
-                : null}
-                
-            </View>
-            <Text style={[styles.text_footer, { marginTop: 35}]}>Password</Text>
-            <View style={styles.action}>
-                <FontAwesome name="lock" color='#05375a' size={20}/>
-                <TextInput placeholder='Your Password' style={styles.textInput} autoCapitalize='none' secureTextEntry={data.secureTextEntry ? true : false}
-                 onChangeText={(val)=>handlePasswordChange(val)}/>
-                 <TouchableOpacity onPress={updateSecureTextEntry}>
-                     {data.secureTextEntry ? <Feather name='eye-off' color='grey' size={20}/>
-                     : <Feather name='eye' color='grey' size={20}/>}
-                 </TouchableOpacity>         
-            </View>
-            <Text style={[styles.text_footer, { marginTop: 35}]}>Confirm password</Text>
-            <View style={styles.action}>
-                <FontAwesome name="lock" color='#05375a' size={20}/>
-                <TextInput placeholder='Confirm Your Password' style={styles.textInput} autoCapitalize='none' secureTextEntry={data.secureTextEntry ? true : false}
-                 onChangeText={(val)=>handleConfirmPasswordChange(val)}/>
-                 <TouchableOpacity onPress={updateConfirmSecureTextEntry}>
-                     {data.secureTextEntry ? <Feather name='eye-off' color='grey' size={20}/>
-                     : <Feather name='eye' color='grey' size={20}/>}
-                 </TouchableOpacity>         
-            </View>
-            <View style={styles.button}>
-                <Button info onPress={() => {console.log('Pressed')}} style={styles.signIn}>
-                    <TextComp h5 white semibold>Sign Up</TextComp>
-                </Button>
-                <Button white onPress={() => navigation.goBack()} style={styles.signIn} marginTop={sizes.sm}>
-                    <TextComp h5 info semibold>Sign In</TextComp>
-                </Button>     
-            </View>
-        </Animatable.View>
-    </View>
-  );
-};
-
-const styles = StyleSheet.create({
+  const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#0abde3'
@@ -202,6 +189,5 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold'
     }
-})
-
+  })
 export default SignUpScreen;

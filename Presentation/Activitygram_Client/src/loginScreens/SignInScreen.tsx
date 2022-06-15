@@ -13,112 +13,98 @@ import {auth} from '../../firebase';
 import { AuthContext } from '../navigation/App';
 
 const SignInScreen = () => {
-  const {gradients, sizes} = useTheme();
-  const navigation = useNavigation();
-  const [data, setData] = useState({
-      email: '',
-      password: '',
-      check_textInputChange: false,
-      secureTextEntry: true
-  })
-
-//   useEffect(() => {
-//     const unsubscribe = auth.onAuthStateChanged(user => {
-//       if (user) {
-//         console.log('onAuthStateChanged')
-//         // navigation.navigate('Home');
-//       }
-//     });
-
-//     return unsubscribe;
-//   }, []);
-
-  const textInputChange = (val) => {
-      if(val.length !== 0) {
+    const {gradients, sizes} = useTheme();
+    const navigation = useNavigation();
+    const [data, setData] = React.useState({
+        email: '',
+        password: '',
+        check_textInputChange: false,
+        secureTextEntry: true
+    })
+    const { signIn } = React.useContext(AuthContext);
+  
+    const textInputChange = (val) => {
+        if(val.length !== 0) {
+            setData({
+                ...data,
+                email: val,
+                check_textInputChange: true
+            })
+        } else {
           setData({
               ...data,
               email: val,
               check_textInputChange: true
           })
-      } else {
-        setData({
-            ...data,
-            email: val,
-            check_textInputChange: true
-        })
-      }
-  } 
-
-  const handlePasswordChange = (val) => {
-        setData({
-            ...data,
-            password: val,
-            check_textInputChange: true
-        })
+        }
     } 
-
- const updateSecureTextEntry = () => {
-    setData({
-        ...data,
-        secureTextEntry: !data.secureTextEntry
-    })
- }
-
- const handleSignIn = () => {
-    auth
-      .signInWithEmailAndPassword(data.email, data.password)
-      .then(userCredentials => {
-        const user = userCredentials.user;
-        console.log('Logged in with:', user.email);
+  
+    const handlePasswordChange = (val) => {
+          setData({
+              ...data,
+              password: val,
+              check_textInputChange: true
+          })
+      } 
+  
+   const updateSecureTextEntry = () => {
+      setData({
+          ...data,
+          secureTextEntry: !data.secureTextEntry
       })
-      .catch(error => alert(error.message));
+   }
+  
+   const callToSignIn = () => {
+      const email = data.email;
+      const password = data.password;
+      signIn({email, password })
+  };
+  
+    return (
+        <View style={styles.container}>
+          {/* <StatusBar backgroundColor='#fff' barStyle='light-content'></StatusBar> */}
+          <View style={styles.header}>
+              <Text style={styles.text_header}>Welcome</Text>
+          </View>
+          <Animatable.View animation="fadeInUpBig" style={styles.footer}>
+              <Text style={styles.text_footer}>Email</Text>
+              <View style={styles.action}>
+                  <FontAwesome name="user-o" color='#05375a' size={20}/>
+                  <TextInput placeholder='Your Email' style={styles.textInput} autoCapitalize='none' 
+                   onChangeText={(val)=>textInputChange(val)}/>
+                  {data.check_textInputChange ? 
+                  <Animatable.View animation="bounceIn">
+                      <Feather name='check-circle' color='green' size={20}/> 
+                  </Animatable.View>
+                  
+                  : null}
+                  
+              </View>
+              <Text style={[styles.text_footer, { marginTop: 35}]}>Password</Text>
+              <View style={styles.action}>
+                  <FontAwesome name="lock" color='#05375a' size={20}/>
+                  <TextInput placeholder='Your Password' style={styles.textInput} autoCapitalize='none' secureTextEntry={data.secureTextEntry ? true : false}
+                   onChangeText={(val)=>handlePasswordChange(val)}/>
+                   <TouchableOpacity onPress={updateSecureTextEntry}>
+                       {data.secureTextEntry ? <Feather name='eye-off' color='grey' size={20}/>
+                       : <Feather name='eye' color='grey' size={20}/>}
+                   </TouchableOpacity>         
+              </View>
+              <View style={styles.button}>
+                  <Button info onPress={() => callToSignIn()} style={styles.signIn}>
+                      <TextComp h5 white semibold>Sign In</TextComp>
+                  </Button>
+                  <Button white onPress={() => navigation.navigate('SignUpScreen')} style={styles.signIn} marginTop={sizes.sm}>
+                      <TextComp h5 info semibold>Sign Up</TextComp>
+                  </Button>     
+              </View>
+          </Animatable.View>
+      </View>
+  
+    );
   };
 
-  return (
-    <View style={styles.container}>
-        <StatusBar backgroundColor='#0abde3' barStyle='light-content'></StatusBar>
-        <View style={styles.header}>
-            <Text style={styles.text_header}>Welcome</Text>
-        </View>
-        <Animatable.View animation="fadeInUpBig" style={styles.footer}>
-            <Text style={styles.text_footer}>Email</Text>
-            <View style={styles.action}>
-                <FontAwesome name="user-o" color='#05375a' size={20}/>
-                <TextInput placeholder='Your Email' style={styles.textInput} autoCapitalize='none' 
-                 onChangeText={(val)=>textInputChange(val)}/>
-                {data.check_textInputChange ? 
-                <Animatable.View animation="bounceIn">
-                    <Feather name='check-circle' color='green' size={20}/> 
-                </Animatable.View>
-                
-                : null}
-                
-            </View>
-            <Text style={[styles.text_footer, { marginTop: 35}]}>Password</Text>
-            <View style={styles.action}>
-                <FontAwesome name="lock" color='#05375a' size={20}/>
-                <TextInput placeholder='Your Password' style={styles.textInput} autoCapitalize='none' secureTextEntry={data.secureTextEntry ? true : false}
-                 onChangeText={(val)=>handlePasswordChange(val)}/>
-                 <TouchableOpacity onPress={updateSecureTextEntry}>
-                     {data.secureTextEntry ? <Feather name='eye-off' color='grey' size={20}/>
-                     : <Feather name='eye' color='grey' size={20}/>}
-                 </TouchableOpacity>         
-            </View>
-            <View style={styles.button}>
-                <Button info onPress={() => {handleSignIn()}} style={styles.signIn}>
-                    <TextComp h5 white semibold>Sign In</TextComp>
-                </Button>
-                <Button white onPress={() => navigation.navigate('SignUpScreen')} style={styles.signIn} marginTop={sizes.sm}>
-                    <TextComp h5 info semibold>Sign Up</TextComp>
-                </Button>     
-            </View>
-        </Animatable.View>
-    </View>
-
-  );
-};
-
-const styles = StyleSheet.create({
+  const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#0abde3'
@@ -174,6 +160,6 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold'
     }
-})
+  })
 
 export default SignInScreen;
