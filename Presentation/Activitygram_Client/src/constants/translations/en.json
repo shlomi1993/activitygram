@@ -86,7 +86,8 @@
     "title": "Profile",
     "bio": "Bio",
     "ParticipatedIn": "Participated in",
-    "InterestsIn": "Interests in"
+    "InterestsIn": "Interests in",
+    "logout": "Log Out"
   },
   "activity": {
     "going": "Going",

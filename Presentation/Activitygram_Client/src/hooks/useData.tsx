@@ -8,6 +8,7 @@ import {
   IUser,
   IUseData,
   ITheme,
+  IActivity,
 } from '../constants/types';
 
 import {
@@ -18,17 +19,19 @@ import {
   ARTICLES,
 } from '../constants/mocks';
 import {light} from '../constants';
+import { BASE_URL } from '../constants/appConstants';
 
 export const DataContext = React.createContext({});
 
 export const DataProvider = ({children}: {children: React.ReactNode}) => {
   const [isDark, setIsDark] = useState(false);
   const [theme, setTheme] = useState<ITheme>(light);
-  const [user, setUser] = useState<IUser>(USERS[0]);
+  const [user, setUser] = useState<IUser>();
   const [categories, setCategories] = useState<ICategory[]>(CATEGORIES);
   const [articles, setArticles] = useState<IBigCard[]>(ARTICLES);
   const [article, setArticle] = useState<IBigCard>({});
   const [userEmail, setUserEmail] = useState<string>();
+  const [activities, setActivities] = useState<IActivity>();
 
   // get isDark mode from storage
   const getIsDark = useCallback(async () => {
@@ -43,12 +46,22 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
 
   const getUserEmail = useCallback(async () => {
     const userEmail = await Storage.getItem('userEmail');
-
+    console.log(userEmail)
     if (userEmail !== null) {
-      console.log(userEmail)
       setUserEmail(userEmail);
+      fetch(BASE_URL + 'getUserByEmail?user_email=' + userEmail.toString(), {
+        method: 'GET'
+      })
+        .then((response) => response.json())
+        .then((responseJson) => {
+          setUser(responseJson);
+        })
+        .catch((error) => {
+          console.error(error + " detected");
+        });
+  
     }
-  }, [setUserEmail]);
+  }, [user, setUser, setUserEmail]);
 
   // handle isDark mode
   const handleIsDark = useCallback(
@@ -93,8 +106,11 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
   }, [isDark]);
 
   useEffect(() => {
-    console.log(userEmail)
   }, [isDark]);
+
+  useEffect(() => {
+    getUserEmail();
+  }, []);
 
   useEffect(() => {
     getUserEmail();
