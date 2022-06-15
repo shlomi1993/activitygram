@@ -1,15 +1,11 @@
-import React, {useCallback, useEffect, useRef, useState, useContext} from 'react';
-import {View, Text, StyleSheet, Platform, TouchableOpacity, Dimensions, TextInput, StatusBar} from 'react-native';
+import React from 'react';
+import {View, Text, StyleSheet, Platform, TouchableOpacity, TextInput } from 'react-native';
 import { Button, Text as TextComp } from '../components';
 import * as Animatable from 'react-native-animatable';
-import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {useData, useTheme, useTranslation} from '../hooks';
-import { createStackNavigator } from '@react-navigation/stack';
+import {useTheme} from '../hooks';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import SignUpScreen from './SignUpScreen';
-import {auth} from '../../firebase';
 import { AuthContext } from '../navigation/App';
 
 const SignInScreen = () => {

@@ -1,20 +1,13 @@
 import * as React from 'react';
-import * as SecureStore from 'expo-secure-store';
 import {useFonts} from 'expo-font';
 import AppLoading from 'expo-app-loading';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {View, Text, Platform, TouchableOpacity, Dimensions, TextInput, StatusBar, StyleSheet} from 'react-native';
-import { Button, Text as TextComp } from '../components';
 import Menu from './Menu';
 import {useData, ThemeProvider, TranslationProvider, useTheme} from '../hooks';
-import { useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import {Block, Image} from '../components';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { Feather } from '@expo/vector-icons';
+import {Block} from '../components';
 import {auth} from '../../firebase';
-import * as Animatable from 'react-native-animatable';
 import SignInScreen from '../loginScreens/SignInScreen'
 import SignUpScreen from '../loginScreens/SignUpScreen'
 
