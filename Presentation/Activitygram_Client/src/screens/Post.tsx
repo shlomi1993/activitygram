@@ -137,9 +137,9 @@ const Form = () => {
     fetch(baseUri + 'allUsers')
       .then((result) => result.json())
       .then((json) => {
-        // for (const u of json) {
-        //   u.title = u.title.slice(0, 40) + '...'
-        // }
+        for (const u of json) {
+          u.title = u.title.slice(0, 40) + '...'
+        }
         setUsers(json)
       })
       .catch(() => {

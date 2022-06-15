@@ -26,6 +26,11 @@ const interestsPath = '../Data/recommender/datasets/interests.csv';
 const ratingsPath = '../Data/recommender/datasets/ratings.csv';
 const datasetsPath = '../Data/recommender/datasets/train_uid_';
 
+module.exports.interestsPath = interestsPath
+module.exports.ratingsPath = ratingsPath
+module.exports.datasetsPath = datasetsPath
+
+
 // Fetch Collaborative Filtering data
 module.exports.fetchDataForCF = async () => {
     let interestsContent = 'interestId,title,tags\n';
@@ -37,14 +42,12 @@ module.exports.fetchDataForCF = async () => {
         interestsContent += '\n';
     });
     fs.writeFileSync(interestsPath, interestsContent.slice(0, -1));
-
     let ratingsContent = 'userId,interestId,rating\n';
     let ratingsDocs = await ratings.find().toArray();
     ratingsDocs.forEach((d) => {
         ratingsContent += `${d.userId},${d.interestId},${d.rating}\n`;
     });
     fs.writeFileSync(ratingsPath, ratingsContent.slice(0, -1));
-
     return ratingsDocs.length;
 };
 

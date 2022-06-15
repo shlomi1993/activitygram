@@ -23,7 +23,7 @@ def train_cf():
     ratings = request.args.get('ratings')
     print(f'train_cf request recieved for interests: {interests}, ratings: {ratings}.')
     cf.create_pred_matrix(ratings, interests)
-    return 'Collaborative Filtering prediction matrix is up-to-date.'
+    return jsonify({'result': 'Collaborative Filtering prediction matrix is up-to-date.'})
 
 # http://localhost:8090/predict_cf?uid=123464&k=10&userbased=1
 @app.route('/predict_cf', methods=['GET'])
