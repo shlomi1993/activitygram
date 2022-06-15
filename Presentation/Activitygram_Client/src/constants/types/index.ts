@@ -83,7 +83,8 @@ export interface IActivityComp {
 
 export interface IUser {
   _id: string,
-  fullName: string,
+  firstName: string,
+  lastName: string,
   username: string,
   activityLog: any[],
   age: number,

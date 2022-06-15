@@ -59,27 +59,12 @@ const ImageSeries = () => {
 }
 const Profile = () => {
   const {assets, sizes, colors } = useTheme();
-  const { userEmail } = useData();
+  const { user } = useData();
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
   const [profile, setProfile] = useState<IUser>();
   const {t} = useTranslation();
   const { signOut } = React.useContext(AuthContext);
-  
-  useEffect(() => {
-    const userId = '627659c91fbdd7e2c67d5e11';
-    fetch(BASE_URL + 'getUser?user_id=' + userId, {
-      method: 'GET'
-    })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        setProfile(responseJson);
-      })
-      .catch((error) => {
-        console.error(error + " detected");
-      });
-
-  }, [profile, setProfile])
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -96,15 +81,12 @@ const Profile = () => {
   }, [assets.background, navigation, sizes.width, headerHeight]);
 
   const IMAGE_SIZE = (sizes.width - (sizes.padding + sizes.sm) * 2) / 4;
-  const IMAGE_VERTICAL_SIZE =
-    (sizes.width - (sizes.padding + sizes.sm) * 2) / 2;
   const IMAGE_MARGIN = (sizes.width - IMAGE_SIZE * 3 - sizes.padding * 2) / 2;
-  
 
-  const fullName = profile ? profile.fullName : '';
-  const username = profile ? profile.username : '';
-  const bio = profile ? profile.bio : '';
-  const interests = profile ? profile.interests : [];
+  const fullName = user.firstName + ' ' + user.lastName;
+  const username = user.username;
+  const bio = user.bio;
+  const interests = user.interests;
 
   return (
     <Block safe>
@@ -114,7 +96,7 @@ const Profile = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingBottom: sizes.padding}}>
         <Block flex={0} marginTop={sizes.xs}>
-          <Button align='flex-end' onPress={() => {signOut()}}><Text secondary>Log out</Text></Button>
+          <Button align='flex-end' onPress={() => {signOut()}} ><Text secondary bold>{t('profile.logout')}</Text></Button>
           <Image
             background
             resizeMode="cover"

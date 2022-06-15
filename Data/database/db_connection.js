@@ -92,6 +92,12 @@ module.exports.getUserById = async function (userId) {
   return result[0];
 };
 
+module.exports.getUserByEmail = async function (userEmail) {
+  const result = await users.find({ email: userEmail }).toArray();
+  console.log(result[0])
+  return result[0];
+};
+
 
 //Update functions
 async function changeUserFirstName(curr_user, firstName) {
