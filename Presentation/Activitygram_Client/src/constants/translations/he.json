@@ -1,0 +1,114 @@
+{
+    "common": {
+      "appDetails": "Activitygram",
+      "appName": "Activitygram",
+      "appVersion": "1.0",
+      "about": "אודות",
+      "visit": "בקר",
+      "posted": "{{date}}פורסם ב",
+      "recommended": "מומלץ עבור",
+      "viewall": "ראה הכל",
+      "more": "עוד",
+      "follow": "עקוב",
+      "followed": "עקב",
+      "search": "חפש",
+      "night": "לילה",
+      "day": "יום",
+      "joinnow": "הצטרף עכשיו",
+      "selectDate": "בחר תאריך",
+      "message": "הקלד הודעתך",
+      "or": "או",
+      "name": "שם",
+      "namePlaceholder": "הקלד את שמך המלא",
+      "email": "אימייל",
+      "emailPlaceholder": "הקלד את כתובת המייל שלך",
+      "password": "סיסמא",
+      "passwordPlaceholder": "הקלד סיסמא",
+      "agree": "אני מסכים עם",
+      "terms": "תנאים",
+      "signup": "Sign Up",
+      "signin": "Sign In",
+      "goBack": "חזור אחורה",
+      "inProcess": "בתהליך",
+      "accept": "קבל"
+    },
+    "app": {
+      "name": "Activitygram",
+      "fullname": "Activitygram",
+      "native": "React Native",
+      "link": "activitygram.com"
+    },
+    "darkMode": "מצב חשוך",
+    "screens": {
+      "home": "Home",
+      "explore": "Explore",
+      "network": "Network",
+      "settings": "Settings",
+      "profile": "Profile",
+      "register": "Create event",
+      "components": "Components"
+    },
+    "navigation": {
+      "home": "Activitygram",
+      "components": "Components",
+      "profile": "Profile",
+      "settings": "Settings",
+      "notifications": "Notifications",
+      "agreement": "User Agreement",
+      "about": "About",
+      "privacy": "Privacy",
+      "register": "Register",
+      "login": "Login"
+    },
+    "menu": {
+      "started": "Getting Started",
+      "documentation": "Documentation"
+    },
+    "home": {
+      "title": "Activitygram",
+      "all": "All",
+      "myActivities": "My Activities"  
+    },
+    "register": {
+      "title": "Welcome",
+      "subtitle": "Register with"
+    },
+    "profile": {
+      "title": "Profile",
+      "bio": "Bio",
+      "ParticipatedIn": "Participated in",
+      "InterestsIn": "Interests in",
+      "logout": "Log Out"
+    },
+    "activity": {
+      "going": "Going",
+      "left": "Left",
+      "inTotal": "In total",
+      "time": "Time",
+      "createdBy": "Created by",
+      "notes": "Notes",
+      "join": "Join",
+      "joined": "You have joined successfully!"
+    },
+    "Post": {
+        "PleaseFill": "Please fill activity details",
+        "Category": "Category",
+        "SelectCategory": "Select a category",
+        "ActivityTitle": "Activity title",
+        "StartDate": "Start date",
+        "StartTime": "Start time",
+        "EndDate": "End date",
+        "EndTime": "End time",
+        "Recurrent": "Recurrent:",
+        "RecurrentYes": "כן   ",
+        "RecurrentNo": "לא    ",
+        "Location": "מיקום",
+        "Description": "תיאור",
+        "AddImage": "הוסף תמונה",
+        "Change": "שנה",
+        "Create": "צור",
+        "TryAgain": "אנא הקלד שוב את הפרטים הבאים:",
+        "SelectParticipant": "בחר משתפים",
+        "SelectManagers": "בחר מנהלים"
+    }
+  }
