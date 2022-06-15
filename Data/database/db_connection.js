@@ -94,7 +94,6 @@ module.exports.getUserById = async function (userId) {
 
 module.exports.getUserByEmail = async function (userEmail) {
   const result = await users.find({ email: userEmail }).toArray();
-  console.log(result[0])
   return result[0];
 };
 
