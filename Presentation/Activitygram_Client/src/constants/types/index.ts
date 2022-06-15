@@ -45,6 +45,8 @@ export interface ICard {
   type: 'vertical' | 'horizontal';
   imageInRow?: number;
   _id?: string;
+  marginLeft?: string;
+  isProfile?: boolean;
 }
 export interface ILocation {
   id?: number;
@@ -64,6 +66,8 @@ export interface IUseData {
   setArticles: (data?: IBigCard[]) => void;
   allActivities: IActivity[];
   setAllActivities: (data?: IActivity[]) => void;
+  myActivities: IActivity[];
+  setMyActivities: (data?: IActivity[]) => void;
   userEmail: string;
   setUserEmail: (data?: string) => void;
   getUserEmail: () => string;
@@ -101,7 +105,7 @@ export interface IActivity {
   common_interest: string;
   date: string;
   description: string;
-  group_managers: any[];
+  managers: any[];
   is_done: boolean;
   participants: any[];
   title: string;

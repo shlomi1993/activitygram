@@ -12,10 +12,11 @@ import { BASE_URL } from '../constants/appConstants'
 
 
 const Home = () => {
-  const { allActivities } = useData()
+  const { user, allActivities, setMyActivities } = useData()
   const {t} = useTranslation();
   const [tab, setTab] = useState<number>(0);
-  const [myActivities, setMyActivities] = useState([]);
+  const [myAllActivities, setMyAllActivities] = useState([]);
+  const [activities, setActivities] = useState([]);
   const [firstTime, setFirstTime] = useState(true);
   const [renderedAct, setRenderedAct] = useState(allActivities);
   const {assets, sizes, colors, fonts, gradients } = useTheme();
@@ -24,31 +25,39 @@ const Home = () => {
 
 
   const handleMyActivities = () => {
-    return !firstTime ? myActivities : 
-    (fetch(BASE_URL + 'getMyActivities', {
-      method: 'GET'
-   })
-   .then((response) => response.json())
-   .then((responseJson) => {
+    console.log(user)
+    if(user) {
+      return !firstTime ? myAllActivities : 
+      (fetch(BASE_URL + 'getMyActivities?user_id=' + (user._id).toString(), {
+        method: 'GET'
+     })
+     .then((response) => response.json())
+     .then((responseJson) => {
+      setMyAllActivities(responseJson);
       setMyActivities(responseJson);
-      setFirstTime(false)
-   })
-   .catch((error) => {
-      console.error(error + " detected");
-   }))
-    
+        setFirstTime(false)
+     })
+     .catch((error) => {
+        console.error(error + " detected");
+     }))
+    }
   }
 
   const handlerenderedAct = useCallback(
     (tab: number) => {
       handleMyActivities();
+      setRenderedAct(tab === 0 ? allActivities : myAllActivities);
       setTab(tab);
-      setRenderedAct(tab === 0 ? allActivities : myActivities);
     },
-    [allActivities, myActivities, setTab, setRenderedAct],
+    [allActivities, myAllActivities, setTab, setRenderedAct],
   );
 
+  useEffect(() => {
+    handlerenderedAct(tab);
+  }, []);
+
   useLayoutEffect(() => {
+    
     navigation.setOptions({
       headerBackground: () => (
         <Image
@@ -126,7 +135,6 @@ const Home = () => {
         contentContainerStyle={{paddingBottom: sizes.l}}>
         <Block row wrap="wrap" justify="space-between" marginTop={sizes.sm}>
           {renderedAct?.map((activity) => (
-            // need to change title to id
             <Card {...activity} key={`card-${activity?._id}`} type="vertical" />
           ))}
         </Block>
