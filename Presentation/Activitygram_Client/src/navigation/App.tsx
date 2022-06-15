@@ -29,7 +29,7 @@ const RootStackScreen = () => {
   );
 };
 export default () => {
-  const {isDark, theme, setTheme} = useData();
+  const {isDark, theme, setTheme, userEmail, setUserEmail} = useData();
   const [user, setUser] = React.useState('');
 
   React.useEffect(() => {
@@ -120,8 +120,11 @@ export default () => {
       signIn: async (data) => {
         console.log('signed in')
         const userToken = handleSignIn(data.email, data.password)
+        console.log('userEmail', userEmail)
         try {
           await AsyncStorage.setItem('userToken', userToken);
+          await AsyncStorage.setItem('userEmail', data.email);
+
         } catch(e) {
           console.log(e)
         }
@@ -142,6 +145,7 @@ export default () => {
         const userToken = handleSignUp(data.email, data.password)
         try {
           await AsyncStorage.setItem('userToken', userToken);
+          await AsyncStorage.setItem('userEmail', data.email);
         } catch(e) {
           console.log(e)
         }

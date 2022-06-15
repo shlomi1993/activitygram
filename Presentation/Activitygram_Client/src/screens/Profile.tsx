@@ -3,6 +3,7 @@ import {Platform, Linking} from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 import {useNavigation} from '@react-navigation/native';
 import {useHeaderHeight} from '@react-navigation/stack';
+import Storage from '@react-native-async-storage/async-storage';
 
 import { useData, useTheme, useTranslation } from '../hooks';
 import { Block, Button, Image, Text } from '../components';
@@ -58,12 +59,13 @@ const ImageSeries = () => {
 }
 const Profile = () => {
   const {assets, sizes, colors } = useTheme();
+  const { userEmail } = useData();
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
   const [profile, setProfile] = useState<IUser>();
   const {t} = useTranslation();
   const { signOut } = React.useContext(AuthContext);
-
+  
   useEffect(() => {
     const userId = '627659c91fbdd7e2c67d5e11';
     fetch(BASE_URL + 'getUser?user_id=' + userId, {
