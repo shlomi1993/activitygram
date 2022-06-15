@@ -4,6 +4,12 @@ const conn = JSON.parse(fs.readFileSync('./connections.json'));
 
 const uri = `http://${conn.Geocoder.ip}:${conn.Geocoder.port}`;
 
+const { PythonShell } = require('python-shell');
+const geocoderService = new PythonShell('../Data/geocoder/geocoder.py');
+geocoderService.on('message', (message) => {
+    console.log('Geocoder: ' + message);
+});
+
 module.exports.geocode = async function(address) {
 	let request = `${uri}/geocode?address=${address}`;
 	let result = null;

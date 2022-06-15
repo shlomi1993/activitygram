@@ -1,34 +1,21 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { Platform } from 'react-native';
 import Storage from '@react-native-async-storage/async-storage';
 
-import {
-  IBigCard,
-  ICategory,
-  ICard,
-  IUser,
-  IUseData,
-  ITheme,
-} from '../constants/types';
-
-import {
-  USERS,
-  FOLLOWING,
-  TRENDING,
-  CATEGORIES,
-  ARTICLES,
-} from '../constants/mocks';
-import {light} from '../constants';
+import { IBigCard, ICategory, ICard, IUser, IUseData, ITheme } from '../constants/types';
+import { USERS, FOLLOWING, TRENDING, ARTICLES, CATEGORIES } from '../constants/mocks';
+import { light } from '../constants';
 
 export const DataContext = React.createContext({});
 
-export const DataProvider = ({children}: {children: React.ReactNode}) => {
+export const DataProvider = ({ children }: { children: React.ReactNode }) => {
   const [isDark, setIsDark] = useState(false);
   const [theme, setTheme] = useState<ITheme>(light);
   const [user, setUser] = useState<IUser>(USERS[0]);
   const [users, setUsers] = useState<IUser[]>(USERS);
   const [following, setFollowing] = useState<ICard[]>(FOLLOWING);
   const [trending, setTrending] = useState<ICard[]>(TRENDING);
-  const [categories, setCategories] = useState<ICategory[]>(CATEGORIES);
+  const [categories, setCategories] = useState<ICategory[]>([]);
   const [articles, setArticles] = useState<IBigCard[]>(ARTICLES);
   const [article, setArticle] = useState<IBigCard>({});
 
@@ -59,7 +46,7 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
     (payload: IUser[]) => {
       // set users / compare if has updated
       if (JSON.stringify(payload) !== JSON.stringify(users)) {
-        setUsers({...users, ...payload});
+        setUsers({ ...users, ...payload });
       }
     },
     [users, setUsers],

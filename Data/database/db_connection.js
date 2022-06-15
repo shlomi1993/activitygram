@@ -1,14 +1,6 @@
 const fs = require('fs');
 const conn = JSON.parse(fs.readFileSync('connections.json'));
-const User = require('./User.js');
-const Interest = require('./Interest.js');
-const Tag = require('./Tag.js');
-const Event = require('./Event.js');
-const Group = require('./Group.js');
 const { MongoClient, ObjectId } = require('mongodb');
-const crypto = require('crypto');
-const { error } = require('console');
-const hash = crypto.createHash('sha512');
 
 const client = new MongoClient(conn.Database.uri);
 client.connect();
@@ -30,6 +22,7 @@ module.exports.interestsPath = interestsPath
 module.exports.ratingsPath = ratingsPath
 module.exports.datasetsPath = datasetsPath
 
+module.exports.getCurrentRatingSize = () => ratings.countDocuments();
 
 // Fetch Collaborative Filtering data
 module.exports.fetchDataForCF = async () => {
@@ -77,8 +70,6 @@ module.exports.createUser = async function (newUser) {
     const user = await users.insertOne(newUser);
     const uido = await user.insertedId
     const uid = uido.toString();
-    const hashedSaltedPassword = hash.update(newUser.password + uid, 'utf-8').digest('hex');
-    await users.updateOne({ _id: uido }, { $set: { hashedPassword: hashedSaltedPassword } });
     await JSON.parse(newUser.interests).forEach((interest) => {
         ratings.insertOne({
             userId: uid,
@@ -252,6 +243,12 @@ async function createNewGroup(client, newGroup) {
 module.exports.getActivityById = async function (activityId) {
     const result = await activities.find({ _id: ObjectId(activityId) }).toArray();
     return result[0];
+};
+
+// Get Activities by category
+module.exports.getActivityByCategory = async function (category) {
+    const result = await activities.find({ category: category }).toArray();
+    return result;
 };
 
 //get All activities

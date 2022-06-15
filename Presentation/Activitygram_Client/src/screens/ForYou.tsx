@@ -9,7 +9,6 @@ import { IBigCard, ICategory } from '../constants/types';
 import { Block, Image, Button, BigCard, Text } from '../components';
 import 'react-native-gesture-handler';
 
-const userContext = { uid: '6283c59f09c1aba370980c09' } // Need to be replaced!
 export const baseUri = Platform.OS === 'android' ? 'http://10.0.2.2:8080/' : 'http://127.0.0.1/8080/';
 
 const ForYou = () => {
@@ -20,6 +19,35 @@ const ForYou = () => {
   const { assets, sizes, colors, gradients } = useTheme();
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
+
+  useEffect(() => {
+    fetch(baseUri + `getInterestPrediction?userId=${data.user.uid}&k=${10}&userbased=${1}`)
+      .then((result) => result.json())
+      .then((json) => {
+        let adjucted = [];
+        for (const cat of json) {
+          adjucted.push({
+            id: cat.interest_id,
+            name: cat.interest_name
+          });
+        }
+        data.setCategories(adjucted);
+        let offers = {}
+        for (const cat of adjucted) {
+          fetch(baseUri + `getActivityPrediction?userId=${data.user.uid}&interest=${cat.name}`)
+            .then((result) => result.json()).then((json) => {
+              offers[cat.id] = json;
+            })
+            .catch(() => {
+              console.error(`Could not fetch offers for ${cat.name} from DB.`);
+            })
+        }
+      })
+      .catch(() => {
+        data.setCategories([]);
+        console.error('Could not fetch interests from DB.');
+      });
+  }, []);
 
   useEffect(() => {
     setArticles(data?.articles);
@@ -51,20 +79,6 @@ const ForYou = () => {
       ),
     });
   }, [assets.background, navigation, sizes.width, headerHeight]);
-
-  useEffect(() => {
-    let uid = userContext.uid;
-    fetch(baseUri + `getInterestPrediction?userId=${uid}k=${100}userbased=${1}`)
-      .then((result) => result.json())
-      .then((json) => {
-        setCategories(json);
-        console.log(json);
-      })
-      .catch(() => {
-        setCategories([]);
-        console.error('Could not fetch interests from DB.');
-      });
-  }, []);
 
   return (
     <Block safe>
