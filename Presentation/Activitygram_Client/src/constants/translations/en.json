@@ -119,6 +119,8 @@
       "Create": "Create",
       "TryAgain": "Please fill the following fields and try again:",
       "SelectParticipant": "Select participants",
-      "SelectManagers": "Select managers"
+      "SelectManagers": "Select managers",
+      "LimitExceeded": "The number of invitees can not exceed the set limit.",
+      "NumberOfParticipants": "Max. participants:"
   }
 }
