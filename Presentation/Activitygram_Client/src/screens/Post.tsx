@@ -75,14 +75,6 @@ const Form = () => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(t('Post.SelectCategory'));
 
-  // Users Drop-down
-  const [showUsersModal, setShowUsersModal] = useState(false);
-  const [users, setUsers] = useState([]);
-  const [selectedParticipants, setSelectedParticipants] = useState([]);
-  const [selectedManagers, setSelectedManagers] = useState([]);
-  const [showParticipantsModal, setShowParticipantsModal] = useState(false);
-  const [showManagersModal, setShowManagersModal] = useState(false);
-
   // Title
   const [title, setTitle] = useState('')
 
@@ -126,6 +118,14 @@ const Form = () => {
   const [image2, setImage2] = useState(null);
   const [image3, setImage3] = useState(null);
 
+  // Participants and Managers
+  const [users, setUsers] = useState([]);
+  const [selectedParticipants, setSelectedParticipants] = useState([]);
+  const [selectedManagers, setSelectedManagers] = useState([]);
+  const [showParticipantsModal, setShowParticipantsModal] = useState(false);
+  const [showManagersModal, setShowManagersModal] = useState(false);
+  const [participantsLimit, setParticipantsLimit] = useState(99999);
+
   // Fetch categories for Category Modal
   useEffect(() => {
     fetch(baseUri + 'allInterests')
@@ -137,9 +137,15 @@ const Form = () => {
     fetch(baseUri + 'allUsers')
       .then((result) => result.json())
       .then((json) => {
+        for (const u of json) {
+          u.title = u.title.slice(0, 40) + '...'
+        }
         setUsers(json)
       })
-      .catch(() => setUsers([]));
+      .catch(() => {
+        console.error('Could not fetch users from DB.');
+        setUsers([]);
+      });
   }, []);
 
   // Creates Date object out of date and time strings (or null).
@@ -474,15 +480,38 @@ const Form = () => {
           </Block>
         </Block>
 
+        <Block row justify='space-between' marginBottom={sizes.sm}>
+          <Text p semibold marginTop={sizes.s}>{t('Post.NumberOfParticipants')}</Text>
+          <Block marginLeft={sizes.m}>
+            <Input keyboardType='numeric' onChangeText={(text) => {
+              if (Number.isInteger(text)) {
+                let n = Number(text)
+                if (n > 0) {
+                  setParticipantsLimit(n);
+                }
+              }
+            }} />
+          </Block>
+
+        </Block>
+
         <Block marginBottom={sizes.sm}>
           <Text p semibold>{t('Post.SelectParticipant')}</Text>
         </Block>
         <AutocompleteDropdown closeOnBlur={true} closeOnSubmit={false} dataSet={users} clearOnFocus={true}
           direction={'up'} onSelectItem={(user) => {
             if (user) {
-              let array = selectedParticipants;
-              array.push(user);
-              setSelectedParticipants(array);
+              if (selectedParticipants.length < participantsLimit) {
+                let array = selectedParticipants;
+                array.push(user);
+                setSelectedParticipants(array);
+              } else {
+                Toast.show({
+                  type: 'error',
+                  text1: t('Post.LimitExceeded')
+                })
+              }
+
             }
           }} />
         <Block marginBottom={sizes.sm} marginTop={sizes.sm}>

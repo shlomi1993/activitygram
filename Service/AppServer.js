@@ -19,10 +19,10 @@ let allActivities;
 var ratingsSize = 0;
 var userActivityLogSizes = {};
 
-async function refreshPredMatrix(currentNumberOfRatings) {
-    if (ratingsSize * 1.05 < currentNumberOfRatings) {
-        database.fetchDataForCF();
-        ratingsSize = currentNumberOfRatings;
+async function refreshPredMatrix() {
+    if (ratingsSize * 1.05 < database.getCurrentRatingSize()) {
+        ratingsSize = database.fetchDataForCF();
+        recommender.train_cf(database.interestsPath, database.ratingsPath);
         console.log('Prediction matrix refreshed.');
     } else {
         console.log('Prediction matrix is sufficiently updated.');
@@ -38,14 +38,6 @@ async function refreshUserModel(uid, currentUserModelSize) {
         console.log(`Model of uid ${uid} is sufficiently updated.`);
     }
 }
-
-recommenderService.on('message', (message) => {
-    console.log('Recommender: ' + message);
-});
-
-geocoderService.on('message', (message) => {
-    console.log('Geocoder: ' + message);
-});
 
 app.use(
     express.urlencoded({
@@ -135,7 +127,6 @@ app.get('/getUserByEmail', (req, res) => {
 app.post('/createUser', (req, res) => {
     newUser = {
         username: req.body.username,
-        password: hash.update(req.body.password, 'utf-8').digest('hex'),
         firstname: req.body.firstname,
         lastname: req.body.lastname,
         images: req.body.images, // first image is the profile picture
@@ -163,6 +154,7 @@ app.post('/createUser', (req, res) => {
         .then((result) => {
             res.status(200).send(result);
             console.log('createUser request succeeded.');
+            database.fetchDataForCF();
         })
         .catch((error) => {
             let msg = 'createUser request failed.';
@@ -374,10 +366,29 @@ app.get('/getInterestPrediction', (req, res) => {
 
 app.get('/getActivityPrediction', (req, res) => {
     let userId = req.query.userId;
-    let interestId = req.query.interestId;
-    console.log('NOT YET IMPLEMENTED.');
-    // let test = req.query.test; // test should hold all activities that their interests list contains the given interest.
-    // recommender.predict_nn(uid, test).then((topk) => res.send(topk));
+    let interest = req.query.interest;
+    database.getActivityByCategory(interest)
+        .then((activities) => {
+            test = []
+            for (const a of activities) {
+                let current = Date()
+                if (Date.parse(a.startDateTime) > Date.parse(current)) {
+                    let testObj = {
+                        activity_id: a._id.toString(),
+                        activity_name: a.title,
+                        description: a.description
+                    }
+                    test.push(testObj)
+                }
+            }
+            recommender.predict_nn(userId, test)
+                .then((offers) => { res.send(offers) });
+        });
+});
+
+app.get('/refreshPredMatrix', (req, res) => {
+    database.fetchDataForCF(100000);
+    recommender.train_cf(database.interestsPath, database.ratingsPath);
 });
 
 app.listen(conn.App.port, () => {

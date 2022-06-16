@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import img64 from '../../temp_img_var';
 import {
   IBigCard,
   IArticleOptions,
@@ -12,10 +13,12 @@ import {
 export const USERS: IUser[] = [
   {
     id: 1,
+    uid: '6283c59f09c1aba370980c09',  // Added by Shlomi.
+    image: img64,
     name: 'Devin Coldewey',
     department: 'Marketing Manager',
-    stats: { posts: 323, followers: 53200, following: 749000 },
-    social: { twitter: 'CreativeTim', dribbble: 'creativetim' },
+    stats: {posts: 323, followers: 53200, following: 749000},
+    social: {twitter: 'CreativeTim', dribbble: 'creativetim'},
     about:
       'Decisions: If you can’t decide, the answer is no. If two equally difficult paths, choose the one more painful in the short term (pain avoidance is creating an illusion of equality).',
     avatar:
@@ -25,8 +28,8 @@ export const USERS: IUser[] = [
     id: 2,
     name: 'Bella Audrey',
     department: 'Marketing Manager',
-    stats: { posts: 323, followers: 53200, following: 749000 },
-    social: { twitter: 'CreativeTim', dribbble: 'creativetim' },
+    stats: {posts: 323, followers: 53200, following: 749000},
+    social: {twitter: 'CreativeTim', dribbble: 'creativetim'},
     about:
       'Decisions: If you can’t decide, the answer is no. If two equally difficult paths, choose the one more painful in the short term (pain avoidance is creating an illusion of equality).',
     avatar:
@@ -36,8 +39,8 @@ export const USERS: IUser[] = [
     id: 3,
     name: 'Miriam Lendra',
     department: 'Desktop Publisher',
-    stats: { posts: 323, followers: 53200, following: 749000 },
-    social: { twitter: 'CreativeTim', dribbble: 'creativetim' },
+    stats: {posts: 323, followers: 53200, following: 749000},
+    social: {twitter: 'CreativeTim', dribbble: 'creativetim'},
     about:
       'Decisions: If you can’t decide, the answer is no. If two equally difficult paths, choose the one more painful in the short term (pain avoidance is creating an illusion of equality).',
     avatar:
@@ -47,8 +50,8 @@ export const USERS: IUser[] = [
     id: 4,
     name: 'David Bishop',
     department: 'Marketing Manager',
-    stats: { posts: 323, followers: 53200, following: 749000 },
-    social: { twitter: 'CreativeTim', dribbble: 'creativetim' },
+    stats: {posts: 323, followers: 53200, following: 749000},
+    social: {twitter: 'CreativeTim', dribbble: 'creativetim'},
     about:
       'Decisions: If you can’t decide, the answer is no. If two equally difficult paths, choose the one more painful in the short term (pain avoidance is creating an illusion of equality).',
     avatar:
@@ -58,8 +61,8 @@ export const USERS: IUser[] = [
     id: 5,
     name: 'Mathew Glock',
     department: 'HR Manager',
-    stats: { posts: 323, followers: 53200, following: 749000 },
-    social: { twitter: 'CreativeTim', dribbble: 'creativetim' },
+    stats: {posts: 323, followers: 53200, following: 749000},
+    social: {twitter: 'CreativeTim', dribbble: 'creativetim'},
     about:
       'Decisions: If you can’t decide, the answer is no. If two equally difficult paths, choose the one more painful in the short term (pain avoidance is creating an illusion of equality).',
     avatar:
@@ -69,8 +72,8 @@ export const USERS: IUser[] = [
     id: 6,
     name: 'Emma Roberts',
     department: 'HR Manager',
-    stats: { posts: 323, followers: 53200, following: 749000 },
-    social: { twitter: 'CreativeTim', dribbble: 'creativetim' },
+    stats: {posts: 323, followers: 53200, following: 749000},
+    social: {twitter: 'CreativeTim', dribbble: 'creativetim'},
     about:
       'Decisions: If you can’t decide, the answer is no. If two equally difficult paths, choose the one more painful in the short term (pain avoidance is creating an illusion of equality).',
     avatar:
@@ -165,10 +168,10 @@ export const TRENDING: ICard[] = [
 
 // categories
 export const CATEGORIES: ICategory[] = [
-  { id: 1, name: 'InterestTop1' },
-  { id: 2, name: 'InterestTop2' },
-  { id: 3, name: 'InterestTop3' },
-  { id: 4, name: 'InterestTop4' },
+  {id: 1, name: 'InterestTop1'},
+  {id: 2, name: 'InterestTop2'},
+  {id: 3, name: 'InterestTop3'},
+  {id: 4, name: 'InterestTop4'},
 ];
 
 // article options
@@ -176,11 +179,10 @@ export const ARTICLE_OPTIONS: IArticleOptions[] = [
   {
     id: 1,
     title: 'Best party in town',
-    description:
-      '18+ only',
+    description: '18+ only',
     type: 'celebrations',
     guests: 1,
-    sleeping: { total: 1, type: 'adults' },
+    sleeping: {total: 1, type: 'adults'},
     price: 89,
     user: USERS[0],
     image:
