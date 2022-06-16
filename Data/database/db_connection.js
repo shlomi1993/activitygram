@@ -86,10 +86,11 @@ module.exports.getUserById = async function (userId) {
     return result[0];
 };
 
-module.exports.getUserByFirebaseId = async function (firebaseId) {
-    const result = await users.find({ firebaseId: firebaseId }).toArray();
-    return result[0];
+module.exports.getUserByEmail = async function (userEmail) {
+  const result = await users.find({ email: userEmail }).toArray();
+  return result[0];
 };
+
 
 //Update functions
 async function changeUserFirstName(curr_user, firstName) {
