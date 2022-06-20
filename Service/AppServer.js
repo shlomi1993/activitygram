@@ -10,10 +10,6 @@ const database = require('../Data/database/db_connection');
 const recommender = require('./recommenderApi');
 const geocoder = require('./geocodeApi');
 
-const { PythonShell } = require('python-shell');
-const recommenderService = new PythonShell('../Data/recommender/recommender.py');
-const geocoderService = new PythonShell('../Data/geocoder/geocoder.py');
-
 let allActivities;
 
 var ratingsSize = 0;
@@ -39,11 +35,7 @@ async function refreshUserModel(uid, currentUserModelSize) {
     }
 }
 
-app.use(
-    express.urlencoded({
-        extended: false
-    })
-);
+app.use(express.urlencoded({ extended: false }));
 
 app.use(bodyParser.json());
 
@@ -94,10 +86,6 @@ app.post('/imageUpload', upload.array('photo', 3), (req, res) => {
     res.status(200).json({
         message: 'success!',
     });
-});
-
-app.post('/templatePost', (req, res) => {
-    console.log('NOT YET IMPLEMENTED.');
 });
 
 /** USERS */
@@ -248,27 +236,6 @@ app.post('/createGroup', (req, res) => {
     res.send(result);
 });
 
-app.post('/editGroup', (req, res) => {
-    console.log('NOT YET IMPLEMENTED.');
-});
-
-app.post('/addCommonInterest', (req, res) => {
-    console.log('NOT YET IMPLEMENTED.');
-});
-
-app.post('/removeCommonInterest', (req, res) => {
-    console.log('NOT YET IMPLEMENTED.');
-});
-
-app.post('/addGroupPrecondition', (req, res) => {
-    console.log('NOT YET IMPLEMENTED.');
-});
-app.get('/searchActivity', (req, res) => {
-    console.log('NOT YET IMPLEMENTED.');
-    // let keyword = req.query.keyword;
-    // database.searchActivity(keyword).then((eventList) => res.send(eventList));
-});
-
 app.get('/getAllActivities', (req, res) => {
     database.getAllActivities().then((activities) => {
         allActivities = activities 
@@ -382,14 +349,10 @@ app.get('/getActivityPrediction', (req, res) => {
                 }
             }
             recommender.predict_nn(userId, test)
-                .then((offers) => { res.send(offers) });
+                .then((suggestions) => { res.send(suggestions) });
         });
 });
 
-app.get('/refreshPredMatrix', (req, res) => {
-    database.fetchDataForCF(100000);
-    recommender.train_cf(database.interestsPath, database.ratingsPath);
-});
 
 app.listen(conn.App.port, () => {
     console.log(`AppServer is available at: http://${conn.App.ip}:${conn.App.port}/`)

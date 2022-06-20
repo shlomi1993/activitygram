@@ -3,7 +3,7 @@ import { Platform, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useHeaderHeight } from '@react-navigation/stack';
 
-import { useTheme, useTranslation } from '../hooks';
+import { useData, useTheme, useTranslation } from '../hooks';
 import { Block, Image, Text, Input, Button, Switch, Modal } from '../components';
 import { userContext } from '../../App'
 
@@ -13,8 +13,8 @@ import * as ImagePicker from 'expo-image-picker'
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
 import Toast from 'react-native-toast-message'
+import { BASE_URL } from '../constants/appConstants';
 
-export const baseUri = Platform.OS === 'android' ? 'http://10.0.2.2:8080/' : 'http://127.0.0.1/8080/';
 const { t } = useTranslation();
 
 function validateInputs(params: object) {
@@ -50,16 +50,16 @@ async function sendNewActivity(params: object) {
     formBodyArray.push(encodedKey + '=' + encodedValue);
   }
   let formBody = formBodyArray.join('&');
-  fetch(baseUri + 'createActivity', {
+  fetch(BASE_URL + 'createActivity', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
     body: formBody
   })
     .then((res) => {
-      console.log('New activity sent to', baseUri);
+      console.log('New activity sent to', BASE_URL);
     })
     .catch((err) => {
-      console.log('Error: could not reach', baseUri);
+      console.log('Error: could not reach', BASE_URL);
     });
 }
 
@@ -68,7 +68,7 @@ const Form = () => {
   // Theme & Context
   const navigation = useNavigation();
   const { assets, colors, sizes, gradients } = useTheme();
-  const initiator = useContext(userContext)
+  const { user } = useData();
 
   // Category Modal
   const [showCategoryModal, setShowCategoryModal] = useState(false);
@@ -128,13 +128,13 @@ const Form = () => {
 
   // Fetch categories for Category Modal
   useEffect(() => {
-    fetch(baseUri + 'allInterests')
+    fetch(BASE_URL + 'allInterests')
       .then((result) => result.json())
       .then((json) => {
         setCategories(json);
       })
       .catch(() => setCategories([]));
-    fetch(baseUri + 'allUsers')
+    fetch(BASE_URL + 'allUsers')
       .then((result) => result.json())
       .then((json) => {
         for (const u of json) {
@@ -247,7 +247,7 @@ const Form = () => {
   // Geocoding address to latitude and longitude
   async function geocode(address: string) {
     try {
-      let res = await fetch(baseUri + `geocode?address=${address}`)
+      let res = await fetch(BASE_URL + `geocode?address=${address}`)
       let json = await res.json();
       setGeolocationError(false)
       setGeolocation({
@@ -305,11 +305,11 @@ const Form = () => {
     if (image1) images.push(image1['base64'])
     if (image2) images.push(image2['base64'])
     if (image3) images.push(image3['base64'])
-    let participants = [initiator.uid]
+    let participants = [user.uid]
     for (const p of selectedParticipants) {
       participants.push(p.id)
     }
-    let managers = [initiator.uid]
+    let managers = [user.uid]
     for (const m of selectedManagers) {
       managers.push(m.id)
     }
@@ -330,7 +330,8 @@ const Form = () => {
     let missing = validateInputs(params);
     if (missing.length === 0) {
       sendNewActivity(params);
-      navigation.navigate('PostSuccess');
+      // navigation.navigate('PostSuccess');
+      console.warn('Navigate to success.')
     } else {
       Toast.show({
         type: 'error',
@@ -350,8 +351,8 @@ const Form = () => {
 
       <Block>
         <Block row marginBottom={sizes.sm}>
-          <Image style={{ width: 60, height: 60 }} source={{ uri: initiator.image }} marginRight={sizes.sm} />
-          <Text p semibold marginTop={sizes.sm} align='center'>{initiator.username}</Text>
+          <Image style={{ width: 60, height: 60 }} source={{ uri: user.image }} marginRight={sizes.sm} />
+          <Text p semibold marginTop={sizes.sm} align='center'>{user.username}</Text>
         </Block>
 
         <Block marginBottom={sizes.xs}>
