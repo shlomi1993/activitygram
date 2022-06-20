@@ -1,6 +1,6 @@
+import sys
 from flask import Flask, jsonify, request
 from geopy import geocoders
-import json
 
 
 app = Flask(__name__)
@@ -36,10 +36,6 @@ def reverse():
 
 
 if __name__ == '__main__':
-    file = open('../Service/connections.json', 'r')
-    conn = json.loads(file.read())
-    file.close()
-    ip = conn['Geocoder']['ip']
-    port = conn['Geocoder']['port']
+    ip = sys.argv[1]
+    port = int(sys.argv[2])
     app.run(host=ip, port=port)
-    print(f'Gecoding service is available at: http://{ip}:{port}/')
