@@ -122,5 +122,17 @@
       "SelectManagers": "Select managers",
       "LimitExceeded": "The number of invitees can not exceed the set limit.",
       "NumberOfParticipants": "Max. participants:"
+  },
+  "EditProfile": {
+    "PleaseFill": "Please fill profile details",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "userName": "Username",
+    "birthDate": "Birth date",
+    "image": "Image",
+    "bio": "Bio",
+    "email": "Email",
+    "address": "Address",
+    "interests": "Interestd"
   }
 }

@@ -66,18 +66,18 @@ module.exports.fetchDataForNN = async (user_id) => {
 };
 
 // Create a user
-module.exports.createUser = async function (newUser) {
-    const user = await users.insertOne(newUser);
-    const uido = await user.insertedId
-    const uid = uido.toString();
-    await JSON.parse(newUser.interests).forEach((interest) => {
-        ratings.insertOne({
-            userId: uid,
-            interestId: interest.id,
-            rating: 10.0
-        });
-    });
-    return `New user created with the id: ${uid}`;
+module.exports.createUser = async function (userObject) {
+    const user = await users.insertOne(userObject);
+    // const uido = await user.insertedId
+    // const uid = uido.toString();
+    // await JSON.parse(newUser.interests).forEach((interest) => {
+    //     ratings.insertOne({
+    //         userId: uid,
+    //         interestId: interest.id,
+    //         rating: 10.0
+    //     });
+    // });
+    // return `New user created with the id: ${uid}`;
 };
 
 //get User by ID
@@ -90,7 +90,6 @@ module.exports.getUserByEmail = async function (userEmail) {
   const result = await users.find({ email: userEmail }).toArray();
   return result[0];
 };
-
 
 //Update functions
 async function changeUserFirstName(curr_user, firstName) {
