@@ -7,21 +7,22 @@ import { useHeaderHeight } from '@react-navigation/stack';
 import { useTheme, useData } from '../hooks';
 import { IBigCard, ICategory } from '../constants/types';
 import { Block, Image, Button, BigCard, Text } from '../components';
-import 'react-native-gesture-handler';
-
-export const baseUri = Platform.OS === 'android' ? 'http://10.0.2.2:8080/' : 'http://127.0.0.1/8080/';
+import { BASE_URL } from '../constants/appConstants';
+// import 'react-native-gesture-handler';
 
 const ForYou = () => {
-  const data = useData();
-  const [selected, setSelected] = useState<ICategory>();
-  const [articles, setArticles] = useState<IBigCard[]>([]);
-  const [categories, setCategories] = useState<ICategory[]>([]);
-  const { assets, sizes, colors, gradients } = useTheme();
+
   const navigation = useNavigation();
+  const data = useData();
+  const { assets, sizes, colors, gradients } = useTheme();
   const headerHeight = useHeaderHeight();
 
+  const [categories, setCategories] = useState<ICategory[]>([]);
+  const [selected, setSelected] = useState<ICategory>();
+  const [suggestions, setSuggestions] = useState<IBigCard[]>([]);
+
   useEffect(() => {
-    fetch(baseUri + `getInterestPrediction?userId=${data.user.uid}&k=${10}&userbased=${1}`)
+    fetch(BASE_URL + `getInterestPrediction?userId=${data.user.uid}&k=${10}&userbased=${1}`)
       .then((result) => result.json())
       .then((json) => {
         let adjucted = [];
@@ -31,16 +32,13 @@ const ForYou = () => {
             name: cat.interest_name
           });
         }
-        data.setCategories(adjucted);
-        let offers = {}
+        setCategories(adjucted);
+        let suggestionLists = {}
         for (const cat of adjucted) {
-          fetch(baseUri + `getActivityPrediction?userId=${data.user.uid}&interest=${cat.name}`)
-            .then((result) => result.json()).then((json) => {
-              offers[cat.id] = json;
-            })
-            .catch(() => {
-              console.error(`Could not fetch offers for ${cat.name} from DB.`);
-            })
+          fetch(BASE_URL + `getActivityPrediction?userId=${data.user.uid}&interest=${cat.name}`)
+            .then((result) => result.json())
+            .then((json) => { suggestionLists[cat.id] = json; })
+            .catch(() => { console.error(`Could not fetch offers for ${cat.name} from DB.`); })
         }
       })
       .catch(() => {
@@ -50,9 +48,9 @@ const ForYou = () => {
   }, []);
 
   useEffect(() => {
-    setArticles(data?.articles);
     setCategories(data?.categories);
     setSelected(data?.categories[0]);
+    setSuggestions(data?.articles);
   }, [data.articles, data.categories]);
 
   useEffect(() => {
@@ -62,8 +60,8 @@ const ForYou = () => {
     const newArticles = data?.articles?.filter(
       (article) => article?.category?.id === category?.id,
     );
-    setArticles(newArticles);
-  }, [data, selected, setArticles]);
+    setSuggestions(newArticles);
+  }, [data, selected, setSuggestions]);
 
 
   useLayoutEffect(() => {
@@ -112,7 +110,7 @@ const ForYou = () => {
 
       {/* our data will be top 2 recommendations */}
       <FlatList
-        data={articles}
+        data={suggestions}
         showsVerticalScrollIndicator={false}
         keyExtractor={(item) => `${item?.id}`}
         style={{ paddingHorizontal: sizes.padding }}

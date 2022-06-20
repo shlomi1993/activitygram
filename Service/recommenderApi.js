@@ -4,11 +4,11 @@ const fs = require('fs');
 const axios = require('axios');
 const conn = JSON.parse(fs.readFileSync('./connections.json'));
 
-// const { PythonShell } = require('python-shell');
-// const recommenderService = new PythonShell('../Data/recommender/recommender.py');
-// recommenderService.on('message', (message) => {
-//     console.log('Recommender: ' + message);
-// });
+const { PythonShell } = require('python-shell');
+const recommenderService = new PythonShell('../Data/recommender/recommender.py');
+recommenderService.on('message', (message) => {
+    console.log('Recommender: ' + message);
+});
 
 const uri = `http://${conn.Recommender.ip}:${conn.Recommender.port}`;
 
