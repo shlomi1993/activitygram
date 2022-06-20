@@ -2,7 +2,6 @@
 
 
 import numpy as np
-import json
 import spacy
 import torch
 from torch import nn
@@ -14,7 +13,7 @@ from matplotlib import pyplot as plt
 
 nlp = spacy.load('en_core_web_sm')
 
-MODEL_UID = '../Data/recommender/models/model_uid_'
+MODEL_UID = './models/model_uid_'
 
 CLASSES = {
     0: 'Will-not-be-interested',
@@ -41,17 +40,11 @@ def create_linear_layer(in_features, out_features):
     )
 
 
-def preprocess_train_set(train_x_file):
-
-    file = open(train_x_file, 'r')
-    train_set = json.load(file)
-    file.close()
-
+def preprocess_train_set(train_json):
     vectors, labels = [], []
-    for example in train_set:
+    for example in train_json:
         vectors.append(nlp(example['description']).vector)
-        labels.append(example['label'])
-
+        labels.append(int(example['label']))
     n_train = len(vectors)
     indexes = [int(i) for i in list(range(n_train))]
     np.random.shuffle(indexes)
@@ -63,6 +56,8 @@ def preprocess_train_set(train_x_file):
     train_y = np.array([labels[i] for i in train_idx])
     valid_x = np.array([vectors[i] for i in valid_idx])
     valid_y = np.array([labels[i] for i in valid_idx])
+
+    print(train_y)
 
     train_x_t = torch.from_numpy(train_x).float()
     train_y_t = torch.from_numpy(train_y).long()
@@ -150,9 +145,9 @@ class TextClassifierNN(nn.Module):
         return valid_loss, valid_accuracy
 
 
-def train_model(uid, train_file, n_epochs, save_plot=False):
+def train_model(uid, train_json, n_epochs, save_plot=False):
     model = TextClassifierNN()
-    train_dataset, valid_dataset = preprocess_train_set(train_file)
+    train_dataset, valid_dataset = preprocess_train_set(train_json)
     train_losses, train_accuracies = [], []
     valid_losses, valid_accuracies = [], []
     for e in range(n_epochs):
@@ -171,6 +166,7 @@ def train_model(uid, train_file, n_epochs, save_plot=False):
     if save_plot:
         plot(train_losses, valid_losses, train_accuracies, valid_accuracies)
     return f'User {uid} model was successfully updated.'
+
 
 def predict(uid, test_json):
     activity_ids, activity_names, test_dataset = preprocess_test_set(test_json)

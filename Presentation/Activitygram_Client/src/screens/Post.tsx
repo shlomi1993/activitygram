@@ -1,45 +1,26 @@
 import React, { useEffect, useLayoutEffect, useState, useRef, useContext } from 'react';
-import { Platform, FlatList } from 'react-native';
+import { FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useHeaderHeight } from '@react-navigation/stack';
 
 import { useData, useTheme, useTranslation } from '../hooks';
 import { Block, Image, Text, Input, Button, Switch, Modal } from '../components';
-import { userContext } from '../../App'
-
-import Moment from 'moment';
-import { TextInput } from 'react-native-paper';
-import * as ImagePicker from 'expo-image-picker'
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
-import Toast from 'react-native-toast-message'
 import { BASE_URL } from '../constants/appConstants';
 
-const { t } = useTranslation();
+import { TextInput } from 'react-native-paper';
+import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import Moment from 'moment';
+import * as ImagePicker from 'expo-image-picker'
+import Toast from 'react-native-toast-message'
 
-function validateInputs(params: object) {
-  let missing = []
-  if (!params['category'] || params['category'] === t('Post.SelectCategory')) {
-    missing.push(t('Post.Category'));
+function isIn(obj: any, arr: any[]) {
+  for (const element of arr) {
+    if (element === obj) {
+      return true;
+    }
   }
-  if (!params['title'] || params['title'] === '') {
-    missing.push(t('Post.ActivityTitle'));
-  }
-  if (!params['startDateTime']) {
-    missing.push(t('Post.StartDate'));
-    missing.push(t('Post.StartTime'));
-  }
-  if (!params['endDateTime'] || params['endDateTime'] < params['startDateTime']) {
-    params['endDateTime'] = new Date(params['startDateTime'].getTime());
-  }
-  // if (!params['geolocation'] || params['geolocation'] === '') {
-  //   missing.push(t('Post.Location'));
-  // }
-  if (!params['description'] || params['description'] === '') {
-    missing.push(t('Post.Description'));
-  }
-  // Insert here more tests...
-  return missing
+  return false;
 }
 
 async function sendNewActivity(params: object) {
@@ -69,11 +50,13 @@ const Form = () => {
   const navigation = useNavigation();
   const { assets, colors, sizes, gradients } = useTheme();
   const { user } = useData();
+  const { t } = useTranslation();
+
 
   // Category Modal
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(t('Post.SelectCategory'));
+  const [selectedCategory, setSelectedCategory] = useState('');
 
   // Title
   const [title, setTitle] = useState('')
@@ -299,22 +282,48 @@ const Form = () => {
     }
   }
 
+  // Validate inputs
+  const validateInputs = (params: object) => {
+    let missing = []
+    if (!params['category'] || params['category'] === '') {
+      missing.push(t('Post.Category'));
+    }
+    if (!params['title'] || params['title'] === '') {
+      missing.push(t('Post.ActivityTitle'));
+    }
+    if (!params['startDateTime']) {
+      missing.push(t('Post.StartDate'));
+      missing.push(t('Post.StartTime'));
+    }
+    if (!params['endDateTime'] || params['endDateTime'] < params['startDateTime']) {
+      params['endDateTime'] = new Date(params['startDateTime'].getTime());
+    }
+    // if (!params['geolocation'] || params['geolocation'] === '') {
+    //   missing.push(t('Post.Location'));
+    // }
+    if (!params['description'] || params['description'] === '') {
+      missing.push(t('Post.Description'));
+    }
+    // Insert here more tests...
+    return missing
+  }
+
   // Create a new activity instance in the DB
   const create = () => {
     let images = []
     if (image1) images.push(image1['base64'])
     if (image2) images.push(image2['base64'])
     if (image3) images.push(image3['base64'])
-    let participants = [user.uid]
+    let participants = [user._id.toString()]
     for (const p of selectedParticipants) {
       participants.push(p.id)
     }
-    let managers = [user.uid]
+    let managers = [user._id.toString()]
     for (const m of selectedManagers) {
       managers.push(m.id)
     }
     let params = {
-      initiator: initiator.uid,
+      initiator: user._id.toString(),
       category: selectedCategory,
       title: title,
       startDateTime: createDateObject(startDate, startTime),
@@ -349,9 +358,10 @@ const Form = () => {
 
       <Text p semibold marginBottom={sizes.sm}>{t('Post.PleaseFill')}</Text>
 
-      <Block>
+          <Block>
+              
         <Block row marginBottom={sizes.sm}>
-          <Image style={{ width: 60, height: 60 }} source={{ uri: user.image }} marginRight={sizes.sm} />
+          <Image style={{ width: 60, height: 60 }} source={{ uri: user.profileImage }} marginRight={sizes.sm} />
           <Text p semibold marginTop={sizes.sm} align='center'>{user.username}</Text>
         </Block>
 
@@ -485,15 +495,13 @@ const Form = () => {
           <Text p semibold marginTop={sizes.s}>{t('Post.NumberOfParticipants')}</Text>
           <Block marginLeft={sizes.m}>
             <Input keyboardType='numeric' onChangeText={(text) => {
-              if (Number.isInteger(text)) {
-                let n = Number(text)
-                if (n > 0) {
-                  setParticipantsLimit(n);
-                }
+              let n = parseInt(text)
+              console.log(!isNaN(n))
+              if (!isNaN(n) && n > 0) {
+                setParticipantsLimit(n);
               }
             }} />
           </Block>
-
         </Block>
 
         <Block marginBottom={sizes.sm}>
@@ -504,8 +512,15 @@ const Form = () => {
             if (user) {
               if (selectedParticipants.length < participantsLimit) {
                 let array = selectedParticipants;
-                array.push(user);
-                setSelectedParticipants(array);
+                if (!isIn(user, array)) {
+                  array.push(user);
+                  setSelectedParticipants(array);
+                } else {
+                  Toast.show({
+                    type: 'error',
+                    text1: t('Post.UserIncluded')
+                  })
+                }
               } else {
                 Toast.show({
                   type: 'error',
@@ -541,8 +556,15 @@ const Form = () => {
           direction={'up'} onSelectItem={(user) => {
             if (user) {
               let array = selectedManagers;
-              array.push(user);
-              setSelectedManagers(array);
+              if (!isIn(user, array)) {
+                array.push(user);
+                setSelectedManagers(array);
+              } else {
+                Toast.show({
+                  type: 'error',
+                  text1: t('Post.ManagerIncluded')
+                })
+              }
             }
           }} />
         <Block marginBottom={sizes.sm} marginTop={sizes.sm}>
