@@ -1,8 +1,8 @@
-import React, { useEffect, useLayoutEffect, useState, useRef, useContext } from 'react';
+import React, { useEffect, useLayoutEffect, useState, useRef, useContext, useCallback } from 'react';
 import { Platform, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Assets, useHeaderHeight } from '@react-navigation/stack';
-
+import Storage from '@react-native-async-storage/async-storage';
 import { useTheme, useTranslation } from '../hooks';
 import { Block, Image, Text, Input, Button, Switch, Modal } from '../components';
 
@@ -14,8 +14,6 @@ import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
 import Toast from 'react-native-toast-message'
 import { BASE_URL } from '../constants/appConstants';
 import { IUser } from '../constants/types';
-
-
 
 const Form = () => {
   const { t } = useTranslation();
@@ -32,14 +30,17 @@ const Form = () => {
   const [birthDate, setbirthDate] = useState('')
   const [birthDateError, setbirthDateError] = useState(false)
 
-  // Location
-  const [geolocationError, setGeolocationError] = useState(false);
-  const [geolocation, setGeolocation] = useState(null);
-  
-
   // Images
-  const [imageButtonText1, setImageButtonText1] = useState(t('Post.AddImage'));
+  const [imageButtonText, setImageButtonText] = useState(t('Post.AddImage'));
   const [image1, setImage1] = useState(null);
+
+  const handleEmail = useCallback(
+    async () => {
+      const email = await Storage.getItem('userEmail')
+      setProfile({...profile, email})
+    },
+    [profile, setProfile],
+  );
 
   // Fetch categories for Category Modal
   useEffect(() => {
@@ -51,29 +52,16 @@ const Form = () => {
       .catch(() => setCategories([]));
   }, []);
 
+  useEffect(() => {
+    setProfile({...profile, creationTime: Date(), activityLog: [] })
+    handleEmail() 
+  }, [])
+
   // Start Date Confirm
   const handlebirthDateConfirm = (date: Date) => {
-    console.log(date)
     setProfile({...profile, birthDate: date})
     setbirthDatePickerVisibility(false);
   };
-
-  // Geocoding address to latitude and longitude
-  async function geocode(address: string) {
-    try {
-      let res = await fetch(BASE_URL + `geocode?address=${address}`)
-      let json = await res.json();
-      setGeolocationError(false)
-      setGeolocation({
-        'address': address,
-        'latitude': json.latitude,
-        'longitude': json.longitude
-      });
-    } catch (error) {
-      setGeolocation('unknown')
-      setGeolocationError(true);
-    }
-  }
 
   // Image handler
   const chooseImage = (imageNumber: Number) => {
@@ -133,18 +121,6 @@ const Form = () => {
             numberOfLines={1} activeOutlineColor={colors.info}
             onChangeText={(newText) => { setProfile({...profile, lastName: newText}) }} />
         </Block>
-        
-        <Block marginBottom={sizes.sm}>
-          <TextInput label={t('EditProfile.userName')} mode='outlined' autoComplete={false} multiline={true}
-            numberOfLines={1} activeOutlineColor={colors.info}
-            onChangeText={(newText) => { { setProfile({...profile, userName: newText}) } }} />
-        </Block>
-
-        <Block marginBottom={sizes.sm}>
-          <TextInput label={t('EditProfile.email')} mode='outlined' autoComplete={false} multiline={true}
-            numberOfLines={1} activeOutlineColor={colors.info}
-            onChangeText={(newText) => { setProfile({...profile, firstName: newText}) }} />
-        </Block>
 
           <Block marginBottom={sizes.sm}>
             <TextInput label={t('EditProfile.birthDate')} mode='outlined' value={Moment(profile.birthDate).format('D.M.YYYY')} error={birthDateError}
@@ -156,11 +132,12 @@ const Form = () => {
             onCancel={() => setbirthDatePickerVisibility(false)} />
 
         </Block>
-{/* 
+
         <Block marginBottom={sizes.sm}>
-          <TextInput label={t('EditProfile.address')} mode='outlined' error={geolocationError} autoComplete={false}
-            activeOutlineColor={colors.info} onChangeText={(newText) => { geocode(newText) }} />
-        </Block> */}
+          <TextInput label={t('EditProfile.city')} mode='outlined' autoComplete={false} multiline={true}
+            numberOfLines={1} activeOutlineColor={colors.info}
+            onChangeText={(newText) => { setProfile({...profile, city: newText}) }} />
+        </Block>
 
         <Block marginBottom={sizes.sm}>
           <TextInput label={t('EditProfile.bio')} mode='outlined' autoComplete={false} multiline={true}
@@ -171,7 +148,7 @@ const Form = () => {
         <Block marginBottom={sizes.sm}>
           <TextInput label={t('EditProfile.interests')} mode='outlined' autoComplete={false} multiline={true}
             numberOfLines={3} activeOutlineColor={colors.info}
-            onChangeText={(newText) => { setBio(newText) }} />
+            onChangeText={(newText) => {}} />
         </Block>
 
         <Block row marginBottom={sizes.s} align='center'>
