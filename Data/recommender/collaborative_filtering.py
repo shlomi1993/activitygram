@@ -1,22 +1,17 @@
 # Shlomi Ben-Shushan
 
 
-import json
 import pickle
 import numpy as np
 import pandas as pd
 from sklearn.metrics.pairwise import pairwise_distances
 
 
-MODEL_CF = '../Data/recommender/models/model_collaborative_filtering'
+MODEL_CF = './models/model_collaborative_filtering'
 
 class CollaborativeFiltering:
 
     def __init__(self):
-        """
-        Collaborative-Filtering object constructor.
-        Initialize attributes that needed to be shared with different functions.
-        """
         self.unique_users = []
         self.unique_interests = []
         self.userId_to_index = {}   # a mapper from user-id to serial index.
@@ -26,14 +21,6 @@ class CollaborativeFiltering:
         self.item_based_matrix = []
 
 def create_pred_matrix(ratings_file, interests_file):
-    """
-    This function creates user-based prediction matrix if user_based is True
-    and item-based prediction matrix if it is False.
-
-    :param ratings:
-    :param interests:
-    :return:
-    """
     cf = CollaborativeFiltering()
     interests = pd.read_csv(interests_file, low_memory=False)
     ratings = pd.read_csv(ratings_file, low_memory=False)
@@ -71,17 +58,6 @@ def create_pred_matrix(ratings_file, interests_file):
         pickle.dump(cf, out)
 
 def predict_interests(user_id, k, is_user_based=True):
-    """
-    This method predicts the "k" interests recommended to the user "user_id"
-    according to the user-based-matrix if "is_user_based" is True or to the
-    item-based-matrix if it is False. This method returns the interests as
-    tuples of interest-ID and match-score for the given user.
-
-    :param user_id: a number that represents a user.
-    :param k: the number of predictions needed
-    :param is_user_based: a boolean that tells which matrix to use.
-    :return: list of k most recommended interests as tuples as described above.
-    """
     try:
         with open(MODEL_CF, 'rb') as file: 
             cf = pickle.load(file)

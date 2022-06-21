@@ -121,7 +121,9 @@
       "SelectParticipant": "Select participants",
       "SelectManagers": "Select managers",
       "LimitExceeded": "The number of invitees can not exceed the set limit.",
-      "NumberOfParticipants": "Max. participants:"
+      "NumberOfParticipants": "Max. participants:",
+      "UserIncluded": "Participant already selected.",
+      "ManagerIncluded": "Manager already selected."
   },
   "EditProfile": {
     "PleaseFill": "Please fill profile details",
