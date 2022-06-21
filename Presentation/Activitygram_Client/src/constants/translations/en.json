@@ -130,6 +130,7 @@
     "lastName": "Last name",
     "userName": "Username",
     "birthDate": "Birth date",
+    "city": "City",
     "image": "Image",
     "bio": "Bio",
     "email": "Email",
