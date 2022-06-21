@@ -126,7 +126,8 @@ app.get('/getUserByEmail', (req, res) => {
 
 app.post('/createUser', (req, res) => {
     const newUser = JSON.parse(decodeURIComponent(req.query.user));
-    database.createUser(newUser)
+    const newProfileImage = req.body;
+    database.createUser(newUser, newProfileImage)
         .then((result) => {
             res.status(200).send(result);
             console.log('createUser request succeeded.');

@@ -66,8 +66,9 @@ module.exports.fetchDataForNN = async (user_id) => {
 };
 
 // Create a user
-module.exports.createUser = async function (userObject) {
-    await users.insertOne(userObject);
+module.exports.createUser = async function (userObject, profileImage) {
+    const user = {...userObject, profileImage: profileImage}
+    await users.insertOne(user);
 };
 
 //get User by ID

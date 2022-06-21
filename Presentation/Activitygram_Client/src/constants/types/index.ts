@@ -96,7 +96,7 @@ export interface IUser {
   interests?: string[],
   profileImage?: any[],
   activityLog?: any[],
-  creationTime: string
+  creationTime: string,
 }
 
 export interface IActivity {

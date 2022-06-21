@@ -126,6 +126,7 @@
   "EditProfile": {
     "PleaseFill": "Please fill profile details",
     "save": "SAVE",
+    "addImage": "Change profile image",
     "firstName": "First name",
     "lastName": "Last name",
     "userName": "Username",
