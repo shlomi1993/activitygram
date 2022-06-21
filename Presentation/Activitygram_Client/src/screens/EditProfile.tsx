@@ -27,12 +27,9 @@ const Form = () => {
 
   const birthDateFocus = useRef();
   const [isbirthDatePickerVisible, setbirthDatePickerVisibility] = useState(false);
-  const [birthDate, setbirthDate] = useState('')
   const [birthDateError, setbirthDateError] = useState(false)
 
-  // Images
-  const [imageButtonText, setImageButtonText] = useState(t('Post.AddImage'));
-  const [image1, setImage1] = useState(null);
+  const [image, setImage] = useState(null);
 
   const handleEmail = useCallback(
     async () => {
@@ -43,14 +40,14 @@ const Form = () => {
   );
 
   // Fetch categories for Category Modal
-  useEffect(() => {
-    fetch(BASE_URL + 'allInterests')
-      .then((result) => result.json())
-      .then((json) => {
-        setCategories(json);
-      })
-      .catch(() => setCategories([]));
-  }, []);
+  // useEffect(() => {
+  //   fetch(BASE_URL + 'allInterests')
+  //     .then((result) => result.json())
+  //     .then((json) => {
+  //       setCategories(json);
+  //     })
+  //     .catch(() => setCategories([]));
+  // }, []);
 
   useEffect(() => {
     setProfile({...profile, creationTime: Date(), activityLog: [] })
@@ -64,7 +61,7 @@ const Form = () => {
   };
 
   // Image handler
-  const chooseImage = (imageNumber: Number) => {
+  const chooseImage = () => {
     ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       base64: true,
@@ -73,29 +70,27 @@ const Form = () => {
       quality: 0.5,
     }).then((data) => {
       if (!data.cancelled) {
-        if (imageNumber == 1) {
-          setImage1(data);
-          setImageButtonText1(t('Post.Change'))
-        }
+        setImage(data);
       }
     });
   }
 
   // Image remover
-  const removeImage = (imageNumber: Number) => {
-    if (imageNumber == 1) {
-      setImage1(null);
-      setImageButtonText1(t('Post.AddImage'))
-    }
+  const removeImage = () => {
+    setProfile({...profile, profileImage: null})
+    setImage(null);
   }
 
   const onPressSave = () => {
+    const imageArr = [];
+    imageArr.push(image['base64'])
     console.log(profile)
     fetch(BASE_URL + 'createUser?user=' + encodeURIComponent(JSON.stringify(profile)), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
       },
+      body: encodeURIComponent(JSON.stringify(image))
     }).then(() => {console.log('Success')})
   }
 
@@ -107,7 +102,11 @@ const Form = () => {
 
       <Block>
         <Block align='center'>
-        <Image style={{ width: 60, height: 60 }} source={assets.profile} />
+            <Image style={{ width: 100, height: 100 }} source={image ? { uri: image.uri } : assets.profile} />
+            <Button flex={1} 
+              onPress={() => chooseImage()} onLongPress={() => removeImage()}>
+              <Text secondary bold>{t('EditProfile.addImage')}</Text>
+            </Button>
         </Block>
 
         <Block marginBottom={sizes.sm}>
@@ -150,17 +149,6 @@ const Form = () => {
             numberOfLines={3} activeOutlineColor={colors.info}
             onChangeText={(newText) => {}} />
         </Block>
-
-        <Block row marginBottom={sizes.s} align='center'>
-          <Block>
-            {image1 && (<Block align='flex-start' marginRight={sizes.xs}>
-              <Image source={{ uri: image1.uri }}
-                style={{ width: 100, height: 100, borderColor: 'black', borderWidth: 1 }} />
-            </Block>)}
-          </Block>
-
-        </Block>
-
       </Block>
 
       <Block>
