@@ -89,15 +89,13 @@ export interface IUser {
   _id: string,
   firstName: string,
   lastName: string,
-  username: string,
-  activityLog: any[],
-  age: number,
+  userName: string,
+  email: string,
+  birthDate: Date,
   bio: string,
-  country: string,
-  dateOfBirth: string,
-  friendsList?: string,
-  interests: string[],
+  interests?: string[],
   profileImage?: any[],
+  activityLog?: any[],
 }
 
 export interface IActivity {
