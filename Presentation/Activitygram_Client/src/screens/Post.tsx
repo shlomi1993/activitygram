@@ -24,23 +24,23 @@ function isIn(obj: any, arr: any[]) {
 }
 
 async function sendNewActivity(params: object) {
-  let formBodyArray = [];
-  for (var property in params) {
-    var encodedKey = encodeURIComponent(property);
-    var encodedValue = encodeURIComponent(params[property]);
-    formBodyArray.push(encodedKey + '=' + encodedValue);
-  }
-  let formBody = formBodyArray.join('&');
+  // let formBodyArray = [];
+  // for (var property in params) {
+  //   var encodedKey = encodeURIComponent(property);
+  //   var encodedValue = encodeURIComponent(params[property]);
+  //   formBodyArray.push(encodedKey + '=' + encodedValue);
+  // }
+  // let formBody = formBodyArray.join('&');
   fetch(BASE_URL + 'createActivity', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-    body: formBody
+    body: encodeURIComponent(JSON.stringify(params))
   })
     .then((res) => {
-      console.log('New activity sent to', BASE_URL);
+      console.log(`New activity sent to ${BASE_URL}/createActivity`);
     })
     .catch((err) => {
-      console.log('Error: could not reach', BASE_URL);
+      console.log(`Error: could not reach ${BASE_URL}/createActivity`);
     });
 }
 
@@ -54,7 +54,6 @@ const Form = () => {
 
 
   // Category Modal
-  const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
 
@@ -89,6 +88,7 @@ const Form = () => {
   // Location
   const [geolocationError, setGeolocationError] = useState(false);
   const [geolocation, setGeolocation] = useState(null);
+  const [geolocationInput, setGeolocationInput] = useState('');
 
   // Description
   const [description, setDescription] = useState('');
@@ -239,7 +239,11 @@ const Form = () => {
         'longitude': json.longitude
       });
     } catch (error) {
-      setGeolocation('unknown')
+      setGeolocation({
+        'address': address,
+        'latitude': 'unknown',
+        'longitude': 'unknown'
+      })
       setGeolocationError(true);
     }
   }
@@ -294,9 +298,10 @@ const Form = () => {
     if (!params['startDateTime']) {
       missing.push(t('Post.StartDate'));
       missing.push(t('Post.StartTime'));
-    }
-    if (!params['endDateTime'] || params['endDateTime'] < params['startDateTime']) {
-      params['endDateTime'] = new Date(params['startDateTime'].getTime());
+    } else {
+      if (!params['endDateTime'] || params['endDateTime'] < params['startDateTime']) {
+        params['endDateTime'] = new Date(params['startDateTime'].getTime());
+      }
     }
     // if (!params['geolocation'] || params['geolocation'] === '') {
     //   missing.push(t('Post.Location'));
@@ -329,7 +334,7 @@ const Form = () => {
       startDateTime: createDateObject(startDate, startTime),
       endDateTime: createDateObject(endDate, endTime),
       recurrent: recurrentSwitch.toString(),
-      geolocation: geolocation.toString(),
+      geolocation: geolocation,
       description: description,
       imagesBase64: images,
       managers: managers,
@@ -337,10 +342,10 @@ const Form = () => {
       status: 'open'
     }
     let missing = validateInputs(params);
-    if (missing.length === 0) {
+    if (missing.length == 0) {
       sendNewActivity(params);
       // navigation.navigate('PostSuccess');
-      console.warn('Navigate to success.')
+      console.warn('Navigate to success.') // what about failure?
     } else {
       Toast.show({
         type: 'error',
@@ -351,6 +356,8 @@ const Form = () => {
 
   }
 
+  // console.log(user)
+
   // Rendering
   return (
 
@@ -358,8 +365,8 @@ const Form = () => {
 
       <Text p semibold marginBottom={sizes.sm}>{t('Post.PleaseFill')}</Text>
 
-          <Block>
-              
+      <Block>
+
         <Block row marginBottom={sizes.sm}>
           <Image style={{ width: 60, height: 60 }} source={{ uri: user.profileImage }} marginRight={sizes.sm} />
           <Text p semibold marginTop={sizes.sm} align='center'>{user.username}</Text>
@@ -438,7 +445,8 @@ const Form = () => {
 
         <Block marginBottom={sizes.sm}>
           <TextInput label={t('Post.Location')} mode='outlined' error={geolocationError} autoComplete={false}
-            activeOutlineColor={colors.info} onChangeText={(newText) => { geocode(newText) }} />
+            activeOutlineColor={colors.info} onEndEditing={() => geocode(geolocationInput)}
+            onChangeText={(newText) => setGeolocationInput(newText)} />
         </Block>
 
         <Block marginBottom={sizes.sm}>
