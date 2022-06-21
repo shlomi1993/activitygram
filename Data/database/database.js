@@ -2,9 +2,11 @@ const fs = require('fs');
 const conn = JSON.parse(fs.readFileSync('connections.json'));
 const { MongoClient, ObjectId } = require('mongodb');
 
+// Connect the a DB-client.
 const client = new MongoClient(conn.Database.uri);
 client.connect();
 
+// Make shortcut accesses.
 const database = client.db('activitygram');
 const activities = database.collection('activities');
 const users = database.collection('users');
@@ -14,17 +16,17 @@ const tags = database.collection('tags');
 const models = database.collection('models');
 const ratings = database.collection('ratings');
 
-const interestsPath = '../Data/recommender/datasets/interests.csv';
-const ratingsPath = '../Data/recommender/datasets/ratings.csv';
-const datasetsPath = '../Data/recommender/datasets/train_uid_';
+// Print databases.
+async function listDatabases() {
+    databasesList = await database.admin().listDatabases();
+    console.log('Databases:');
+    databasesList.databases.forEach((db) => console.log(` - ${db.name}`));
+}
 
-module.exports.interestsPath = interestsPath
-module.exports.ratingsPath = ratingsPath
-module.exports.datasetsPath = datasetsPath
-
+// Get current number of documents in ratings collection..
 module.exports.getCurrentRatingSize = () => ratings.countDocuments();
 
-// Fetch Collaborative Filtering data
+// Fetch Collaborative-Filtering data.
 module.exports.fetchDataForCF = async () => {
     let interestsContent = 'interestId,title,tags\n';
     let interestsDocs = await interests.find().toArray();
@@ -34,35 +36,37 @@ module.exports.fetchDataForCF = async () => {
         interestsContent = interestsContent.slice(0, -1);
         interestsContent += '\n';
     });
-    fs.writeFileSync(interestsPath, interestsContent.slice(0, -1));
     let ratingsContent = 'userId,interestId,rating\n';
     let ratingsDocs = await ratings.find().toArray();
     ratingsDocs.forEach((d) => {
         ratingsContent += `${d.userId},${d.interestId},${d.rating}\n`;
     });
-    fs.writeFileSync(ratingsPath, ratingsContent.slice(0, -1));
-    return ratingsDocs.length;
+    return {
+        interests: interestsContent.slice(0, -1),
+        ratings: ratingsContent.slice(0, -1),
+        ratings_len: ratingsDocs.length
+    };
 };
 
-// Fetch Neural Network data
-module.exports.fetchDataForNN = async (user_id) => {
+// Fetch Neural-Network data.
+module.exports.fetchDataForNN = async (uid) => {
     let train = [];
-    let user = await users.find({ _id: ObjectId(user_id) }).toArray();
-    let activityLog = user[0].activityLog;
-    for (const log of activityLog) {
-        let jsoned = JSON.parse(log);
-        let aid = jsoned.activity_id;
-        let activity = await activities.find({ _id: ObjectId(aid) }).toArray();
-        let description = activity[0].description;
-        let label = jsoned.label;
-        train.push({
-            activity_id: aid,
-            description: description,
-            label: label
-        });
+    let user = await users.find({ _id: ObjectId(uid) }).toArray();
+    if (user.length > 0) {
+        let activityLog = user[0].activityLog;
+        for (const log of activityLog) {
+            let aid = log.activity_id;
+            let activity = await activities.find({ _id: ObjectId(aid) }).toArray();
+            let description = activity[0].description;
+            let label = log.label;
+            train.push({
+                activity_id: aid,
+                description: description,
+                label: label
+            });
+        }
     }
-    fs.writeFileSync(`${datasetsPath}${user_id}.json`, JSON.stringify(train, null, 2));
-    return train.length
+    return train;
 };
 
 // Create a user
@@ -71,91 +75,87 @@ module.exports.createUser = async function (userObject, profileImage) {
     await users.insertOne(user);
 };
 
-//get User by ID
+// Get User by ID.
 module.exports.getUserById = async function (userId) {
     const result = await users.find({ _id: ObjectId(userId) }).toArray();
     return result[0];
 };
 
+// Get User by Email.
 module.exports.getUserByEmail = async function (userEmail) {
-  const result = await users.find({ email: userEmail }).toArray();
-  return result[0];
+    const result = await users.find({ email: userEmail }).toArray();
+    return result[0];
 };
 
 //Update functions
 async function changeUserFirstName(curr_user, firstName) {
     const result = await users.updateOne({ _id: curr_user.id }, { $set: { firstName: firstName } });
+    return result;
 }
-
 async function changeUserLastName(curr_user, lastName) {
     const result = await users.updateOne({ _id: curr_user.id }, { $set: { lastName: lastName } });
+    return result;
 }
-
 async function changeUserDateOfBirth(curr_user, dateOfBirth) {
     const result = await users.updateOne({ _id: curr_user.id }, { $set: { dateOfBirth: dateOfBirth } });
+    return result;
 }
-
 async function changeUserAge(curr_user, age) {
     const result = await users.updateOne({ _id: curr_user.id }, { $set: { age: age } });
+    return result;
 }
-
 async function changeUserCountry(curr_user, country) {
     const result = await users.updateOne({ _id: curr_user.id }, { $set: { country: country } });
+    return result;
 }
-
 async function changeUserProfileImage(curr_user, profileImage) {
     const result = await users.updateOne({ _id: curr_user.id }, { $set: { profileImage: profileImage } });
+    return result;
 }
-
 async function changeUserBio(curr_user, bio) {
     const result = await users.updateOne({ _id: curr_user.id }, { $set: { bio: bio } });
+    return result;
 }
-
 async function changeUserFriendsList(curr_user, friendsList) {
     const result = await users.updateOne({ _id: curr_user.id }, { $set: { friendsList: friendsList } });
+    return result;
 }
-
 async function changeUserIntrests(curr_user, intrests) {
     const result = await users.updateOne({ _id: curr_user.id }, { $set: { intrests: intrests } });
+    return result;
 }
-
 async function changeUserActivityLog(curr_user, activityLog) {
     const result = await users.updateOne({ _id: curr_user.id }, { $set: { activityLog: activityLog } });
+    return result;
 }
 
 module.exports.updateActivityParticipants = async function (activityId, participantsArr) {
-    await activities.updateOne({ _id: ObjectId(activityId) }, { $set: { participants: participantsArr } });
+    const result = await activities.updateOne({ _id: ObjectId(activityId) }, { $set: { participants: participantsArr } });
+    return result;
 }
 
-// print databases
-async function listDatabases() {
-    databasesList = await database.admin().listDatabases();
-    console.log('Databases:');
-    databasesList.databases.forEach((db) => console.log(` - ${db.name}`));
-}
-
-//creat NewInterest
+// Create an interest (a.k.a category).
 async function createNewInterest(newInterest) {
     const result = await client.db('activitygram').collection('interests').insertOne(newInterest.forDB);
     newInterest.set_id = result.insertedId;
-    console.log(`New listing created with the following id: ${result.insertedId}`);
+    return result;
 }
 
-//creat NewTag
+// Creat a tag.
 async function createNewTag(client, newTag) {
     const result = await client.db('activitygram').collection('tags').insertOne(newTag.forDB);
     newTag.set_id = result.insertedId;
-    console.log(`New listing created with the following id: ${result.insertedId}`);
+    return result;
 }
 
-// search events
+// Search activities.
 module.exports.searchActivity = async function (keyword, userState, activitiesState, groupsState) {
     console.log(`\nin searchActivity = async function(keyword, userState, activitiesState, groupsState)`)
     let usersFound = []
     let activitiesFound = []
     let groupsFound = []
 
-    // searching in database...
+    // Search in the database...
     if (userState == "true") {
         // const wheretoSearch = [firstName, lastName, bio, city, state, school, interests, activityLog]
         console.log(`userState is true`)
@@ -208,7 +208,7 @@ module.exports.searchActivity = async function (keyword, userState, activitiesSt
         console.log(`groupsFound = ${JSON.stringify(groupsFound)}`)
     }
 
-    // get all found data together and return it
+    // Get all found data together and return it
     console.log(`end of searchActivity\n`)
     const allFoundObjects = []
     allFoundObjects.push(usersFound)
@@ -217,38 +217,38 @@ module.exports.searchActivity = async function (keyword, userState, activitiesSt
     return allFoundObjects
 };
 
-//creat NewEvent
+// Create an activity.
 module.exports.createNewActivity = async function (newActivity) {
     const result = activities.insertOne(newActivity);
-    return `New listing created with the following id: ${result.insertedId}`;
+    return result;
 };
 
-//creat NewGroup
+// Create a group.
 async function createNewGroup(client, newGroup) {
     const result = await client.db('activitygram').collection('groups').insertOne(newGroup.forDB);
     newGroup.set_id = result.insertedId;
-    console.log(`New listing created with the following id: ${result.insertedId}`);
+    return result;
 }
 
-//get Activity by ID
+// Get Activity by ID.
 module.exports.getActivityById = async function (activityId) {
     const result = await activities.find({ _id: ObjectId(activityId) }).toArray();
     return result[0];
 };
 
 // Get Activities by category
-module.exports.getActivityByCategory = async function (category) {
+module.exports.getActivitiesByCategory = async function (category) {
     const result = await activities.find({ category: category }).toArray();
     return result;
 };
 
-//get All activities
+// Get All activities.
 module.exports.getAllActivities = async function () {
     const result = await activities.find().toArray();
     return result;
 };
 
-// Get All Interests
+// Get All Interests.
 module.exports.getAllInterests = async function () {
     const result = await interests.find().toArray();
     array = []
@@ -263,7 +263,7 @@ module.exports.getAllInterests = async function () {
     return array;
 };
 
-// Get all users
+// Get all users.
 module.exports.getAllUsers = async function () {
     const result = await users.find().toArray();
     let array = []
