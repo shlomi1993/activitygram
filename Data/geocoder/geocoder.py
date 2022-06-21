@@ -4,7 +4,7 @@ from geopy import geocoders
 
 
 app = Flask(__name__)
-geolocator = geocoders.Nominatim(user_agent='AqdHYN8WZH0xzQR9RGgb264VJl087NRvLrj4tAwT292vwuakZhx2HuKiN_UR2kzS')
+geolocator = geocoders.Nominatim(user_agent='Activitygram')
 
 
 @app.route('/')

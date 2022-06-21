@@ -17,7 +17,7 @@ const Tab = createBottomTabNavigator();
 function HomeStackScreen() {
   return (
     <HomeStack.Navigator>
-      <HomeStack.Screen name="Home" component={Home} />
+      <HomeStack.Screen name="Home " component={Home} />
       <HomeStack.Screen name="Activity" component={Activity} />
     </HomeStack.Navigator>
   )
@@ -34,7 +34,7 @@ function ComponentsStackScreen() {
 function ProfileStackScreen() {
   return (
     <ProfileStack.Navigator>
-      <ProfileStack.Screen name="Profile" component={Profile} />
+      <ProfileStack.Screen name="Profile " component={Profile} />
     </ProfileStack.Navigator>
   )
 }
@@ -42,7 +42,7 @@ function ProfileStackScreen() {
 function PostStackScreen() {
   return (
     <PostStack.Navigator>
-      <PostStack.Screen name="Post" component={Post} />
+      <PostStack.Screen name="Post " component={Post} />
       <PostStack.Screen name="PostSuccess" component={ActivityCreatedSuccessfully} />
     </PostStack.Navigator>
   )
@@ -51,7 +51,7 @@ function PostStackScreen() {
 function SearchStackScreen() {
   return (
     <SearchStack.Navigator>
-      <SearchStack.Screen name="Search" component={Search} />
+      <SearchStack.Screen name="Search " component={Search} />
     </SearchStack.Navigator>
   )
 }
@@ -59,7 +59,7 @@ function SearchStackScreen() {
 function ForYouStackScreen() {
   return (
     <ForYouStack.Navigator>
-      <ForYouStack.Screen name="For You" component={ForYou} />
+      <ForYouStack.Screen name="For You " component={ForYou} />
     </ForYouStack.Navigator>
   )
 }
