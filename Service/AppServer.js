@@ -199,7 +199,7 @@ app.post('/search', (req, res) => {
     database.searchActivity(name_to_search, userState, activitiesState, groupState)
         .then((result) => {
             res.status(200).send(result);
-            // console.log
+            console.log(`result = ${JSON.stringify(result)}`)
             console.log('searchActivity request succeeded.');
         })
         .catch((error) => {
@@ -208,11 +208,6 @@ app.post('/search', (req, res) => {
             console.error(msg);
             console.error(error);
         });
-
-	// let result = database.searchActivity(name_to_search, userState, activitiesState, groupState)
-	// console.log(`result is ${result}`)
-	// res.send(result);
-
 });
 
 /** GROUPS */

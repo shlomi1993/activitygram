@@ -4,9 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useHeaderHeight } from '@react-navigation/stack';
 import { useTheme, useTranslation } from '../hooks';
 import { Block, Image, Checkbox, Input, Text, Button } from '../components';
-import { IEventForm } from '../constants/types/forms';
 import 'react-native-gesture-handler';
-import CheckboxList from 'rn-checkbox-list';
 export const url = Platform.OS === 'android' ? 'http://10.0.2.2:8080/' : 'http://127.0.0.1/8080/';
 
 async function sendNewSearch(params: object) {
@@ -24,6 +22,7 @@ async function sendNewSearch(params: object) {
 		body: formBody
 	})
 		.then((res) => {
+      console.log(`res = ${JSON.stringify(res)}`)
 			console.log('sent request');
 		})
 		.catch((err) => {
