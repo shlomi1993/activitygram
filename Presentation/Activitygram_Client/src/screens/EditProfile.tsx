@@ -13,6 +13,7 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
 import Toast from 'react-native-toast-message'
 import { BASE_URL } from '../constants/appConstants';
+import { IUser } from '../constants/types';
 
 
 
@@ -21,15 +22,11 @@ const Form = () => {
   // Theme & Context
   const navigation = useNavigation();
   const { assets, colors, sizes, gradients } = useTheme();
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [bio, setBio] = useState('');
-  // Category Modal
+  const [profile, setProfile] = useState<IUser>({})
+
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(t('Post.SelectCategory'));
 
-  // Start Date and Time
   const birthDateFocus = useRef();
   const [isbirthDatePickerVisible, setbirthDatePickerVisibility] = useState(false);
   const [birthDate, setbirthDate] = useState('')
@@ -54,27 +51,10 @@ const Form = () => {
       .catch(() => setCategories([]));
   }, []);
 
-  // Creates Date object out of date and time strings (or null).
-  const createDateObject = (date: string, time: string) => {
-    try {
-      let dateArray = date.split(', ')[1].split('.');
-      let timeArray = time.split(':');
-      let sY = Number(dateArray[2]);
-      let sM = Number(dateArray[1]) - 1;
-      let sD = Number(dateArray[0]);
-      let sh = Number(timeArray[0]);
-      let sm = Number(timeArray[1]);
-      return new Date(sY, sM, sD, sh, sm);
-    } catch (e) {
-      return null;
-    }
-  }
-
   // Start Date Confirm
   const handlebirthDateConfirm = (date: Date) => {
-    Moment.locale('en');
-    let newText = Moment(date).format('ddd, D.M.YYYY');
-    setbirthDate(newText);
+    console.log(date)
+    setProfile({...profile, birthDate: date})
     setbirthDatePickerVisibility(false);
   };
 
@@ -121,6 +101,16 @@ const Form = () => {
     }
   }
 
+  const onPressSave = () => {
+    console.log(profile)
+    fetch(BASE_URL + 'createUser?user=' + encodeURIComponent(JSON.stringify(profile)), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+      },
+    }).then(() => {console.log('Success')})
+  }
+
   return (
 
     <Block color={colors.card} paddingTop={sizes.m} paddingHorizontal={sizes.padding}>
@@ -131,32 +121,33 @@ const Form = () => {
         <Block align='center'>
         <Image style={{ width: 60, height: 60 }} source={assets.profile} />
         </Block>
-        
-
-        {/* <Block marginBottom={sizes.xs}>
-          <Text p semibold>{t('Post.SelectCategory')}</Text>
-        </Block> */}
-        {/* <AutocompleteDropdown closeOnBlur={true} closeOnSubmit={false} dataSet={categories} clearOnFocus={true}
-          direction={'down'} onSelectItem={(category) => {
-            if (category && category.title) {
-              setSelectedCategory(category.title);
-            }
-          }} /> */}
 
         <Block marginBottom={sizes.sm}>
           <TextInput label={t('EditProfile.firstName')} mode='outlined' autoComplete={false} multiline={true}
             numberOfLines={1} activeOutlineColor={colors.info}
-            onChangeText={(newText) => { setFirstName(newText) }} />
+            onChangeText={(newText) => { setProfile({...profile, firstName: newText}) }} />
         </Block>
 
         <Block marginBottom={sizes.sm}>
           <TextInput label={t('EditProfile.lastName')} mode='outlined' autoComplete={false} multiline={true}
             numberOfLines={1} activeOutlineColor={colors.info}
-            onChangeText={(newText) => { setLastName(newText) }} />
+            onChangeText={(newText) => { setProfile({...profile, lastName: newText}) }} />
+        </Block>
+        
+        <Block marginBottom={sizes.sm}>
+          <TextInput label={t('EditProfile.userName')} mode='outlined' autoComplete={false} multiline={true}
+            numberOfLines={1} activeOutlineColor={colors.info}
+            onChangeText={(newText) => { { setProfile({...profile, userName: newText}) } }} />
+        </Block>
+
+        <Block marginBottom={sizes.sm}>
+          <TextInput label={t('EditProfile.email')} mode='outlined' autoComplete={false} multiline={true}
+            numberOfLines={1} activeOutlineColor={colors.info}
+            onChangeText={(newText) => { setProfile({...profile, firstName: newText}) }} />
         </Block>
 
           <Block marginBottom={sizes.sm}>
-            <TextInput label={t('EditProfile.birthDate')} mode='outlined' value={birthDate} error={birthDateError}
+            <TextInput label={t('EditProfile.birthDate')} mode='outlined' value={Moment(profile.birthDate).format('D.M.YYYY')} error={birthDateError}
               autoComplete={false} showSoftInputOnFocus={false} ref={birthDateFocus} activeOutlineColor={colors.info}
               onFocus={() => { setbirthDatePickerVisibility(true); birthDateFocus.current.blur(); }}
             />
@@ -165,14 +156,20 @@ const Form = () => {
             onCancel={() => setbirthDatePickerVisibility(false)} />
 
         </Block>
-
+{/* 
         <Block marginBottom={sizes.sm}>
           <TextInput label={t('EditProfile.address')} mode='outlined' error={geolocationError} autoComplete={false}
             activeOutlineColor={colors.info} onChangeText={(newText) => { geocode(newText) }} />
-        </Block>
+        </Block> */}
 
         <Block marginBottom={sizes.sm}>
           <TextInput label={t('EditProfile.bio')} mode='outlined' autoComplete={false} multiline={true}
+            numberOfLines={3} activeOutlineColor={colors.info}
+            onChangeText={(newText) => { setProfile({...profile, bio: newText}) }} />
+        </Block>
+
+        <Block marginBottom={sizes.sm}>
+          <TextInput label={t('EditProfile.interests')} mode='outlined' autoComplete={false} multiline={true}
             numberOfLines={3} activeOutlineColor={colors.info}
             onChangeText={(newText) => { setBio(newText) }} />
         </Block>
@@ -190,8 +187,8 @@ const Form = () => {
       </Block>
 
       <Block>
-        <Button flex={1} gradient={gradients.primary} marginBottom={sizes.base} onPress={() => {console.log('create placeholder')}}>
-          <Text white bold transform="uppercase">{t('Post.Create')}</Text>
+        <Button flex={1} gradient={gradients.primary} marginBottom={sizes.base} onPress={() => {onPressSave()}}>
+          <Text white bold transform="uppercase">{t('EditProfile.save')}</Text>
         </Button>
       </Block>
 

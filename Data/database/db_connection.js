@@ -67,17 +67,7 @@ module.exports.fetchDataForNN = async (user_id) => {
 
 // Create a user
 module.exports.createUser = async function (userObject) {
-    const user = await users.insertOne(userObject);
-    // const uido = await user.insertedId
-    // const uid = uido.toString();
-    // await JSON.parse(newUser.interests).forEach((interest) => {
-    //     ratings.insertOne({
-    //         userId: uid,
-    //         interestId: interest.id,
-    //         rating: 10.0
-    //     });
-    // });
-    // return `New user created with the id: ${uid}`;
+    await users.insertOne(userObject);
 };
 
 //get User by ID

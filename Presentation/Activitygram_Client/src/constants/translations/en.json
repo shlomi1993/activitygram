@@ -125,6 +125,7 @@
   },
   "EditProfile": {
     "PleaseFill": "Please fill profile details",
+    "save": "SAVE",
     "firstName": "First name",
     "lastName": "Last name",
     "userName": "Username",
@@ -133,6 +134,6 @@
     "bio": "Bio",
     "email": "Email",
     "address": "Address",
-    "interests": "Interestd"
+    "interests": "Interests"
   }
 }
