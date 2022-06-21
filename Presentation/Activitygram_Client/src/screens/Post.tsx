@@ -593,7 +593,7 @@ const Form = () => {
 
       <Block>
         <Button flex={1} gradient={gradients.primary} marginBottom={sizes.base} onPress={create}>
-          <Text white bold transform="uppercase">{t('Post.Create')}</Text>
+          <Text white bold transform="uppercase">{t('EditProfile.save')}</Text>
         </Button>
       </Block>
 

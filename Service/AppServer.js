@@ -98,42 +98,19 @@ app.get('/getUserByEmail', (req, res) => {
 });
 
 app.post('/createUser', (req, res) => {
-	newUser = {
-		username: req.body.username,
-		firstname: req.body.firstname,
-		lastname: req.body.lastname,
-		images: req.body.images, // first image is the profile picture
-		bio: req.body.bio,
-		city: req.body.city,
-		state: req.body.state,
-		phone: req.body.phone,
-		email: req.body.email,
-		facebook: req.body.facebook,
-		twitter: req.body.twitter,
-		linkedin: req.body.linkedin,
-		github: req.body.github,
-		lastGeo: req.body.lastGeo,
-		school: req.body.school,
-		collage: req.body.collage,
-		interests: req.body.interests, // for CF, contains objects of {"interestId": interestId, "rating:" rate}
-		activityLog: [], // for NN, contains objects of {"activity": eventObj, "label": label}
-		initiatedActivities: [],
-		managedActivities: [],
-		participantedActivities: [],
-		suspension: false,
-		creationTime: Date()
-	};
-	database.createUser(newUser)
-		.then((result) => {
-			res.status(200).send(result);
-			console.log('createUser request succeeded.');
-			database.fetchDataForCF();
-		})
-		.catch((error) => {
-			let msg = 'createUser request failed.';
-			res.status(500).send(msg);
-			console.error(msg);
-		});
+    const newUser = JSON.parse(decodeURIComponent(req.query.user));
+    const newProfileImage = req.body;
+    database.createUser(newUser, newProfileImage)
+        .then((result) => {
+            res.status(200).send(result);
+            console.log('createUser request succeeded.');
+            database.fetchDataForCF();
+        })
+        .catch((error) => {
+            let msg = 'createUser request failed.';
+            res.status(500).send(msg);
+            console.error(msg);
+        });
 });
 
 /** ACTIVITIES */

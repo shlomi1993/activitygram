@@ -69,18 +69,10 @@ module.exports.fetchDataForNN = async (uid) => {
     return train;
 };
 
-// Create a user.
-module.exports.createUser = async function (newUser) {
-    const user = await users.insertOne(newUser);
-    const uido = await user.insertedId
-    const uid = uido.toString();
-    await JSON.parse(newUser.interests).forEach((interest) => {
-        ratings.insertOne({
-            userId: uid,
-            interestId: interest.id,
-            rating: 10.0
-        });
-    });
+// Create a user
+module.exports.createUser = async function (userObject, profileImage) {
+    const user = {...userObject, profileImage: profileImage}
+    await users.insertOne(user);
 };
 
 // Get User by ID.
@@ -95,8 +87,7 @@ module.exports.getUserByEmail = async function (userEmail) {
     return result[0];
 };
 
-
-// Update functions...
+//Update functions
 async function changeUserFirstName(curr_user, firstName) {
     const result = await users.updateOne({ _id: curr_user.id }, { $set: { firstName: firstName } });
     return result;
