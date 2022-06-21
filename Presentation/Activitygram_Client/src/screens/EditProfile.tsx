@@ -5,7 +5,7 @@ import { Assets, useHeaderHeight } from '@react-navigation/stack';
 import Storage from '@react-native-async-storage/async-storage';
 import { useTheme, useTranslation } from '../hooks';
 import { Block, Image, Text, Input, Button, Switch, Modal } from '../components';
-
+import MultiSelect from 'react-native-multiple-select';
 import Moment from 'moment';
 import { TextInput } from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker'
@@ -22,8 +22,9 @@ const Form = () => {
   const { assets, colors, sizes, gradients } = useTheme();
   const [profile, setProfile] = useState<IUser>({})
 
-  const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(t('Post.SelectCategory'));
+  const [interests, setInterests] = useState([]);
+  const [selectedInterests, setSelectedInterests] = useState([]);
+  const [selectedInterestsValues, setSelectedInterestsValues] = useState([]);
 
   const birthDateFocus = useRef();
   const [isbirthDatePickerVisible, setbirthDatePickerVisibility] = useState(false);
@@ -39,22 +40,30 @@ const Form = () => {
     [profile, setProfile],
   );
 
+  const handleSelectedInterests = () => {
+    let result;
+    const values = []
+    selectedInterests.forEach((key) => {result = interests.find((i) => i.id === key ); values.push(result.title)})
+    setProfile({...profile, interests: values});
+  }
+
   // Fetch categories for Category Modal
-  // useEffect(() => {
-  //   fetch(BASE_URL + 'allInterests')
-  //     .then((result) => result.json())
-  //     .then((json) => {
-  //       setCategories(json);
-  //     })
-  //     .catch(() => setCategories([]));
-  // }, []);
+  useEffect(() => {
+    fetch(BASE_URL + 'allInterests')
+      .then((result) => result.json())
+      .then((json) => {
+        setInterests(json);
+      })
+      .catch(() => setInterests([]));
+  },[interests, setInterests]);
 
   useEffect(() => {
     setProfile({...profile, creationTime: Date(), activityLog: [] })
     handleEmail() 
-  }, [])
+    handleSelectedInterests()
+  }, [selectedInterests, setSelectedInterests])
 
-  // Start Date Confirm
+
   const handlebirthDateConfirm = (date: Date) => {
     setProfile({...profile, birthDate: date})
     setbirthDatePickerVisibility(false);
@@ -84,7 +93,6 @@ const Form = () => {
   const onPressSave = () => {
     const imageArr = [];
     imageArr.push(image['base64'])
-    console.log(profile)
     fetch(BASE_URL + 'createUser?user=' + encodeURIComponent(JSON.stringify(profile)), {
       method: 'POST',
       headers: {
@@ -144,10 +152,32 @@ const Form = () => {
             onChangeText={(newText) => { setProfile({...profile, bio: newText}) }} />
         </Block>
 
-        <Block marginBottom={sizes.sm}>
-          <TextInput label={t('EditProfile.interests')} mode='outlined' autoComplete={false} multiline={true}
+        <Block marginBottom={sizes.sm} safe>
+          {/* <TextInput label={t('EditProfile.interests')} mode='outlined' autoComplete={false} multiline={true}
             numberOfLines={3} activeOutlineColor={colors.info}
-            onChangeText={(newText) => {}} />
+            onChangeText={(newText) => {}} /> */}
+          <Block>
+          <MultiSelect
+          hideTags
+          items={interests}
+          uniqueKey="id"
+          onSelectedItemsChange={(selected) => {setSelectedInterests(selected)}}
+          selectedItems={selectedInterests}
+          onAddItem={() => handleSelectedInterests()}
+          selectText="Choose Interests"
+          onChangeInput={ (text)=> console.log(text)}
+          tagRemoveIconColor="#CCC"
+          tagBorderColor="#CCC"
+          tagTextColor="#CCC"
+          selectedItemTextColor="#CCC"
+          selectedItemIconColor="#CCC"
+          itemTextColor="#000"
+          displayKey="title"
+          searchInputStyle={{ color: '#CCC' }}
+          submitButtonColor="#CCC"
+          submitButtonText="Choose"
+        />
+          </Block>
         </Block>
       </Block>
 

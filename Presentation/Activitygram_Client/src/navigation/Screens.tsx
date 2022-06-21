@@ -42,7 +42,7 @@ function ProfileStackScreen() {
 function PostStackScreen() {
   return (
     <PostStack.Navigator>
-      <PostStack.Screen name="Post" component={EditProfile} />
+      <PostStack.Screen name="Post" component={Post} />
       <PostStack.Screen name="PostSuccess" component={ActivityCreatedSuccessfully} />
     </PostStack.Navigator>
   )
