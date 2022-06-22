@@ -128,6 +128,7 @@ const Form = () => {
 
   // Fetch categories for Category Modal
   useEffect(() => {
+    console.log(user.profileImage)
     fetch(BASE_URL + 'allInterests')
       .then((result) => result.json())
       .then((json) => {
@@ -440,7 +441,7 @@ const Form = () => {
           onLoad={initActivity}
         />
         <Text p semibold marginTop={sizes.sm} align='center'>
-          {user.username}
+          {}
         </Text>
       </Block>
       <Block marginBottom={sizes.xs}>
