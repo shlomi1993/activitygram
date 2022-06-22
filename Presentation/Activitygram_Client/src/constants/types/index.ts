@@ -86,17 +86,20 @@ export interface IActivityComp {
 
 export interface IUser {
   _id: string;
+  email: string,
   firstName: string;
   lastName: string;
   username: string;
-  activityLog: any[];
   age: number;
+  dateOfBirth: string; //   birthDate: Date; ?
   bio: string;
+  city: string;
   country: string;
-  dateOfBirth: string;
   friendsList?: string;
   interests: string[];
   profileImage?: any[];
+  activityLog?: any[];
+  creationTime: string;
 }
 
 export interface IActivity {

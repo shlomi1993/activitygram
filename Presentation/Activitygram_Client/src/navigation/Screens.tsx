@@ -2,7 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Image } from '../components'
-import { Components, Home, Profile, Post, Search, ForYou, Activity, ActivityCreatedSuccessfully } from '../screens';
+import { Components, Home, Profile, Post, Search, ForYou, Activity, ActivityCreatedSuccessfully, EditProfile } from '../screens';
 import { useScreenOptions, useTranslation, useTheme } from '../hooks';
 const Stack = createStackNavigator();
 const HomeStack = createStackNavigator();

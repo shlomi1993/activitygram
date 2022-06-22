@@ -131,5 +131,20 @@
       "Okay": "Okay",
       "Wrong": "Something went wrong 😕",
       "Dismiss": "Dismiss"
+  },
+  "EditProfile": {
+    "PleaseFill": "Please fill profile details",
+    "save": "SAVE",
+    "addImage": "Change profile image",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "userName": "Username",
+    "birthDate": "Birth date",
+    "city": "City",
+    "image": "Image",
+    "bio": "Bio",
+    "email": "Email",
+    "address": "Address",
+    "interests": "Interests"
   }
 }
