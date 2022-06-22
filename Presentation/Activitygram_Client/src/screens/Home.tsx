@@ -1,30 +1,52 @@
-import React, {useLayoutEffect, useState, useCallback, useEffect } from 'react';
-import {FlatList, TouchableOpacity, Platform} from 'react-native';
+import React, { useLayoutEffect, useState, useCallback, useEffect } from 'react';
+import { FlatList, TouchableOpacity, Platform } from 'react-native';
 
-import {useNavigation} from '@react-navigation/native';
-import {useHeaderHeight} from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/native';
+import { useHeaderHeight } from '@react-navigation/stack';
 
-import {useTheme, useTranslation, useData} from '../hooks';
-import {Block, Button, Input, Image, Switch, Modal, Text, Card} from '../components';
+import { useTheme, useTranslation, useData } from '../hooks';
+import { Block, Button, Input, Image, Switch, Modal, Text, Card } from '../components';
 import 'react-native-gesture-handler';
 import { DrawerContentScrollView } from '@react-navigation/drawer';
 import { BASE_URL } from '../constants/appConstants'
 
+import { AuthContext } from '../navigation/App';
+
+
 
 const Home = () => {
+
+  const { signOut } = React.useContext(AuthContext);
+
   const { user, allActivities, setMyActivities } = useData()
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const [tab, setTab] = useState<number>(0);
   const [myAllActivities, setMyAllActivities] = useState([]);
   const [activities, setActivities] = useState([]);
   const [firstTime, setFirstTime] = useState(true);
   const [renderedAct, setRenderedAct] = useState(allActivities);
-  const {assets, sizes, colors, fonts, gradients } = useTheme();
+  const { assets, sizes, colors, fonts, gradients } = useTheme();
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
 
 
   const handleMyActivities = () => {
+<<<<<<< HEAD
+    if (user) {
+      return !firstTime ? myAllActivities :
+        (fetch(BASE_URL + 'getMyActivities?user_id=' + (user._id).toString(), {
+          method: 'GET'
+        })
+          .then((response) => response.json())
+          .then((responseJson) => {
+            setMyAllActivities(responseJson);
+            setMyActivities(responseJson);
+            setFirstTime(false)
+          })
+          .catch((error) => {
+            console.error(error + " detected");
+          }))
+=======
     if(user) {
       return !firstTime ? myAllActivities : 
       (fetch(BASE_URL + 'getMyActivities?user_id=' + (user._id).toString(), {
@@ -39,6 +61,7 @@ const Home = () => {
      .catch((error) => {
         console.error(error + " detected");
      }))
+>>>>>>> 07290d2ccce80481d6d8bd83c93744419399c086
     }
   }
 
@@ -56,7 +79,7 @@ const Home = () => {
   }, []);
 
   useLayoutEffect(() => {
-    
+
     navigation.setOptions({
       headerBackground: () => (
         <Image
@@ -72,6 +95,7 @@ const Home = () => {
 
   return (
     <Block safe>
+      <Button align='flex-end' onPress={() => { signOut() }} ><Text secondary bold>TEMP LOGOUT BUTTON</Text></Button>
       <Block
         row
         flex={0}
@@ -131,7 +155,7 @@ const Home = () => {
         scroll
         paddingHorizontal={sizes.padding}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingBottom: sizes.l}}>
+        contentContainerStyle={{ paddingBottom: sizes.l }}>
         <Block row wrap="wrap" justify="space-between" marginTop={sizes.sm}>
           {renderedAct?.map((activity) => (
             <Card {...activity} key={`card-${activity?._id}`} type="vertical" />

@@ -4,7 +4,7 @@ from geopy import geocoders
 
 
 app = Flask(__name__)
-geolocator = geocoders.Nominatim(user_agent='AqdHYN8WZH0xzQR9RGgb264VJl087NRvLrj4tAwT292vwuakZhx2HuKiN_UR2kzS')
+geolocator = geocoders.Nominatim(user_agent='Activitygram')
 
 
 @app.route('/')
@@ -18,6 +18,7 @@ def geocode():
     address = request.args.get('address')
     print(f'geocode request recieved for address {address}.')
     location = geolocator.geocode(address)
+    print(f'{location} (lat: {location.latitude}, lon: {location.longitude})')
     return jsonify({
         "latitude": location.latitude,
         "longitude": location.longitude  
