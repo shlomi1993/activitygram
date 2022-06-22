@@ -18,6 +18,7 @@ def geocode():
     address = request.args.get('address')
     print(f'geocode request recieved for address {address}.')
     location = geolocator.geocode(address)
+    print(f'{location} (lat: {location.latitude}, lon: {location.longitude})')
     return jsonify({
         "latitude": location.latitude,
         "longitude": location.longitude  
