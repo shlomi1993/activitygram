@@ -41,7 +41,6 @@ app.get('/geocode', (req, res) => {
 	axios
 		.get(request)
         .then((result) => {
-            console.log(result.data)
 			res.status(200).send(result.data);
 			console.log('geocode request succeeded.');
 		})
@@ -138,8 +137,8 @@ app.post('/createUser', (req, res) => {
 /** ACTIVITIES */
 
 app.post('/createActivity', (req, res) => {
-    console.log(req.body)
-    let newActivity = JSON.parse(decodeURIComponent(req.body));
+    let newActivity = JSON.parse(decodeURIComponent(req.query.activity));
+    newActivity['images'] = JSON.parse(req.body.images);
 	newActivity['creationTime'] = Date();
 	database.createNewActivity(newActivity)
 		.then((result) => {
@@ -172,7 +171,6 @@ app.get('/getActivityById', (req, res) => {
 });
 
 app.get('/getMyActivities', (req, res) => {
-	console.log(req.query.user_id)
 	if (allActivities) {
 		const filtered =
 			allActivities.filter((act) => { return act.participants && Array.isArray(act.participants) })

@@ -1,6 +1,6 @@
 import i18n from 'i18n-js';
-import { ImageSourcePropType } from 'react-native';
-import { ITheme } from './theme';
+import {ImageSourcePropType} from 'react-native';
+import {ITheme} from './theme';
 
 export * from './components';
 export * from './theme';
@@ -14,7 +14,7 @@ export interface IArticleOptions {
   title?: string;
   description?: string;
   type?: 'celebrations' | 'sport' | 'other';
-  sleeping?: { total?: number; type?: 'adults' | 'kids' };
+  sleeping?: {total?: number; type?: 'adults' | 'kids'};
   guests?: number;
   price?: number;
   user?: IUser;
@@ -71,7 +71,6 @@ export interface IUseData {
   userEmail: string;
   setUserEmail: (data?: string) => void;
   getUserEmail: () => string;
-
 }
 
 export interface ITranslate {
@@ -86,28 +85,33 @@ export interface IActivityComp {
 }
 
 export interface IUser {
-  _id: string,
-  firstName: string,
-  lastName: string,
-  username: string,
-  activityLog: any[],
-  age: number,
-  bio: string,
-  country: string,
-  dateOfBirth: string,
-  friendsList?: string,
-  interests: string[],
-  profileImage?: any[],
+  _id: string;
+  firstName: string;
+  lastName: string;
+  username: string;
+  activityLog: any[];
+  age: number;
+  bio: string;
+  country: string;
+  dateOfBirth: string;
+  friendsList?: string;
+  interests: string[];
+  profileImage?: any[];
 }
 
 export interface IActivity {
   _id: string;
-  common_interest: string;
-  date: string;
-  description: string;
-  managers: any[];
-  is_done: boolean;
-  participants: any[];
   title: string;
-
+  initiator: string;
+  category: string;
+  startDateTime: Date;
+  endDateTime: Date;
+  recurrent: boolean;
+  geolocation: object;
+  description: string;
+  images: any[];
+  managers: any[];
+  participants: any[];
+  participantLimit: number;
+  status: string;
 }

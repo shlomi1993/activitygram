@@ -31,7 +31,6 @@ const Home = () => {
 
 
   const handleMyActivities = () => {
-    console.log(user)
     if (user) {
       return !firstTime ? myAllActivities :
         (fetch(BASE_URL + 'getMyActivities?user_id=' + (user._id).toString(), {
@@ -79,7 +78,7 @@ const Home = () => {
 
   return (
     <Block safe>
-      <Button align='flex-end' onPress={() => { signOut() }} ><Text secondary bold>{t('profile.logout')}</Text></Button>
+      <Button align='flex-end' onPress={() => { signOut() }} ><Text secondary bold>TEMP LOGOUT BUTTON</Text></Button>
       <Block
         row
         flex={0}
