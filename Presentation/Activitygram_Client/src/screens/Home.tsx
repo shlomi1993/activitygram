@@ -70,7 +70,6 @@ const Home = () => {
 
   return (
     <Block safe>
-      <Button align='flex-end' onPress={() => { signOut() }} ><Text secondary bold>TEMP LOGOUT BUTTON</Text></Button>
       <Block
         row
         flex={0}
