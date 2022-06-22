@@ -31,6 +31,7 @@ const Home = () => {
 
 
   const handleMyActivities = () => {
+<<<<<<< HEAD
     if (user) {
       return !firstTime ? myAllActivities :
         (fetch(BASE_URL + 'getMyActivities?user_id=' + (user._id).toString(), {
@@ -45,6 +46,22 @@ const Home = () => {
           .catch((error) => {
             console.error(error + " detected");
           }))
+=======
+    if(user) {
+      return !firstTime ? myAllActivities : 
+      (fetch(BASE_URL + 'getMyActivities?user_id=' + (user._id).toString(), {
+        method: 'GET'
+     })
+     .then((response) => response.json())
+     .then((responseJson) => {
+      setMyAllActivities(responseJson);
+      setMyActivities(responseJson);
+        setFirstTime(false)
+     })
+     .catch((error) => {
+        console.error(error + " detected");
+     }))
+>>>>>>> 07290d2ccce80481d6d8bd83c93744419399c086
     }
   }
 
