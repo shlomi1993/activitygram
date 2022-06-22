@@ -37,12 +37,11 @@ app.get('/', (req, res) => {
 });
 
 app.get('/geocode', (req, res) => {
-	let request = `${geocoderUri}/geocode?address=${req.query.address}`;
+    let request = `${geocoderUri}/geocode?address=${req.query.address}`;
 	axios
 		.get(request)
-		.then((res) => {
-			let result = JSON.parse(JSON.stringify(res.data))
-			res.status(200).send(result);
+        .then((result) => {
+			res.status(200).send(result.data);
 			console.log('geocode request succeeded.');
 		})
 		.catch((err) => {
@@ -56,9 +55,8 @@ app.get('/geocodeReverse', (req, res) => {
 	let request = `${geocoderUri}/reverse?latitude=${req.query.latitude}&longitude=${req.query.longitude}`;
 	axios
 		.get(request)
-		.then((res) => {
-			let result = JSON.parse(JSON.stringify(res.data));
-			res.status(200).send(result);
+		.then((result) => {
+			res.status(200).send(result.data);
 			console.log('geocodeReverse request succeeded.');
 		})
 		.catch((error) => {
@@ -116,10 +114,8 @@ app.post('/createUser', (req, res) => {
 /** ACTIVITIES */
 
 app.post('/createActivity', (req, res) => {
-	newActivity = {}
-	for (const key in req.body) {
-		newActivity[key] = req.body[key]
-	}
+    let newActivity = JSON.parse(decodeURIComponent(req.query.activity));
+    newActivity['images'] = JSON.parse(req.body.images);
 	newActivity['creationTime'] = Date();
 	database.createNewActivity(newActivity)
 		.then((result) => {
@@ -152,7 +148,6 @@ app.get('/getActivityById', (req, res) => {
 });
 
 app.get('/getMyActivities', (req, res) => {
-	console.log(req.query.user_id)
 	if (allActivities) {
 		const filtered =
 			allActivities.filter((act) => { return act.participants && Array.isArray(act.participants) })

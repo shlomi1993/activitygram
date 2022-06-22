@@ -268,10 +268,10 @@ module.exports.getAllUsers = async function () {
     const result = await users.find().toArray();
     let array = []
     for (const item of result) {
-        if (item.firstName && item.lastName && item.username) {
+        if (item.firstName && item.lastName && item.email/*&& item.username*/) {
             array.push({
                 id: item._id.toString(),
-                title: item.firstName + ' ' + item.lastName + ' (' + item.username + ')'
+                title: item.firstName + ' ' + item.lastName + ' (' + item.email + ')'
             })
         }
     }

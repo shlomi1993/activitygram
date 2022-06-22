@@ -1,11 +1,11 @@
-import React, {useLayoutEffect, useState, useCallback, useEffect } from 'react';
-import {FlatList, TouchableOpacity, Platform} from 'react-native';
+import React, { useLayoutEffect, useState, useCallback, useEffect } from 'react';
+import { FlatList, TouchableOpacity, Platform } from 'react-native';
 
-import {useNavigation} from '@react-navigation/native';
-import {useHeaderHeight} from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/native';
+import { useHeaderHeight } from '@react-navigation/stack';
 
-import {useTheme, useTranslation, useData} from '../hooks';
-import {Block, Button, Input, Image, Switch, Modal, Text, Card} from '../components';
+import { useTheme, useTranslation, useData } from '../hooks';
+import { Block, Button, Input, Image, Switch, Modal, Text, Card } from '../components';
 import 'react-native-gesture-handler';
 import { DrawerContentScrollView } from '@react-navigation/drawer';
 import { BASE_URL } from '../constants/appConstants'
@@ -18,7 +18,7 @@ const Home = () => {
   const [activities, setActivities] = useState([]);
   const [firstTime, setFirstTime] = useState(true);
   const [renderedAct, setRenderedAct] = useState(allActivities);
-  const {assets, sizes, colors, fonts, gradients } = useTheme();
+  const { assets, sizes, colors, fonts, gradients } = useTheme();
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
 
@@ -54,7 +54,7 @@ const Home = () => {
   });
 
   useLayoutEffect(() => {
-    
+
     navigation.setOptions({
       headerBackground: () => (
         <Image
@@ -70,6 +70,7 @@ const Home = () => {
 
   return (
     <Block safe>
+      <Button align='flex-end' onPress={() => { signOut() }} ><Text secondary bold>TEMP LOGOUT BUTTON</Text></Button>
       <Block
         row
         flex={0}
@@ -129,7 +130,7 @@ const Home = () => {
         scroll
         paddingHorizontal={sizes.padding}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingBottom: sizes.l}}>
+        contentContainerStyle={{ paddingBottom: sizes.l }}>
         <Block row wrap="wrap" justify="space-between" marginTop={sizes.sm}>
           {renderedAct?.map((activity) => (
             <Card {...activity} key={`card-${activity?._id}`} type="vertical" />
