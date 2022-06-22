@@ -10,6 +10,7 @@ import {Block} from '../components';
 import {auth} from '../../firebase';
 import SignInScreen from '../loginScreens/SignInScreen'
 import SignUpScreen from '../loginScreens/SignUpScreen'
+import { EditProfile } from '../screens'
 
 export const AuthContext = React.createContext(undefined as any);
 
@@ -19,18 +20,20 @@ const RootStack = createStackNavigator();
 const RootStackScreen = () => {
   const {gradients} = useTheme();
 
+
   return (
     <Block gradient={gradients.light}>
         <RootStack.Navigator headerMode='none'>
             <RootStack.Screen name="SignInScreen" component={SignInScreen}/>
             <RootStack.Screen name="SignUpScreen" component={SignUpScreen}/>
+            <RootStack.Screen name="CreateProfile" component={EditProfile}/>
         </RootStack.Navigator>
     </Block>
   );
 };
 export default () => {
   const {isDark, theme, setTheme, userEmail, setUserEmail} = useData();
-  const [user, setUser] = React.useState('');
+  let storeUser, storeEmail;
 
   React.useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
@@ -60,7 +63,6 @@ export default () => {
       .then(userCredentials => {
         const user = userCredentials.user;
         console.log('Logged in with:', user.email);
-        setUser(user.uid)
         return user;
       })
       .catch(error => alert(error.message));
@@ -68,7 +70,9 @@ export default () => {
   };
   
   const handleSignUp = (email, password) => {
-    const token = email.replace('@', '.')
+    const token = email.replace('@', '.');
+    storeUser = token;
+    storeEmail = email;
     auth
       .createUserWithEmailAndPassword(email, password)
       .then(userCredentials => {
@@ -134,6 +138,7 @@ export default () => {
         auth.signOut()
         .then(() => console.log('signed out'))
         try {
+          await AsyncStorage.removeItem('userEmail');
           await AsyncStorage.removeItem('userToken');
         } catch(e) {
           console.log(e)
@@ -141,15 +146,23 @@ export default () => {
         dispatch({ type: 'SIGN_OUT' })
       },
       signUp: async (data) => {
-        console.log('signed up')
         const userToken = handleSignUp(data.email, data.password)
         try {
-          await AsyncStorage.setItem('userToken', userToken);
           await AsyncStorage.setItem('userEmail', data.email);
         } catch(e) {
           console.log(e)
         }
-        dispatch({ type: 'SIGN_IN', token: userToken });
+      },
+      completeSignUp: async () => {
+        console.log('signed up')
+        try {
+          console.log(storeUser);
+          await AsyncStorage.setItem('userToken', storeUser);
+          
+        } catch(e) {
+          console.log(e)
+        }
+        dispatch({ type: 'SIGN_IN', token: storeUser });
       },
     }),
     []
