@@ -10,9 +10,8 @@ import 'react-native-gesture-handler';
 import { DrawerContentScrollView } from '@react-navigation/drawer';
 import { BASE_URL } from '../constants/appConstants'
 
-
 const Home = () => {
-  const { user, allActivities, setMyActivities } = useData()
+  const { user, allActivities, setMyActivities, getUserEmail } = useData()
   const {t} = useTranslation();
   const [tab, setTab] = useState<number>(0);
   const [myAllActivities, setMyAllActivities] = useState([]);
@@ -22,7 +21,6 @@ const Home = () => {
   const {assets, sizes, colors, fonts, gradients } = useTheme();
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
-
 
   const handleMyActivities = () => {
     if(user) {
@@ -53,7 +51,7 @@ const Home = () => {
 
   useEffect(() => {
     handlerenderedAct(tab);
-  }, []);
+  });
 
   useLayoutEffect(() => {
     

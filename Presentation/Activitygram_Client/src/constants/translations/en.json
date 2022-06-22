@@ -34,7 +34,6 @@
     "inProcess": "In process",
     "checkout": "Proceed to checkout",
     "accept": "Accept",
-    "more": "More",
     "guests": {
       "one": "1 guest",
       "other": "{{count}} guests",
@@ -124,6 +123,7 @@
       "NumberOfParticipants": "Max. participants:",
       "UserIncluded": "Participant already selected.",
       "ManagerIncluded": "Manager already selected."
+
   },
   "EditProfile": {
     "PleaseFill": "Please fill profile details",

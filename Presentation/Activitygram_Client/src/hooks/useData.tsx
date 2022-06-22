@@ -50,7 +50,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     const userEmail = await Storage.getItem('userEmail');
     if (userEmail !== null) {
       setUserEmail(userEmail);
-      fetch(BASE_URL + 'getUserByEmail?user_email=' + userEmail.toString(), {
+      fetch(BASE_URL + 'getUserByEmail?user_email=' + userEmail, {
         method: 'GET'
       })
         .then((response) => response.json())
