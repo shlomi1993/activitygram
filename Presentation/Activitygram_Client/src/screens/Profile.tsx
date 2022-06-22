@@ -53,10 +53,10 @@ const Profile = () => {
   const IMAGE_SIZE = (sizes.width - (sizes.padding + sizes.sm) * 2) / 4;
   const IMAGE_MARGIN = (sizes.width - IMAGE_SIZE * 3 - sizes.padding * 2) / 2;
 
-  const fullName = user.firstName + ' ' + user.lastName;
-  const username = user.username;
-  const bio = user.bio;
-  const interests = user.interests;
+  const fullName = (user && (user.firstName + ' ' + user.lastName)) || '';
+  const city = (user && user.city) || '';
+  const bio = (user && user.bio) || '';
+  const interests = (user && user.interests);
 
   return (
     <Block safe>
@@ -85,7 +85,7 @@ const Profile = () => {
                 {fullName}
               </Text>
               <Text h5 center white marginBottom={sizes.md}>
-                {username}
+                {city}
               </Text>
             </Block>
           </Image>
