@@ -198,7 +198,7 @@ app.post('/search', (req, res) => {
 
     database.searchActivity(name_to_search, userState, activitiesState, groupState)
         .then((result) => {
-            res.status(200).send(result);
+            res.send(result);
             console.log(`result = ${JSON.stringify(result)}`)
             console.log('searchActivity request succeeded.');
         })
