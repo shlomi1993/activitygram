@@ -101,7 +101,7 @@ const Form = () => {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
       },
-      body: encodeURIComponent(JSON.stringify(image))
+      body: `profileImage=${encodeURIComponent(JSON.stringify(image))}`
     }).then(() => {
       isNewUser && completeSignUp(); 
       console.log('Success')

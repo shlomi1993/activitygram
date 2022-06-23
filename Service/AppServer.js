@@ -97,7 +97,7 @@ app.get('/getUserByEmail', (req, res) => {
 
 app.post('/createUser', (req, res) => {
 	const newUser = JSON.parse(decodeURIComponent(req.query.user));
-	const newProfileImage = req.body;
+	const newProfileImage = JSON.parse(decodeURIComponent(req.body.profileImage));
 	database.createUser(newUser, newProfileImage)
 		.then((result) => {
 			res.status(200).send(result);
@@ -114,8 +114,8 @@ app.post('/createUser', (req, res) => {
 /** ACTIVITIES */
 
 app.post('/createActivity', (req, res) => {
-	let newActivity = JSON.parse(decodeURIComponent(req.query.activity));
-	newActivity['images'] = JSON.parse(req.body.images);
+    let newActivity = JSON.parse(decodeURIComponent(req.query.activity));
+	newActivity['images'] = JSON.parse(decodeURIComponent(req.body.images));
 	newActivity['creationTime'] = Date();
 	database.createNewActivity(newActivity)
 		.then((result) => {
