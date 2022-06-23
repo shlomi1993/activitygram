@@ -411,7 +411,7 @@ const Form = () => {
       fetch(BASE_URL + 'createActivity?activity=' + encodeURIComponent(JSON.stringify(activity)), {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-        body: `images=${JSON.stringify(images)}`
+        body: `images=${encodeURIComponent(JSON.stringify(images))}`
       })
         .then((res) => {
           console.log(`New activity sent to ${BASE_URL}/createActivity`);
@@ -429,14 +429,14 @@ const Form = () => {
       });
     }
   }
-
+  
   // Rendering
   return (
     <Block color={colors.card} paddingTop={sizes.m} paddingHorizontal={sizes.padding}>
       <Block row marginBottom={sizes.sm}>
         <Image
           style={{ width: 60, height: 60 }}
-          source={{ uri: user.profileImage }}
+          source={{ uri: 'data:image/png;base64,' + user.profileImage['base64'] }}
           marginRight={sizes.sm}
           onLoad={initActivity}
         />
@@ -719,7 +719,7 @@ const Form = () => {
         <Button marginTop={sizes.s} marginBottom={sizes.sm} gradient={gradients.primary}
           onPress={() => { setShowSuccessModal(false); clearForm(); }}>
           <Text p white semibold>
-          {t('Post.Okay')}
+            {t('Post.Okay')}
           </Text>
         </Button>
       </Modal>
