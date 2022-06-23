@@ -19,7 +19,7 @@ const Gallery = () => {
       (sizes.width - (IMAGE_VERTICAL_SIZE + sizes.sm) * 2) / 2;
   
     return (
-      <Block marginTop={sizes.m} paddingHorizontal={sizes.padding}>
+      <Block paddingHorizontal={sizes.padding}>
         <Block>
           <Block row align="center" justify="space-between">
             <Text h5 semibold>
@@ -252,24 +252,28 @@ const Search = () => {
   return (
     <Block safe>
     {/* search input and button*/}
-    <Block justify="space-between" marginBottom={sizes.xxl} color={colors.card} flex={0.8} padding={sizes.base}>
-
-        <Input search placeholder={t('common.search')} marginBottom={sizes.sm} 				
-          onChangeText={(newText) => { setTitle(newText) }}/>
-          
-        <Checkbox checked={isCheckedUsers} onPress={() => {setIsCheckedUsers(!isCheckedUsers), storeCheckData('Users', !isCheckedUsers)}}/>
-        <Text>Users</Text>
-        <Checkbox checked={isCheckedActivities} onPress={() => {setIsCheckedActivities(!isCheckedActivities), storeCheckData('Activities', !isCheckedActivities)}}/>
-        <Text>Activities</Text>
-        <Checkbox checked={isCheckedGroups} onPress={() => {setIsCheckedGroups(!isCheckedGroups), storeCheckData('Groups', !isCheckedGroups)}}/>
-        <Text>Groups</Text>
-
-        <Button flex={1} gradient={gradients.info} marginBottom={sizes.base} onPress={() => {handlerenderedAct()}}>
-          <Text white bold transform="uppercase">
-            search
-          </Text>
-        </Button>
-
+    <Block color={colors.card} flex={0}>
+      <Block color={colors.card} flex={0} padding={sizes.padding}>
+        <Input search placeholder={t('common.search')}				
+         onChangeText={(newText) => { setTitle(newText) }}/>
+      </Block>
+      <Block row marginLeft={sizes.sm} color={colors.card} flex={0} marginBottom={sizes.sm}>
+        <Block marginRight={sizes.s} row>
+          <Checkbox checked={isCheckedUsers} onPress={() => {setIsCheckedUsers(!isCheckedUsers), storeCheckData('Users', !isCheckedUsers)}}/>
+          <Text>Users</Text>
+        </Block>
+        <Block marginRight={sizes.s} row>
+          <Checkbox checked={isCheckedActivities} onPress={() => {setIsCheckedActivities(!isCheckedActivities), storeCheckData('Activities', !isCheckedActivities)}}/>
+          <Text>Activities</Text>
+        </Block>
+        <Block marginRight={sizes.s} row>
+          <Checkbox checked={isCheckedGroups} onPress={() => {setIsCheckedGroups(!isCheckedGroups), storeCheckData('Groups', !isCheckedGroups)}}/>
+          <Text>Groups</Text>
+        </Block>
+      </Block>
+      <Button gradient={gradients.info} onPress={() => {handlerenderedAct()}} margin={sizes.sm}>
+          <Text white bold transform="uppercase">search</Text>
+      </Button>
     </Block>
     {/* submit */}
     <Block
