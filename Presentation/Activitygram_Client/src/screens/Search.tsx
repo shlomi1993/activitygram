@@ -167,11 +167,10 @@ var boxData = { "Users": false,
 
 const Search = () => {
   const [allActivities, setAllActivities] = useState([]);
-  const [myActivities, setMyActivities] = useState([]);
   const [firstTime, setFirstTime] = useState(true);
   const [renderedAct, setRenderedAct] = useState(allActivities);
 
-  const {assets, sizes,gradients, colors } = useTheme();
+  const {assets, sizes, gradients, colors} = useTheme();
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
   const {t} = useTranslation();
@@ -180,7 +179,7 @@ const Search = () => {
   const [isCheckedGroups, setIsCheckedGroups] = useState(false);
   const [title, setTitle] = useState('')
 
-  async function sendNewSearch(params: object) {
+  const sendNewSearch = (params: object) => {
     console.log(`\nin sendNewSearch(params)`)
     let formBodyArray = [];
     for (var property in params) {
@@ -189,63 +188,43 @@ const Search = () => {
       formBodyArray.push(encodedKey + '=' + encodedValue);
     }
     let formBody = formBodyArray.join('&');
-    return !firstTime ? myActivities : 
-    (fetch(url + 'search', {
+    console.log(`firstTime = ${firstTime}`)
+    fetch(url + 'search', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
       body: formBody
     })
       .then((response) => response.json())
       .then((responseJson) => {
+        console.log(`allActivities BEFORE setAllActivities ${allActivities}`)
         setAllActivities(responseJson[1])
-        setMyActivities(responseJson[1])
+        console.log(`allActivities AFTER setAllActivities ${allActivities}`)
         setFirstTime(false)
-        console.log(`res = ${JSON.stringify(responseJson[1])}`)
-        console.log('sent request');
+        console.log(`responseJson[1] = ${JSON.stringify(responseJson[1])}`)
       })
       .catch((err) => {
         console.log('error');
-      }))
+      })
   }
 
-  // const handlerenderedAct = useCallback(
-  //   () => {
-  //     sendNewSearch({});
-  //     setRenderedAct(tab === 0 ? allActivities : myActivities);
-  //   },
-  //   [allActivities, myActivities, setRenderedAct],
-  // );
-
-  // ADD useCallback
-
-  const handlerenderedAct = useCallback((tab: number) => {
-    console.log(`\nin const search`)
+  const handlerenderedAct = useCallback(() => {
+    console.log(`\nin handlerenderedAct`)
     let params = {
       title: title,
       searchUsers : boxData["Users"],
       searchActivities : boxData["Activities"],
       searchGroups : boxData["Groups"]
     }
-    sendNewSearch(params);
-    setRenderedAct(tab === 0 ? allActivities : myActivities);
+    console.log(`allActivities BEFORE sendNewSearch(params) ${allActivities}`)
+    sendNewSearch(params)
+    console.log(`allActivities AFTER sendNewSearch(params) ${allActivities}`)
+    setRenderedAct(allActivities);
+    console.log(`allActivities AFTER setRenderedAct(params) ${allActivities}`)
   },
-  [allActivities, myActivities, setRenderedAct],
+  [allActivities, setRenderedAct],
 );
 
-
-  // const onPressSearch = () => {
-  //   console.log(`\nin const search`)
-  //   let params = {
-  //     title: title,
-  //     searchUsers : boxData["Users"],
-  //     searchActivities : boxData["Activities"],
-  //     searchGroups : boxData["Groups"]
-  //   }
-  //   sendNewSearch(params);
-  //   setRenderedAct(allActivities)
-  // }
-
-  async function storeCheckData(boxName, state) {
+  const storeCheckData = (boxName, state) => {
     boxData[boxName] = state
   }
 
@@ -285,7 +264,7 @@ const Search = () => {
         <Checkbox checked={isCheckedGroups} onPress={() => {setIsCheckedGroups(!isCheckedGroups), storeCheckData('Groups', !isCheckedGroups)}}/>
         <Text>Groups</Text>
 
-        <Button flex={1} gradient={gradients.info} marginBottom={sizes.base} onPress={() => {handlerenderedAct(0)}}>
+        <Button flex={1} gradient={gradients.info} marginBottom={sizes.base} onPress={() => {handlerenderedAct()}}>
           <Text white bold transform="uppercase">
             search
           </Text>
@@ -303,9 +282,9 @@ const Search = () => {
             <Card {...activity} key={`card-${activity?._id}`} type="vertical" />
           ))}
         </Block>
-        {/* <Block>
+        <Block>
           <Gallery/>
-        </Block> */}
+        </Block>
     </Block>
     </Block>
   );
