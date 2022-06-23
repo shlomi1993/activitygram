@@ -71,7 +71,7 @@ const Form = () => {
 
   // Theme & Context
   const navigation = useNavigation();
-  const { assets, colors, sizes, gradients } = useTheme();
+  const { colors, sizes, gradients } = useTheme();
   const { t } = useTranslation();
   const { user } = useData();
 

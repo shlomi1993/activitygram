@@ -349,8 +349,19 @@ app.get('/getActivityPrediction', (req, res) => {
 				testSet: test
 			})
 				.then((response) => {
-					res.send(JSON.stringify(response.data))
-					console.log('predict_nn request succeed.');
+					let ids = []
+					for (const p of response.data) {
+						if (p.pred === 'Will-be-interested' || p.pred === 'Will-participate') { // Can be separated later to to options.
+							ids.push(p.aid);
+						}
+					}
+					database.getActivitiesByPred(ids)
+						.then((fullActivities) => {
+							res.send(JSON.stringify(fullActivities));
+							console.log('predict_nn request succeed.');
+						}).catch((err) => {
+							console.log('predict_nn request failed.');
+						});
 				}).catch((err) => {
 					console.log('predict_nn request failed.');
 				})
