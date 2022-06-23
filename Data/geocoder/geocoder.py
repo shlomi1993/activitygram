@@ -1,10 +1,10 @@
+import sys
 from flask import Flask, jsonify, request
 from geopy import geocoders
-import json
 
 
 app = Flask(__name__)
-geolocator = geocoders.Nominatim(user_agent='AqdHYN8WZH0xzQR9RGgb264VJl087NRvLrj4tAwT292vwuakZhx2HuKiN_UR2kzS')
+geolocator = geocoders.Nominatim(user_agent='Activitygram')
 
 
 @app.route('/')
@@ -18,6 +18,7 @@ def geocode():
     address = request.args.get('address')
     print(f'geocode request recieved for address {address}.')
     location = geolocator.geocode(address)
+    print(f'{location} (lat: {location.latitude}, lon: {location.longitude})')
     return jsonify({
         "latitude": location.latitude,
         "longitude": location.longitude  
@@ -31,15 +32,11 @@ def reverse():
     print(f'reverse request recieved for latitude {latitude}, longitude: {longitude}.')
     location = geolocator.reverse(latitude + ', ' + longitude)
     return jsonify({
-        "address": location.address,
+        "address": location.address
     })
 
 
 if __name__ == '__main__':
-    file = open('../Service/connections.json', 'r')
-    conn = json.loads(file.read())
-    file.close()
-    ip = conn['Geocoder']['ip']
-    port = conn['Geocoder']['port']
+    ip = sys.argv[1]
+    port = int(sys.argv[2])
     app.run(host=ip, port=port)
-    print(f'Gecoding service is available at: http://{ip}:{port}/')
