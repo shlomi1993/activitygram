@@ -126,7 +126,7 @@ const Form = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showFailureModal, setShowFailureModal] = useState(false);
 
-  // Fetch categories for Category Modal
+  // Fetch categories for Category AutocompleteDropdown
   useEffect(() => {
     fetch(BASE_URL + 'allInterests')
       .then((result) => result.json())
@@ -134,6 +134,10 @@ const Form = () => {
         setCategories(json);
       })
       .catch(() => setCategories([]));
+  }, []);
+
+  // Fetch categories for Participants and Managers AutocompleteDropdowns
+  useEffect(() => {
     fetch(BASE_URL + 'allUsers')
       .then((result) => result.json())
       .then((json) => {
@@ -163,7 +167,7 @@ const Form = () => {
       ...activity,
       initiator: [uid, fullName],
       participants: [uid],
-      participantLimit: 99999,
+      participantLimit: 1000,
       managers: [uid],
       images: [],
       status: 'open'
@@ -175,6 +179,9 @@ const Form = () => {
     setSelectedParticipants([userItem])
     setSelectedManagers([userItem])
   }
+  useEffect(() => {
+    initActivity()
+  }, []);
 
   // Clear form
   const clearForm = () => {
@@ -429,7 +436,7 @@ const Form = () => {
       });
     }
   }
-  
+
   // Rendering
   return (
     <Block color={colors.card} paddingTop={sizes.m} paddingHorizontal={sizes.padding}>
@@ -438,7 +445,6 @@ const Form = () => {
           style={{ width: 60, height: 60 }}
           source={{ uri: 'data:image/png;base64,' + user.profileImage['base64'] }}
           marginRight={sizes.sm}
-          onLoad={initActivity}
         />
         <Text p semibold marginTop={sizes.sm} align='center'>
           {user.firstName}
@@ -599,7 +605,6 @@ const Form = () => {
             />
           </Block>)}
         </Block>
-
         <Block>
           {image3 && (<Block align='flex-end' marginLeft={sizes.xs}>
             <Image

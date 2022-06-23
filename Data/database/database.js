@@ -69,9 +69,27 @@ module.exports.fetchDataForNN = async (uid) => {
     return train;
 };
 
+// Activity status updater
+var interval = 10 * 60 * 1000; // min * sec * ms
+async function updateActivityStatuses() {
+    let actArray = await activities.find().toArray();
+    for (const a of actArray) {
+        try {
+            if (a.status === 'open' && new Date(a.endDateTime.split('.')[0] < new Date())) {
+                activities.updateOne({ _id: a._id }, { $set: { status: 'passed' } });
+            }
+        } catch (err) {
+            console.err(`Database: could not update activity ${a.title} status`);
+        }
+    }
+    console.log('Database: activity statuses updated.')
+    setTimeout(updateActivityStatuses, interval);
+}
+setTimeout(updateActivityStatuses, interval);
+
 // Create a user
 module.exports.createUser = async function (userObject, profileImage) {
-    const user = {...userObject, profileImage: profileImage}
+    const user = { ...userObject, profileImage: profileImage }
     await users.insertOne(user);
 };
 

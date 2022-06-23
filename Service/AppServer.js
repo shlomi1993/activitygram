@@ -114,7 +114,7 @@ app.post('/createUser', (req, res) => {
 /** ACTIVITIES */
 
 app.post('/createActivity', (req, res) => {
-    let newActivity = JSON.parse(decodeURIComponent(req.query.activity));
+	let newActivity = JSON.parse(decodeURIComponent(req.query.activity));
 	newActivity['images'] = JSON.parse(decodeURIComponent(req.body.images));
 	newActivity['creationTime'] = Date();
 	database.createNewActivity(newActivity)
@@ -155,19 +155,19 @@ app.post('/search', (req, res) => {
 	const activitiesState = req.body.searchActivities
 	const groupState = req.body.searchGroups
 
-    database.searchActivity(name_to_search, userState, activitiesState, groupState)
-        .then((result) => {
-            res.send(result);
-            console.log(`result = ${JSON.stringify(result)}`)
-            console.log('searchActivity request succeeded.');
-        })
-        .catch((error) => {
-            let msg = 'searchActivity request failed.';
-            res.status(500).send(msg);
-            console.error(msg);
-            console.error(error);
-        });
-    }
+	database.searchActivity(name_to_search, userState, activitiesState, groupState)
+		.then((result) => {
+			res.send(result);
+			console.log(`result = ${JSON.stringify(result)}`)
+			console.log('searchActivity request succeeded.');
+		})
+		.catch((error) => {
+			let msg = 'searchActivity request failed.';
+			res.status(500).send(msg);
+			console.error(msg);
+			console.error(error);
+		});
+}
 )
 
 
