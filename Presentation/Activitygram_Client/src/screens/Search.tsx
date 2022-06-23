@@ -6,7 +6,6 @@ import { useTheme, useTranslation } from '../hooks';
 import { Block, Image, Checkbox, Input, Text, Button } from '../components';
 import { IEventForm } from '../constants/types/forms';
 import 'react-native-gesture-handler';
-import CheckboxList from 'rn-checkbox-list';
 export const url = Platform.OS === 'android' ? 'http://10.0.2.2:8080/' : 'http://127.0.0.1/8080/';
 
 async function sendNewSearch(params: object) {
@@ -41,7 +40,7 @@ const Gallery = () => {
       (sizes.width - (IMAGE_VERTICAL_SIZE + sizes.sm) * 2) / 2;
   
     return (
-      <Block marginTop={sizes.m} paddingHorizontal={sizes.padding}>
+      <Block paddingHorizontal={sizes.padding}>
         <Block>
           <Block row align="center" justify="space-between">
             <Text h5 semibold>
@@ -235,26 +234,29 @@ const Search = () => {
   return (
     <Block safe>
     {/* search input and button*/}
-    <Block justify="space-between" marginBottom={sizes.xxl} color={colors.card} flex={0.8} padding={sizes.base}>
-
-        <Input search placeholder={t('common.search')} marginBottom={sizes.sm} 				
-          onChangeText={(newText) => { setTitle(newText) }}/>
-          
-        <Checkbox checked={isCheckedUsers} onPress={() => {setIsCheckedUsers(!isCheckedUsers), storeCheckData('Users', !isCheckedUsers)}}/>
-        <Text>Users</Text>
-        <Checkbox checked={isCheckedActivities} onPress={() => {setIsCheckedActivities(!isCheckedActivities), storeCheckData('Activities', !isCheckedActivities)}}/>
-        <Text>Activities</Text>
-        <Checkbox checked={isCheckedGroups} onPress={() => {setIsCheckedGroups(!isCheckedGroups), storeCheckData('Groups', !isCheckedGroups)}}/>
-        <Text>Groups</Text>
-
-        <Button flex={1} gradient={gradients.info} marginBottom={sizes.base} onPress={() => {onPressSearch()}}>
-          <Text white bold transform="uppercase">
-            search
-          </Text>
-        </Button>
-
+    <Block color={colors.card} flex={0}>
+      <Block color={colors.card} flex={0} padding={sizes.padding}>
+        <Input search placeholder={t('common.search')}				
+         onChangeText={(newText) => { setTitle(newText) }}/>
+      </Block>
+      <Block row marginLeft={sizes.sm} color={colors.card} flex={0} marginBottom={sizes.sm}>
+    <Block marginRight={sizes.s} row>
+      <Checkbox marginRight={sizes.xs} checked={isCheckedUsers} onPress={() => {setIsCheckedUsers(!isCheckedUsers), storeCheckData('Users', !isCheckedUsers)}}/>
+      <Text>Users</Text>
     </Block>
-
+    <Block marginRight={sizes.s} row>
+      <Checkbox marginRight={sizes.xs} checked={isCheckedActivities} onPress={() => {setIsCheckedActivities(!isCheckedActivities), storeCheckData('Activities', !isCheckedActivities)}}/>
+      <Text>Activities</Text>
+    </Block>
+    <Block marginRight={sizes.s} row>
+      <Checkbox marginRight={sizes.xs} checked={isCheckedGroups} onPress={() => {setIsCheckedGroups(!isCheckedGroups), storeCheckData('Groups', !isCheckedGroups)}}/>
+      <Text>Groups</Text>
+    </Block>
+      </Block>
+      <Button gradient={gradients.info} onPress={() => {onPressSearch()}} margin={sizes.sm}>
+          <Text white bold transform="uppercase">search</Text>
+      </Button>
+    </Block>
     {/* submit */}
     <Block
         scroll
@@ -269,3 +271,22 @@ const Search = () => {
 };
 
 export default Search;
+
+{/* <Block color={colors.card} padding={sizes.s}>
+<Input search placeholder={t('common.search')} marginBottom={sizes.sm} 				
+    onChangeText={(newText) => { setTitle(newText) }}/>
+  <Block row>
+    <Block marginRight={sizes.s} row>
+      <Checkbox marginRight={sizes.xs} checked={isCheckedUsers} onPress={() => {setIsCheckedUsers(!isCheckedUsers), storeCheckData('Users', !isCheckedUsers)}}/>
+      <Text>Users</Text>
+    </Block>
+    <Block marginRight={sizes.s} row>
+      <Checkbox marginRight={sizes.xs} checked={isCheckedActivities} onPress={() => {setIsCheckedActivities(!isCheckedActivities), storeCheckData('Activities', !isCheckedActivities)}}/>
+      <Text>Activities</Text>
+    </Block>
+    <Block marginRight={sizes.s} row>
+      <Checkbox marginRight={sizes.xs} checked={isCheckedGroups} onPress={() => {setIsCheckedGroups(!isCheckedGroups), storeCheckData('Groups', !isCheckedGroups)}}/>
+      <Text>Groups</Text>
+    </Block>
+  </Block> 
+</Block> */}
