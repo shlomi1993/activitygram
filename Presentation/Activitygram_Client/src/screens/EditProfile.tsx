@@ -14,13 +14,16 @@ import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
 import Toast from 'react-native-toast-message'
 import { BASE_URL } from '../constants/appConstants';
 import { IUser } from '../constants/types';
+import { AuthContext } from '../navigation/App';
 
 const Form = () => {
   const { t } = useTranslation();
   // Theme & Context
   const navigation = useNavigation();
+  const { completeSignUp } = React.useContext(AuthContext);
   const { assets, colors, sizes, gradients } = useTheme();
   const [profile, setProfile] = useState<IUser>({})
+  const [isNewUser, setIsNewUser] = useState<boolean>(true);
 
   const [interests, setInterests] = useState([]);
   const [selectedInterests, setSelectedInterests] = useState([]);
@@ -99,7 +102,10 @@ const Form = () => {
         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
       },
       body: encodeURIComponent(JSON.stringify(image))
-    }).then(() => {console.log('Success')})
+    }).then(() => {
+      isNewUser && completeSignUp(); 
+      console.log('Success')
+    })
   }
 
   return (

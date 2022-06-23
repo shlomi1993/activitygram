@@ -29,6 +29,8 @@ const SignUpScreen = () => {
       const email = data.email;
       const password = data.password;
       signUp({ email, password })
+      navigation.navigate('CreateProfile')
+
     };
   
     const textInputChange = (val) => {

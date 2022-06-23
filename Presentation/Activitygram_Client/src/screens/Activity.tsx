@@ -25,7 +25,7 @@ const Activity = ({ route }) => {
   const { activityId } = route.params;
 
   useEffect(() => {
-    fetch(BASE_URL + 'getActivity?activity_id=' + activityId, {
+    fetch(BASE_URL + 'getActivityById?activity_id=' + activityId, {
       method: 'GET'
     })
       .then((response) => response.json())
@@ -60,11 +60,15 @@ const Activity = ({ route }) => {
 
   const title = activity ? activity.title : '';
   const description = activity ? activity.description : '';
-  const time = activity ? activity.date : '';
+  // const time = activity ? activity.date : '';
+
+  const going = (activity && activity.participants.length) || 0;
+  const left = (activity && (activity.participantLimit - activity.participants.length)) || 0;
+  const inTotal = (activity && activity.participantLimit) || 0;
 
   const onPressJoin = () => {
     const userId = '627659c91fbdd7e2c67d5e11';
-    fetch(BASE_URL + 'getUser?user_id=' + userId, {
+    fetch(BASE_URL + 'getUserById?user_id=' + userId, {
       method: 'GET'
     })
       .then((response) => response.json())
@@ -132,15 +136,15 @@ const Activity = ({ route }) => {
               paddingVertical={sizes.sm}
               renderToHardwareTextureAndroid>
               <Block align="center">
-                <Text h5>0</Text>
+                <Text h5>{going}</Text>
                 <Text>{t('activity.going')}</Text>
               </Block>
               <Block align="center">
-                <Text h5>0</Text>
+                <Text h5>{left}</Text>
                 <Text>{t('activity.left')}</Text>
               </Block>
               <Block align="center">
-                <Text h5>0</Text>
+                <Text h5>{inTotal}</Text>
                 <Text>{t('activity.inTotal')}</Text>
               </Block>
             </Block>
