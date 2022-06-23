@@ -37,10 +37,10 @@ app.get('/', (req, res) => {
 });
 
 app.get('/geocode', (req, res) => {
-    let request = `${geocoderUri}/geocode?address=${req.query.address}`;
+	let request = `${geocoderUri}/geocode?address=${req.query.address}`;
 	axios
 		.get(request)
-        .then((result) => {
+		.then((result) => {
 			res.status(200).send(result.data);
 			console.log('geocode request succeeded.');
 		})
@@ -96,26 +96,26 @@ app.get('/getUserByEmail', (req, res) => {
 });
 
 app.post('/createUser', (req, res) => {
-    const newUser = JSON.parse(decodeURIComponent(req.query.user));
-    const newProfileImage = req.body;
-    database.createUser(newUser, newProfileImage)
-        .then((result) => {
-            res.status(200).send(result);
-            console.log('createUser request succeeded.');
-            database.fetchDataForCF();
-        })
-        .catch((error) => {
-            let msg = 'createUser request failed.';
-            res.status(500).send(msg);
-            console.error(msg);
-        });
+	const newUser = JSON.parse(decodeURIComponent(req.query.user));
+	const newProfileImage = req.body;
+	database.createUser(newUser, newProfileImage)
+		.then((result) => {
+			res.status(200).send(result);
+			console.log('createUser request succeeded.');
+			database.fetchDataForCF();
+		})
+		.catch((error) => {
+			let msg = 'createUser request failed.';
+			res.status(500).send(msg);
+			console.error(msg);
+		});
 });
 
 /** ACTIVITIES */
 
 app.post('/createActivity', (req, res) => {
-    let newActivity = JSON.parse(decodeURIComponent(req.query.activity));
-    newActivity['images'] = JSON.parse(req.body.images);
+	let newActivity = JSON.parse(decodeURIComponent(req.query.activity));
+	newActivity['images'] = JSON.parse(req.body.images);
 	newActivity['creationTime'] = Date();
 	database.createNewActivity(newActivity)
 		.then((result) => {
