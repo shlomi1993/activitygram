@@ -158,9 +158,10 @@ const Form = () => {
   // Initialize Activity object
   const initActivity = () => {
     let uid = user._id.toString();
+    let fullName = user.firstName + ' ' + user.lastName;
     setActivity({
       ...activity,
-      initiator: uid,
+      initiator: [uid, fullName],
       participants: [uid],
       participantLimit: 99999,
       managers: [uid],

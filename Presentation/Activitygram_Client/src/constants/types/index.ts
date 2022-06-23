@@ -102,7 +102,7 @@ export interface IUser {
 export interface IActivity {
   _id: string;
   title: string;
-  initiator: string;
+  initiator: string[];
   category: string;
   startDateTime: Date;
   endDateTime: Date;
