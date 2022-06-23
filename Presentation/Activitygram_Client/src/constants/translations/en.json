@@ -34,7 +34,6 @@
     "inProcess": "In process",
     "checkout": "Proceed to checkout",
     "accept": "Accept",
-    "more": "More",
     "guests": {
       "one": "1 guest",
       "other": "{{count}} guests",

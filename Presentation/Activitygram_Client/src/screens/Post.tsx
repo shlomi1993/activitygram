@@ -440,7 +440,7 @@ const Form = () => {
           onLoad={initActivity}
         />
         <Text p semibold marginTop={sizes.sm} align='center'>
-          {user.username}
+          {user.firstName}
         </Text>
       </Block>
       <Block marginBottom={sizes.xs}>

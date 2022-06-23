@@ -10,16 +10,9 @@ import 'react-native-gesture-handler';
 import { DrawerContentScrollView } from '@react-navigation/drawer';
 import { BASE_URL } from '../constants/appConstants'
 
-import { AuthContext } from '../navigation/App';
-
-
-
 const Home = () => {
-
-  const { signOut } = React.useContext(AuthContext);
-
-  const { user, allActivities, setMyActivities } = useData()
-  const { t } = useTranslation();
+  const { user, allActivities, setMyActivities, getUserEmail } = useData()
+  const {t} = useTranslation();
   const [tab, setTab] = useState<number>(0);
   const [myAllActivities, setMyAllActivities] = useState([]);
   const [activities, setActivities] = useState([]);
@@ -28,7 +21,6 @@ const Home = () => {
   const { assets, sizes, colors, fonts, gradients } = useTheme();
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
-
 
   const handleMyActivities = () => {
     if(user) {
@@ -59,7 +51,7 @@ const Home = () => {
 
   useEffect(() => {
     handlerenderedAct(tab);
-  }, []);
+  });
 
   useLayoutEffect(() => {
 
@@ -78,7 +70,6 @@ const Home = () => {
 
   return (
     <Block safe>
-      <Button align='flex-end' onPress={() => { signOut() }} ><Text secondary bold>TEMP LOGOUT BUTTON</Text></Button>
       <Block
         row
         flex={0}
