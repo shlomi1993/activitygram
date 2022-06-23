@@ -93,11 +93,13 @@
     "going": "Going",
     "left": "Left",
     "inTotal": "In total",
-    "time": "Time",
+    "startTime": "Start time",
+    "endTime": "End time",
     "createdBy": "Created by",
     "notes": "Notes",
     "join": "Join",
-    "joined": "You have joined successfully!"
+    "joined": "You have joined successfully!",
+    "cantJoin": "Participants limit exceeded"
   },
   "Post": {
       "PleaseFill": "Please fill activity details",
