@@ -2,7 +2,6 @@
 
 
 import numpy as np
-import json
 import spacy
 import torch
 from torch import nn
@@ -14,7 +13,7 @@ from matplotlib import pyplot as plt
 
 nlp = spacy.load('en_core_web_sm')
 
-MODEL_UID = '../Data/recommender/models/model_uid_'
+MODEL_UID = './models/model_uid_'
 
 CLASSES = {
     0: 'Will-not-be-interested',
@@ -41,17 +40,11 @@ def create_linear_layer(in_features, out_features):
     )
 
 
-def preprocess_train_set(train_x_file):
-
-    file = open(train_x_file, 'r')
-    train_set = json.load(file)
-    file.close()
-
+def preprocess_train_set(train_json):
     vectors, labels = [], []
-    for example in train_set:
+    for example in train_json:
         vectors.append(nlp(example['description']).vector)
-        labels.append(example['label'])
-
+        labels.append(int(example['label']))
     n_train = len(vectors)
     indexes = [int(i) for i in list(range(n_train))]
     np.random.shuffle(indexes)
@@ -64,6 +57,8 @@ def preprocess_train_set(train_x_file):
     valid_x = np.array([vectors[i] for i in valid_idx])
     valid_y = np.array([labels[i] for i in valid_idx])
 
+    print(train_y)
+
     train_x_t = torch.from_numpy(train_x).float()
     train_y_t = torch.from_numpy(train_y).long()
     valid_x_t = torch.from_numpy(valid_x).float()
@@ -75,16 +70,14 @@ def preprocess_train_set(train_x_file):
     return DataLoader(train_dataset, 64), DataLoader(valid_dataset, 64)
 
 
-def preprocess_test_set(test_file):
-    file = open(test_file, 'r')
-    test_set = json.load(file)
-    file.close()
-    activity_ids, vectors = [], []
-    for event in test_set:
-        activity_ids.append(event['activity_id'])
-        vectors.append(nlp(event['description']).vector)
+def preprocess_test_set(test_json):
+    activity_ids, activity_names, vectors = [], [], []
+    for activity in test_json:
+        activity_ids.append(activity['activity_id'])
+        activity_names.append(activity['activity_name'])
+        vectors.append(nlp(activity['description']).vector)
     test_dataset = torch.from_numpy(np.array(vectors)).float()
-    return activity_ids, test_dataset
+    return activity_ids, activity_names, test_dataset
 
 
 def plot(t_losses, v_losses, t_accuracies, v_accuracies):
@@ -152,9 +145,9 @@ class TextClassifierNN(nn.Module):
         return valid_loss, valid_accuracy
 
 
-def train_model(uid, train_file, n_epochs, save_plot=False):
+def train_model(uid, train_json, n_epochs, save_plot=False):
     model = TextClassifierNN()
-    train_dataset, valid_dataset = preprocess_train_set(train_file)
+    train_dataset, valid_dataset = preprocess_train_set(train_json)
     train_losses, train_accuracies = [], []
     valid_losses, valid_accuracies = [], []
     for e in range(n_epochs):
@@ -174,15 +167,20 @@ def train_model(uid, train_file, n_epochs, save_plot=False):
         plot(train_losses, valid_losses, train_accuracies, valid_accuracies)
     return f'User {uid} model was successfully updated.'
 
-def predict(uid, test_file):
-    activity_ids, test_dataset = preprocess_test_set(test_file)
+
+def predict(uid, test_json):
+    activity_ids, activity_names, test_dataset = preprocess_test_set(test_json)
     model = TextClassifierNN()
     model.load_state_dict(torch.load(MODEL_UID + str(uid)))
     model.eval()
     predictions = []
-    for eid, x in zip(activity_ids, test_dataset):
+    for aid, name, x in zip(activity_ids, activity_names, test_dataset):
         y_hat = model(x.unsqueeze(0)).max(1, keepdim=True)[1].item()
-        predictions.append((eid, CLASSES[y_hat]))
+        predictions.append({
+            'aid': aid,
+            'title': name,
+            'pred': CLASSES[y_hat]
+        })
     return predictions
 
 

@@ -34,7 +34,6 @@
     "inProcess": "In process",
     "checkout": "Proceed to checkout",
     "accept": "Accept",
-    "more": "More",
     "guests": {
       "one": "1 guest",
       "other": "{{count}} guests",
@@ -86,7 +85,9 @@
     "title": "Profile",
     "bio": "Bio",
     "ParticipatedIn": "Participated in",
-    "InterestsIn": "Interests in"
+    "InterestsIn": "Interests in",
+    "logout": "Log Out",
+    "createdByUser": "Created by user"
   },
   "activity": {
     "going": "Going",
@@ -99,7 +100,7 @@
     "joined": "You have joined successfully!"
   },
   "Post": {
-      "PleaseFill": "Please fill details below",
+      "PleaseFill": "Please fill activity details",
       "Category": "Category",
       "SelectCategory": "Select a category",
       "ActivityTitle": "Activity title",
@@ -115,6 +116,34 @@
       "AddImage": "Add Image",
       "Change": "Change",
       "Create": "Create",
-      "TryAgain": "Please fill the following fields and try again:"
+      "TryAgain": "Please fill the following fields and try again:",
+      "SelectParticipant": "Select participants",
+      "SelectManagers": "Select managers",
+      "LimitExceeded": "The number of invitees can not exceed the set limit.",
+      "NumberOfParticipants": "Max. participants:",
+      "UserIncluded": "Participant already selected.",
+      "ManagerIncluded": "Manager already selected.",
+      "Yourself": "Yourself",
+      "ParticipantsList": "Participants List",
+      "ManagersList": "Managers List",
+      "ActivityPosted": "Activity Posted! ☺",
+      "Okay": "Okay",
+      "Wrong": "Something went wrong 😕",
+      "Dismiss": "Dismiss"
+  },
+  "EditProfile": {
+    "PleaseFill": "Please fill profile details",
+    "save": "SAVE",
+    "addImage": "Change profile image",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "userName": "Username",
+    "birthDate": "Birth date",
+    "city": "City",
+    "image": "Image",
+    "bio": "Bio",
+    "email": "Email",
+    "address": "Address",
+    "interests": "Interests"
   }
 }

@@ -1,6 +1,6 @@
 import i18n from 'i18n-js';
-import { ImageSourcePropType } from 'react-native';
-import { ITheme } from './theme';
+import {ImageSourcePropType} from 'react-native';
+import {ITheme} from './theme';
 
 export * from './components';
 export * from './theme';
@@ -14,7 +14,7 @@ export interface IArticleOptions {
   title?: string;
   description?: string;
   type?: 'celebrations' | 'sport' | 'other';
-  sleeping?: { total?: number; type?: 'adults' | 'kids' };
+  sleeping?: {total?: number; type?: 'adults' | 'kids'};
   guests?: number;
   price?: number;
   user?: IUser;
@@ -45,6 +45,8 @@ export interface ICard {
   type: 'vertical' | 'horizontal';
   imageInRow?: number;
   _id?: string;
+  marginLeft?: string;
+  isProfile?: boolean;
 }
 export interface ILocation {
   id?: number;
@@ -57,18 +59,18 @@ export interface IUseData {
   theme: ITheme;
   setTheme: (theme?: ITheme) => void;
   user: IUser;
-  users: IUser[];
   handleUser: (data?: IUser) => void;
-  handleUsers: (data?: IUser[]) => void;
-  following: ICard[];
-  setFollowing: (data?: ICard[]) => void;
   categories: ICategory[];
   setCategories: (data?: ICategory[]) => void;
   articles: IBigCard[];
   setArticles: (data?: IBigCard[]) => void;
   allActivities: IActivity[];
   setAllActivities: (data?: IActivity[]) => void;
-  
+  myActivities: IActivity[];
+  setMyActivities: (data?: IActivity[]) => void;
+  userEmail: string;
+  setUserEmail: (data?: string) => void;
+  getUserEmail: () => string;
 }
 
 export interface ITranslate {
@@ -84,26 +86,32 @@ export interface IActivityComp {
 
 export interface IUser {
   _id: string,
-  fullName: string,
-  username: string,
-  activityLog: any[],
-  age: number,
+  firstName: string,
+  lastName: string,
+  email: string,
+  birthDate: Date,
+  city: string,
+  country: string;
   bio: string,
-  country: string,
-  dateOfBirth: string,
-  friendsList?: string,
-  interests: string[],
+  interests?: string[],
   profileImage?: any[],
+  activityLog?: any[],
+  creationTime: string,
 }
 
 export interface IActivity {
   _id: string;
-  common_interest: string;
-  date: string;
-  description: string;
-  group_managers: any[];
-  is_done: boolean;
-  participants: any[];
   title: string;
-
+  initiator: string;
+  category: string;
+  startDateTime: Date;
+  endDateTime: Date;
+  recurrent: boolean;
+  geolocation: object;
+  description: string;
+  images: any[];
+  managers: any[];
+  participants: any[];
+  participantLimit: number;
+  status: string;
 }
