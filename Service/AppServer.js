@@ -147,6 +147,30 @@ app.get('/getActivityById', (req, res) => {
 	database.getActivityById(req.query.activity_id).then((event) => res.send(event));
 });
 
+app.post('/search', (req, res) => {
+	console.log(`\nin app.post('/search', (req, res)`)
+	console.log(`req.body ${JSON.stringify(req.body)}`);
+	const name_to_search = req.body.title
+	const userState = req.body.searchUsers
+	const activitiesState = req.body.searchActivities
+	const groupState = req.body.searchGroups
+
+    database.searchActivity(name_to_search, userState, activitiesState, groupState)
+        .then((result) => {
+            res.send(result);
+            console.log(`result = ${JSON.stringify(result)}`)
+            console.log('searchActivity request succeeded.');
+        })
+        .catch((error) => {
+            let msg = 'searchActivity request failed.';
+            res.status(500).send(msg);
+            console.error(msg);
+            console.error(error);
+        });
+    }
+)
+
+
 app.get('/getMyActivities', (req, res) => {
 	if (allActivities) {
 		const filtered =
@@ -185,6 +209,7 @@ app.get('/getAllActivities', (req, res) => {
 		allActivities = activities;
 		res.send(activities);
 	});
+
 });
 
 /** GROUPS */
