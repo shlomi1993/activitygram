@@ -65,7 +65,12 @@ def predict_interests(user_id, k, is_user_based=True):
         return { 'error': 'Could not find CF model file.' }
     output = []
     matrix = cf.user_based_matrix if is_user_based else cf.item_based_matrix
-    row = matrix[cf.userId_to_index[user_id]]
+    try:
+        row = matrix[cf.userId_to_index[user_id]]
+    except KeyError:
+        msg = f'Index error: {user_id}'
+        print(msg)
+        return { 'error': msg }
     recommendations = list(zip(cf.unique_interests, row))
     recommendations.sort(reverse=True, key=lambda tup: tup[1])
     for r in recommendations[:k]:
@@ -76,8 +81,7 @@ def predict_interests(user_id, k, is_user_based=True):
         })
     return output
 
-
 # test
 # cf = CollaborativeFiltering()
 # create_pred_matrix('./datasets/ratings.csv', './datasets/interests.csv')
-# print(predict_interests('123464', 10, True))
+# print(predict_interests('627659c91fbdd7e2c67d5e11', 10, True))
