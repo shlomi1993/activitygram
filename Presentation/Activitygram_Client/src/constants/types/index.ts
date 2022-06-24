@@ -9,28 +9,17 @@ export interface ICategory {
   id?: number;
   name?: string;
 }
-export interface IArticleOptions {
-  id?: number;
-  title?: string;
-  description?: string;
-  type?: 'celebrations' | 'sport' | 'other';
-  sleeping?: {total?: number; type?: 'adults' | 'kids'};
-  guests?: number;
-  price?: number;
-  user?: IUser;
-  image?: string;
-}
+
 export interface IBigCard {
   id?: number;
   title?: string;
   description?: string;
   category?: ICategory;
   image?: string;
-  location?: ILocation;
+  location?: any;
   rating?: number;
   user?: IUser;
   offers?: ICard[];
-  options?: IArticleOptions[];
   timestamp?: number;
   onPress?: (event?: any) => void;
 }
@@ -48,11 +37,7 @@ export interface ICard {
   marginLeft?: string;
   isProfile?: boolean;
 }
-export interface ILocation {
-  id?: number;
-  city?: string;
-  country?: string;
-}
+
 export interface IUseData {
   isDark: boolean;
   handleIsDark: (isDark?: boolean) => void;

@@ -13,11 +13,7 @@ import {
 } from '../constants/types';
 
 import {
-  USERS,
-  FOLLOWING,
-  TRENDING,
   CATEGORIES,
-  ARTICLES,
 } from '../constants/mocks';
 import {light} from '../constants';
 import { BASE_URL } from '../constants/appConstants';
@@ -29,7 +25,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
   const [theme, setTheme] = useState<ITheme>(light);
   const [user, setUser] = useState<IUser>();
   const [categories, setCategories] = useState<ICategory[]>(CATEGORIES);
-  const [articles, setArticles] = useState<IBigCard[]>(ARTICLES);
+  const [articles, setArticles] = useState<IBigCard[]>();
   const [article, setArticle] = useState<IBigCard>({});
   const [userEmail, setUserEmail] = useState<string>();
   const [allActivities, setAllActivities] = useState<IActivity[]>();
