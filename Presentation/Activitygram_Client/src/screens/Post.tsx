@@ -161,15 +161,13 @@ const Form = () => {
   }, []);
 
   useEffect(() => {
-    if( user && _.isEmpty(activity)) {
+    if (user && _.isEmpty(activity)) {
       initActivity();
-      console.log('init')
     }
   })
 
   // Initialize Activity object
   const initActivity = () => {
-    
     let uid = user._id.toString();
     let fullName = user.firstName + ' ' + user.lastName;
     setActivity({
