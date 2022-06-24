@@ -94,18 +94,31 @@ const Form = () => {
   }
 
   const onPressSave = () => {
-    const imageArr = [];
-    imageArr.push(image['base64'])
-    fetch(BASE_URL + 'createUser?user=' + encodeURIComponent(JSON.stringify(profile)), {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-      },
-      body: `profileImage=${encodeURIComponent(JSON.stringify(image))}`
-    }).then(() => {
-      isNewUser && completeSignUp(); 
-      console.log('Success')
-    })
+    if(image) {
+      const imageArr = [];
+      imageArr.push(image['base64'])
+      fetch(BASE_URL + 'createUser?user=' + encodeURIComponent(JSON.stringify(profile)), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+        },
+        body: `profileImage=${encodeURIComponent(JSON.stringify(image))}`
+      }).then(() => {
+        isNewUser && completeSignUp(); 
+        console.log('Success')
+      })
+    } else {
+      console.log(profile)
+      fetch(BASE_URL + 'createUser?user=' + encodeURIComponent(JSON.stringify(profile)), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+        },
+      }).then(() => {
+        isNewUser && completeSignUp(); 
+        console.log('Success')
+      })
+    }
   }
 
   return (

@@ -88,9 +88,14 @@ async function updateActivityStatuses() {
 setTimeout(updateActivityStatuses, interval);
 
 // Create a user
-module.exports.createUser = async function (userObject, profileImage) {
-	const user = { ...userObject, profileImage: profileImage }
-	await users.insertOne(user);
+module.exports.createUser = async function (userObject) {
+    const user = {...userObject}
+    await users.insertOne(user);
+};
+
+module.exports.createUserWithImage = async function (userObject, profileImage) {
+    const user = {...userObject, profileImage: profileImage}
+    await users.insertOne(user);
 };
 
 // Get User by ID.

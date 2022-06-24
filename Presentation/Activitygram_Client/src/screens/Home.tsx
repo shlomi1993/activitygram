@@ -8,7 +8,8 @@ import { useTheme, useTranslation, useData } from '../hooks';
 import { Block, Button, Input, Image, Switch, Modal, Text, Card } from '../components';
 import 'react-native-gesture-handler';
 import { DrawerContentScrollView } from '@react-navigation/drawer';
-import { BASE_URL } from '../constants/appConstants'
+import { BASE_URL } from '../constants/appConstants';
+
 
 const Home = () => {
   const { user, allActivities, setMyActivities, getUserEmail } = useData()
@@ -51,6 +52,10 @@ const Home = () => {
 
   useEffect(() => {
     handlerenderedAct(tab);
+  });
+
+  useEffect(() => {
+    getUserEmail();
   });
 
   useLayoutEffect(() => {
