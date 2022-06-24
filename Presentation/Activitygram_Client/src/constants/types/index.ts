@@ -39,7 +39,7 @@ export interface ICard {
   id?: number;
   title?: string;
   description?: string;
-  image?: string;
+  images?: any[];
   timestamp?: number;
   linkLabel?: string;
   type: 'vertical' | 'horizontal';
@@ -94,7 +94,7 @@ export interface IUser {
   country: string;
   bio: string,
   interests?: string[],
-  profileImage?: any[],
+  profileImage?: any,
   activityLog?: any[],
   creationTime: string,
 }
