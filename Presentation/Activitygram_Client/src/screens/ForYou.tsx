@@ -15,10 +15,10 @@ const ForYou = () => {
   const navigation = useNavigation();
   const { t } = useTranslation();
   const { user } = useData();
-  
+
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [selected, setSelected] = useState<ICategory>();
-  const [suggestions, setSuggestions] = useState<IBigCard[]>({}); // Gal - how to make it possible to assign dict?
+  const [suggestions, setSuggestions] = useState({});
 
   useEffect(() => {
     const uid = user._id.toString();
@@ -35,11 +35,15 @@ const ForYou = () => {
           });
           fetch(BASE_URL + `getActivityPrediction?uid=${uid}&interest=${cat.interest_name}`)
             .then((result) => result.json())
-            .then((activities) => { suggestionLists[cat.interest_id] = activities; })
-            .catch(() => { console.error(`Could not fetch offers for ${cat.name} from DB.`); })
+            .then((activities) => {
+              suggestionLists[cat.interest_id] = activities;
+              // Activities recieved proparly, the question is how to store them in a hook and use them later...
+              // Another question is how to show other random activities.
+              // And another task to do is to define the operations beehind the "interest" and "not interest buttons"
+            })
+            .catch(() => { console.error(`Could not fetch offers for ${cat.interest_name} from DB.`); })
         }
         setCategories(adjucted);
-        // setSuggestions(suggestionLists);
       })
       .catch(() => {
         data.setCategories([]);
