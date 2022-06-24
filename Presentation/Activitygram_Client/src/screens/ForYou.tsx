@@ -1,45 +1,49 @@
 import React, { useLayoutEffect, useState, useEffect } from 'react';
 import { FlatList, Platform } from 'react-native';
-
-import { useNavigation } from '@react-navigation/native';
 import { useHeaderHeight } from '@react-navigation/stack';
-
-import { useTheme, useData } from '../hooks';
+import { useNavigation } from '@react-navigation/native';
+import { useTheme, useData, useTranslation } from '../hooks';
 import { IBigCard, ICategory } from '../constants/types';
 import { Block, Image, Button, BigCard, Text } from '../components';
 import { BASE_URL } from '../constants/appConstants';
-// import 'react-native-gesture-handler';
 
 const ForYou = () => {
 
-  const navigation = useNavigation();
   const data = useData();
   const { assets, sizes, colors, gradients } = useTheme();
   const headerHeight = useHeaderHeight();
+  const navigation = useNavigation();
+  const { t } = useTranslation();
+  const { user } = useData();
 
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [selected, setSelected] = useState<ICategory>();
-  const [suggestions, setSuggestions] = useState<IBigCard[]>([]);
+  const [suggestions, setSuggestions] = useState({});
 
   useEffect(() => {
-    fetch(BASE_URL + `getInterestPrediction?userId=${data.user.uid}&k=${10}&userbased=${1}`)
+    const uid = user._id.toString();
+    const uri = BASE_URL + `getInterestPrediction?uid=${uid}&k=${10}&userbased=${1}`
+    fetch(uri)
       .then((result) => result.json())
       .then((json) => {
         let adjucted = [];
+        let suggestionLists = {};
         for (const cat of json) {
           adjucted.push({
             id: cat.interest_id,
             name: cat.interest_name
           });
+          fetch(BASE_URL + `getActivityPrediction?uid=${uid}&interest=${cat.interest_name}`)
+            .then((result) => result.json())
+            .then((activities) => {
+              suggestionLists[cat.interest_id] = activities;
+              // Activities recieved proparly, the question is how to store them in a hook and use them later...
+              // Another question is how to show other random activities.
+              // And another task to do is to define the operations beehind the "interest" and "not interest buttons"
+            })
+            .catch(() => { console.error(`Could not fetch offers for ${cat.interest_name} from DB.`); })
         }
         setCategories(adjucted);
-        let suggestionLists = {}
-        for (const cat of adjucted) {
-          fetch(BASE_URL + `getActivityPrediction?userId=${data.user.uid}&interest=${cat.name}`)
-            .then((result) => result.json())
-            .then((json) => { suggestionLists[cat.id] = json; })
-            .catch(() => { console.error(`Could not fetch offers for ${cat.name} from DB.`); })
-        }
       })
       .catch(() => {
         data.setCategories([]);
@@ -48,10 +52,8 @@ const ForYou = () => {
   }, []);
 
   useEffect(() => {
-    setCategories(data?.categories);
     setSelected(data?.categories[0]);
-    setSuggestions(data?.articles);
-  }, [data.articles, data.categories]);
+  }, []);
 
   useEffect(() => {
     const category = data?.categories?.find(

@@ -72,7 +72,7 @@ const Form = () => {
 
   // Theme & Context
   const navigation = useNavigation();
-  const { assets, colors, sizes, gradients } = useTheme();
+  const { colors, sizes, gradients } = useTheme();
   const { t } = useTranslation();
   const { user } = useData();
 
@@ -127,7 +127,7 @@ const Form = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showFailureModal, setShowFailureModal] = useState(false);
 
-  // Fetch categories for Category Modal
+  // Fetch categories for Category AutocompleteDropdown
   useEffect(() => {
     fetch(BASE_URL + 'allInterests')
       .then((result) => result.json())
@@ -135,6 +135,10 @@ const Form = () => {
         setCategories(json);
       })
       .catch(() => setCategories([]));
+  }, []);
+
+  // Fetch categories for Participants and Managers AutocompleteDropdowns
+  useEffect(() => {
     fetch(BASE_URL + 'allUsers')
       .then((result) => result.json())
       .then((json) => {
@@ -157,15 +161,13 @@ const Form = () => {
   }, []);
 
   useEffect(() => {
-    if( user && _.isEmpty(activity)) {
+    if (user && _.isEmpty(activity)) {
       initActivity();
-      console.log('init')
     }
   })
 
   // Initialize Activity object
   const initActivity = () => {
-    
     let uid = user._id.toString();
     let fullName = user.firstName + ' ' + user.lastName;
     setActivity({
@@ -184,6 +186,9 @@ const Form = () => {
     setSelectedParticipants([userItem])
     setSelectedManagers([userItem])
   }
+  useEffect(() => {
+    initActivity()
+  }, []);
 
   // Clear form
   const clearForm = () => {
@@ -438,7 +443,7 @@ const Form = () => {
       });
     }
   }
-  
+
   // Rendering
   return (
     <Block color={colors.card} paddingTop={sizes.m} paddingHorizontal={sizes.padding}>
@@ -607,7 +612,6 @@ const Form = () => {
             />
           </Block>)}
         </Block>
-
         <Block>
           {image3 && (<Block align='flex-end' marginLeft={sizes.xs}>
             <Image
