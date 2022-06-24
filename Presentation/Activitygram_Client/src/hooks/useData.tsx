@@ -47,10 +47,10 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
   }, [setIsDark]);
 
   const getUserEmail = useCallback(async () => {
-    const userEmail = await Storage.getItem('userEmail');
-    if (userEmail !== null) {
-      setUserEmail(userEmail);
-      fetch(BASE_URL + 'getUserByEmail?user_email=' + userEmail, {
+    const currentEmail = await Storage.getItem('userEmail');
+    if (currentEmail !== userEmail || userEmail === null) {
+      setUserEmail(currentEmail);
+      fetch(BASE_URL + 'getUserByEmail?user_email=' + currentEmail.toString(), {
         method: 'GET'
       })
         .then((response) => response.json())
