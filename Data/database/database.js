@@ -268,8 +268,8 @@ module.exports.getAllActivities = async function () {
 
 // Get activities by id list
 module.exports.getActivitiesByPred = async function (ids) {
-	const obj_ids = ids.map((id) => { return ObjectId(id); });
-	let fullActivities = await activities.find({ _id: { $in: obj_ids } });
+    const obj_ids = ids.map((id) => { return ObjectId(id); });
+    let fullActivities = await activities.find({ _id: { $in: obj_ids } }).toArray();
 	return fullActivities;
 }
 
