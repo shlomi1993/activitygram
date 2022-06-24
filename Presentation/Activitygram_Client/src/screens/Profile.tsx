@@ -75,12 +75,19 @@ const Profile = () => {
             radius={sizes.cardRadius}
             source={assets.background}>
             <Block flex={0} align="center">
-              <Image
-                width={128}
-                height={128}
-                marginBottom={sizes.sm}
-                source={assets.card1}
-              />
+            {user.profileImage ? 
+            (<Image
+              width={128}
+              height={128}
+              marginBottom={sizes.sm}
+              source={{uri: `data:image/png;base64,${user.profileImage['base64']}`}}
+            />) :
+            (<Image
+              width={128}
+              height={128}
+              marginBottom={sizes.sm}
+              source={assets.card1}
+            />)}
               <Text h2 semibold center white>
                 {fullName}
               </Text>
@@ -113,11 +120,11 @@ const Profile = () => {
           </Block>
           {/* interests in */}
           <Block paddingHorizontal={sizes.sm} marginTop={sizes.sm}>
-          <Block row align="center" justify="space-between">
+          {interests && (<Block row align="center" justify="space-between">
             <Text h4 semibold>
             {t('profile.InterestsIn')}
             </Text>
-          </Block>
+          </Block>)}
           <Block row justify="space-between" wrap="wrap">
           {interests?.map((interest) => (
             <Block key={`block-${interest}`}>
@@ -139,11 +146,11 @@ const Profile = () => {
 
           </Block>
           {/* participated in */}
-          <Block row align="center" justify="space-between">
+          {myActivities && (<Block row align="center" justify="space-between">
             <Text h4 semibold marginBottom={sizes.s}>
             {t('profile.ParticipatedIn')}
             </Text>
-          </Block>
+          </Block>)}
           <Block
           scroll
           horizontal
@@ -157,11 +164,11 @@ const Profile = () => {
           </Block>
                     
           {/* Created by user */}
-            <Block row align="center" justify="space-between">
+          {createdByUser && (<Block row align="center" justify="space-between">
             <Text h4 semibold marginBottom={sizes.s}>
             {t('profile.createdByUser')}
             </Text>
-          </Block>
+          </Block>)}
           <Block
           scroll
           horizontal
