@@ -1,67 +1,42 @@
-import React, { useLayoutEffect, useState, useEffect } from 'react';
-import { FlatList, Platform } from 'react-native';
+import React, {useLayoutEffect, useState, useEffect } from 'react';
+import {FlatList} from 'react-native';
 
-import { useNavigation } from '@react-navigation/native';
-import { useHeaderHeight } from '@react-navigation/stack';
+import {useNavigation} from '@react-navigation/native';
+import {useHeaderHeight} from '@react-navigation/stack';
 
-import { useTheme, useData } from '../hooks';
-import { IBigCard, ICategory } from '../constants/types';
-import { Block, Image, Button, BigCard, Text } from '../components';
-import { BASE_URL } from '../constants/appConstants';
-// import 'react-native-gesture-handler';
+import {useTheme, useData, useTranslation } from '../hooks';
+import {IBigCard, ICategory} from '../constants/types';
+import {Block, Image, Button, Text } from '../components';
+import 'react-native-gesture-handler';
 
 const ForYou = () => {
-
-  const navigation = useNavigation();
   const data = useData();
-  const { assets, sizes, colors, gradients } = useTheme();
+  const {t} = useTranslation();
+  // const [renderedActivity, setRenderedActivity] = useState<IActivity>();
+  const [selected, setSelected] = useState<ICategory>();
+  const [articles, setArticles] = useState<IBigCard[]>([]);
+  const [categories, setCategories] = useState<ICategory[]>([]);
+  const {assets, sizes, colors, gradients, icons } = useTheme();
+  const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
 
-  const [categories, setCategories] = useState<ICategory[]>([]);
-  const [selected, setSelected] = useState<ICategory>();
-  const [suggestions, setSuggestions] = useState<IBigCard[]>([]);
-
   useEffect(() => {
-    fetch(BASE_URL + `getInterestPrediction?userId=${data.user.uid}&k=${10}&userbased=${1}`)
-      .then((result) => result.json())
-      .then((json) => {
-        let adjucted = [];
-        for (const cat of json) {
-          adjucted.push({
-            id: cat.interest_id,
-            name: cat.interest_name
-          });
-        }
-        setCategories(adjucted);
-        let suggestionLists = {}
-        for (const cat of adjucted) {
-          fetch(BASE_URL + `getActivityPrediction?userId=${data.user.uid}&interest=${cat.name}`)
-            .then((result) => result.json())
-            .then((json) => { suggestionLists[cat.id] = json; })
-            .catch(() => { console.error(`Could not fetch offers for ${cat.name} from DB.`); })
-        }
-      })
-      .catch(() => {
-        data.setCategories([]);
-        console.error('Could not fetch interests from DB.');
-      });
-  }, []);
-
-  useEffect(() => {
+    setArticles(data?.articles);
     setCategories(data?.categories);
     setSelected(data?.categories[0]);
-    setSuggestions(data?.articles);
   }, [data.articles, data.categories]);
 
   useEffect(() => {
     const category = data?.categories?.find(
       (category) => category?.id === selected?.id,
     );
+
     const newArticles = data?.articles?.filter(
       (article) => article?.category?.id === category?.id,
     );
-    setSuggestions(newArticles);
-  }, [data, selected, setSuggestions]);
+
+    setArticles(newArticles);
+  }, [data, selected, setArticles]);
 
 
   useLayoutEffect(() => {
@@ -78,12 +53,65 @@ const ForYou = () => {
     });
   }, [assets.background, navigation, sizes.width, headerHeight]);
 
+  const onPressInterested = () => {
+    // save that user interests
+    // setRenderedActivity(activity[i+1])
+    console.log('interested');
+  }
+
+  const onPressNotInterested = () => {
+    // save that user not interests
+    // setRenderedActivity(activity[i+1])
+    console.log('not interested');
+  }
+
+  const renderBigCard = () => {
+    return (
+      <Block card white padding={0} marginTop={sizes.xl} paddingHorizontal={sizes.padding}>
+      <Image
+        background
+        resizeMode="cover"
+        radius={sizes.cardRadius}
+        height={460}
+        source={assets.activityBackground}>
+        
+        <Block color={colors.overlay} padding={sizes.padding}>
+          <Text h2 white bold center marginBottom={sizes.sm} marginTop={sizes.cardPadding}>
+            Activity title
+          </Text>
+          <Text h5 white center marginBottom={sizes.sm}>
+            Activity Description
+          </Text>
+          <Block row center marginBottom={sizes.sm}>
+            <Image source={icons.location} marginRight={sizes.s} />
+            <Text p semibold white>
+              Activity Location
+            </Text>
+          </Block>
+          <Block center marginBottom={sizes.xl} marginHorizontal={sizes.m}>
+             <Image height={150} width={265} source={assets.background}/>
+          </Block>
+          {/* Need to change icons */}
+          <Block row align="center" marginBottom={sizes.cardPadding}>
+            <Button success paddingHorizontal={sizes.sm} marginRight={sizes.sm} onPress={() => {onPressInterested()}}><Text white p bold>{t('forYou.interested')}</Text></Button>
+            <Button danger paddingHorizontal={sizes.sm} onPress={() => {onPressNotInterested()}}><Text white p bold>{t('forYou.notInterested')}</Text></Button>
+          </Block>
+        </Block>
+      </Image>
+    </Block>
+    )
+  }
+
   return (
     <Block safe>
-      {/* categories list */}
-      <Block color={colors.card} row flex={0} paddingVertical={sizes.padding}>
-        <Block scroll horizontal renderToHardwareTextureAndroid showsHorizontalScrollIndicator={false}
-          contentOffset={{ x: -sizes.padding, y: 0 }}>
+            {/* categories list */}
+            <Block color={colors.card} row flex={0} paddingVertical={sizes.padding}>
+        <Block
+          scroll
+          horizontal
+          renderToHardwareTextureAndroid
+          showsHorizontalScrollIndicator={false}
+          contentOffset={{x: -sizes.padding, y: 0}}>
           {categories?.map((category) => {
             const isSelected = category?.id === selected?.id;
             return (
@@ -107,16 +135,7 @@ const ForYou = () => {
           })}
         </Block>
       </Block>
-
-      {/* our data will be top 2 recommendations */}
-      <FlatList
-        data={suggestions}
-        showsVerticalScrollIndicator={false}
-        keyExtractor={(item) => `${item?.id}`}
-        style={{ paddingHorizontal: sizes.padding }}
-        contentContainerStyle={{ paddingBottom: sizes.l }}
-        renderItem={({ item }) => <BigCard {...item} />}
-      />
+      {renderBigCard()}
     </Block>
   );
 };
