@@ -2,6 +2,7 @@ import React, { useEffect, useLayoutEffect, useState, useRef, useContext } from 
 import { FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useHeaderHeight } from '@react-navigation/stack';
+import _ from 'lodash';
 
 import { useData, useTheme, useTranslation } from '../hooks';
 import { Block, Image, Text, Input, Button, Switch, Modal } from '../components';
@@ -155,15 +156,23 @@ const Form = () => {
       });
   }, []);
 
+  useEffect(() => {
+    if( user && _.isEmpty(activity)) {
+      initActivity();
+      console.log('init')
+    }
+  })
+
   // Initialize Activity object
   const initActivity = () => {
+    
     let uid = user._id.toString();
     let fullName = user.firstName + ' ' + user.lastName;
     setActivity({
       ...activity,
       initiator: [uid, fullName],
       participants: [uid],
-      participantLimit: 99999,
+      participantLimit: 1000,
       managers: [uid],
       images: [],
       status: 'open'
@@ -438,7 +447,6 @@ const Form = () => {
           style={{ width: 60, height: 60 }}
           source={{ uri: 'data:image/png;base64,' + user.profileImage['base64'] }}
           marginRight={sizes.sm}
-          onLoad={initActivity}
         />
         <Text p semibold marginTop={sizes.sm} align='center'>
           {user.firstName}
