@@ -9,21 +9,32 @@ import { useTheme, useTranslation } from '../hooks';
 import {useNavigation} from '@react-navigation/native';
 
 
-const Card = ({ image, _id, title, type, linkLabel, imageInRow }: ICard) => {
+const Card = ({ images, _id, title, type, linkLabel, imageInRow, marginLeft, isProfile }: ICard) => {
   const { t } = useTranslation();
   const { assets, colors, sizes } = useTheme();
   const navigation = useNavigation();
-
+  const styles = isProfile ? {marginRight: sizes.s} : {};
   const isHorizontal = type !== 'vertical';
-  const num = imageInRow ? imageInRow : 2
+  const num = imageInRow ? imageInRow : 2;
   const CARD_WIDTH = (sizes.width - sizes.padding * 2 - sizes.sm) / num;
+  let image = images ? (images[0] ? images[0]['base64'] : undefined) : undefined;
+  
   return (
     <Block
       card
       flex={0}
       row={false}
       marginBottom={sizes.sm}
+      style={styles}
       width={CARD_WIDTH}>
+      {image ? <Image
+        resizeMode="cover"
+        source={{uri: `data:image/png;base64,${image}`}}
+        style={{
+          height: isHorizontal ? 114 : 110,
+          width: !isHorizontal ? '100%' : sizes.width / 2.435,
+        }}
+      /> : 
       <Image
         resizeMode="cover"
         source={assets.background}
@@ -31,7 +42,7 @@ const Card = ({ image, _id, title, type, linkLabel, imageInRow }: ICard) => {
           height: isHorizontal ? 114 : 110,
           width: !isHorizontal ? '100%' : sizes.width / 2.435,
         }}
-      />
+      />}
       <Block
         paddingTop={sizes.s}
         justify="space-between"

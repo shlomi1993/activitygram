@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@react-native-community/checkbox": "^0.5.12",
     "axios": "^0.27.2",
     "crypto": "^1.0.1",
     "firebase": "^9.8.2",
@@ -8,6 +9,7 @@
     "native-base": "^3.3.7",
     "react-native-bing-maps": "^0.1.1",
     "react-native-dialog-input": "^1.0.8",
-    "react-native-push-notification": "^8.1.1"
+    "react-native-push-notification": "^8.1.1",
+    "rn-checkbox-list": "^1.1.0"
   }
 }

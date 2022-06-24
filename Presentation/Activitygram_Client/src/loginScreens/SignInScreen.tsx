@@ -53,7 +53,11 @@ const SignInScreen = () => {
    const callToSignIn = () => {
       const email = data.email;
       const password = data.password;
-      signIn({email, password })
+      if(email === '' || password === '') {
+          alert('Please fill email and password');
+      } else {
+        signIn({email, password })
+      }
   };
   
     return (

@@ -11,21 +11,27 @@ import { IActivity, IUser } from '../constants/types';
 import { BASE_URL } from '../constants/appConstants';
 const isAndroid = Platform.OS === 'android';
 
+const formatDate = (date) => {
+  const newDate = date.substring(0,10)
+  const time = date.substring(11,16)
+  return [newDate, time]
+}
+
 const Activity = ({ route }) => {
   const { assets, sizes, colors, gradients } = useTheme();
+  const { user } = useData();
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
   // const { user } = useData();
   const { t } = useTranslation();
   const [activity, setActivity] = useState<IActivity>();
-  const [user, setUser] = useState<IUser>();
   // const [participants, setParticipants] = useState();
-  const [isChecked, setIsChecked] = useState(false);
   const [showModal, setModal] = useState(false);
+  const [showCantJoinModal, setCantJoinModal] = useState(false);
   const { activityId } = route.params;
 
   useEffect(() => {
-    fetch(BASE_URL + 'getActivity?activity_id=' + activityId, {
+    fetch(BASE_URL + 'getActivityById?activity_id=' + activityId, {
       method: 'GET'
     })
       .then((response) => response.json())
@@ -54,39 +60,39 @@ const Activity = ({ route }) => {
   const IMAGE_SIZE = (sizes.width - (sizes.padding + sizes.sm) * 2) / 3;
   const IMAGE_VERTICAL_SIZE =
     (sizes.width - (sizes.padding + sizes.sm) * 2) / 2;
-  const IMAGE_MARGIN = (sizes.width - IMAGE_SIZE * 3 - sizes.padding * 2) / 2;
-  const IMAGE_VERTICAL_MARGIN =
-    (sizes.width - (IMAGE_VERTICAL_SIZE + sizes.sm) * 2) / 2;
 
   const title = activity ? activity.title : '';
   const description = activity ? activity.description : '';
-  const time = activity ? activity.date : '';
+  const start = (activity && activity.startDateTime) ? formatDate(activity.startDateTime): '';
+  const end = (activity && activity.endDateTime) ? formatDate(activity.endDateTime) : '';
+  const startTime = start[0] + ' ' + start[1];
+  const endTime = end[0] + ' ' + end[1];
+  const initiator = (activity && activity.initiator[1]) ? activity.initiator[1] : ''
 
+  const going = Math.min((activity && activity.participants?.length), (activity && activity.participantLimit)) || 0;
+  const left = Math.max((activity && (activity.participantLimit - activity.participants?.length)), 0) || 0;
+  const inTotal = (activity && activity.participantLimit) || 0;
+  
   const onPressJoin = () => {
-    const userId = '627659c91fbdd7e2c67d5e11';
-    fetch(BASE_URL + 'getUser?user_id=' + userId, {
-      method: 'GET'
+    if (left <= 0) {
+      setCantJoinModal(true)
+      return
+    } else {
+      let updatedParticipants: string[] = activity.participants ? activity.participants : [];
+      updatedParticipants.push(user._id);
+      fetch(BASE_URL + 'updateActivityParticipants?activity_id=' + activity._id + '&participants=' + encodeURIComponent(JSON.stringify(updatedParticipants)), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+        },
+      })
+    .then(() => {
+      setModal(true);
     })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        setUser(responseJson);
-      })
-      .then(() => {
-        let updatedParticipants: string[] = activity.participants ? activity.participants : [];
-        updatedParticipants.push(userId);
-        fetch(BASE_URL + 'updateActivityParticipants?activity_id=' + activity._id + '&participants=' + encodeURIComponent(JSON.stringify(updatedParticipants)), {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-          },
-        })
-      })
-      .then(() => {
-        setModal(true);
-      })
-      .catch((error) => {
-        console.error(error + " detected");
-      });
+    .catch((error) => {
+      console.error(error + " detected");
+    });
+    }
   }
   return (
     <Block safe>
@@ -132,15 +138,15 @@ const Activity = ({ route }) => {
               paddingVertical={sizes.sm}
               renderToHardwareTextureAndroid>
               <Block align="center">
-                <Text h5>0</Text>
+                <Text h5>{going}</Text>
                 <Text>{t('activity.going')}</Text>
               </Block>
               <Block align="center">
-                <Text h5>0</Text>
+                <Text h5>{left}</Text>
                 <Text>{t('activity.left')}</Text>
               </Block>
               <Block align="center">
-                <Text h5>0</Text>
+                <Text h5>{inTotal}</Text>
                 <Text>{t('activity.inTotal')}</Text>
               </Block>
             </Block>
@@ -157,10 +163,18 @@ const Activity = ({ route }) => {
           <Block paddingHorizontal={sizes.sm} marginTop={sizes.sm}>
             <Block row align="center" justify="space-between" marginBottom={sizes.l}>
               <Text h5 semibold>
-                {t('activity.time')}
+                {t('activity.startTime')}
               </Text>
               <Text p secondary semibold>
-                placeholder
+                {startTime}
+              </Text>
+            </Block>
+            <Block row align="center" justify="space-between" marginBottom={sizes.l}>
+              <Text h5 semibold>
+                {t('activity.endTime')}
+              </Text>
+              <Text p secondary semibold>
+                {endTime}
               </Text>
             </Block>
             <Block row align="center" justify="space-between" marginBottom={sizes.l}>
@@ -168,29 +182,18 @@ const Activity = ({ route }) => {
                 {t('activity.createdBy')}
               </Text>
               <Text p secondary semibold>
-                placeholder
-              </Text>
-            </Block>
-            <Block row align="center" justify="space-between" marginBottom={sizes.l}>
-              <Text h5 semibold>
-                {t('activity.notes')}
-              </Text>
-              <Text p secondary semibold>
-                placeholder
-              </Text>
-            </Block>
-            <Block row marginBottom={sizes.l}>
-              <Checkbox checked={isChecked} onPress={() => setIsChecked(!isChecked)} />
-              <Text p marginLeft={sizes.sm}>
-                I want to be a manager
+                {initiator}
               </Text>
             </Block>
           </Block>
         </Block>
       </Block>
       <Modal visible={showModal} onRequestClose={() => setModal(false)} >
-            <Text h3 white marginBottom={sizes.xl} center>{t('activity.joined')}</Text>
-          </Modal>
+        <Text h3 white marginBottom={sizes.xl} center>{t('activity.joined')}</Text>
+      </Modal>
+      <Modal visible={showCantJoinModal} onRequestClose={() => setCantJoinModal(false)} >
+        <Text h3 white marginBottom={sizes.xl} center>{t('activity.cantJoin')}</Text>
+      </Modal>
     </Block>
   );
 };

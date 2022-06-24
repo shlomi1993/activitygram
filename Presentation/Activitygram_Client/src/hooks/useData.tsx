@@ -1,4 +1,5 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { Platform } from 'react-native';
 import Storage from '@react-native-async-storage/async-storage';
 
 import {
@@ -12,26 +13,23 @@ import {
 } from '../constants/types';
 
 import {
-  USERS,
-  FOLLOWING,
-  TRENDING,
   CATEGORIES,
-  ARTICLES,
 } from '../constants/mocks';
 import {light} from '../constants';
 import { BASE_URL } from '../constants/appConstants';
 
 export const DataContext = React.createContext({});
 
-export const DataProvider = ({children}: {children: React.ReactNode}) => {
+export const DataProvider = ({ children }: { children: React.ReactNode }) => {
   const [isDark, setIsDark] = useState(false);
   const [theme, setTheme] = useState<ITheme>(light);
   const [user, setUser] = useState<IUser>();
   const [categories, setCategories] = useState<ICategory[]>(CATEGORIES);
-  const [articles, setArticles] = useState<IBigCard[]>(ARTICLES);
+  const [articles, setArticles] = useState<IBigCard[]>();
   const [article, setArticle] = useState<IBigCard>({});
   const [userEmail, setUserEmail] = useState<string>();
   const [allActivities, setAllActivities] = useState<IActivity[]>();
+  const [myActivities, setMyActivities] = useState<IActivity[]>();
 
   // get isDark mode from storage
   const getIsDark = useCallback(async () => {
@@ -45,10 +43,10 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
   }, [setIsDark]);
 
   const getUserEmail = useCallback(async () => {
-    const userEmail = await Storage.getItem('userEmail');
-    if (userEmail !== null) {
-      setUserEmail(userEmail);
-      fetch(BASE_URL + 'getUserByEmail?user_email=' + userEmail.toString(), {
+    const currentEmail = await Storage.getItem('userEmail');
+    if (currentEmail !== userEmail || userEmail === null) {
+      setUserEmail(currentEmail);
+      fetch(BASE_URL + 'getUserByEmail?user_email=' + currentEmail.toString(), {
         method: 'GET'
       })
         .then((response) => response.json())
@@ -99,6 +97,19 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
     getIsDark();
   }, [getIsDark]);
 
+  useEffect(() => {
+    fetch(BASE_URL + 'getAllActivities', {
+      method: 'GET'
+   })
+   .then((response) => response.json())
+   .then((responseJson) => {
+      setAllActivities(responseJson);
+   })
+   .catch((error) => {
+      console.error(error + " detected");
+   });
+  }, [allActivities, setAllActivities]);
+
   // change theme based on isDark updates
   useEffect(() => {
     setTheme(isDark ? light : light);
@@ -126,7 +137,11 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
     handleArticle,
     userEmail,
     setUserEmail,
-    getUserEmail
+    getUserEmail,
+    allActivities,
+    setAllActivities,
+    myActivities,
+    setMyActivities
   };
 
   return (
