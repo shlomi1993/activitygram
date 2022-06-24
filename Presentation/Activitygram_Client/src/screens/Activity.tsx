@@ -63,11 +63,11 @@ const Activity = ({ route }) => {
 
   const title = activity ? activity.title : '';
   const description = activity ? activity.description : '';
-  const start = (activity) ? formatDate(activity.startDateTime): '';
-  const end = (activity) ? formatDate(activity.endDateTime) : '';
+  const start = (activity && activity.startDateTime) ? formatDate(activity.startDateTime): '';
+  const end = (activity && activity.endDateTime) ? formatDate(activity.endDateTime) : '';
   const startTime = start[0] + ' ' + start[1];
   const endTime = end[0] + ' ' + end[1];
-  const initiator = (activity) ? activity.initiator[1] : ''
+  const initiator = (activity && activity.initiator[1]) ? activity.initiator[1] : ''
 
   const going = Math.min((activity && activity.participants?.length), (activity && activity.participantLimit)) || 0;
   const left = Math.max((activity && (activity.participantLimit - activity.participants?.length)), 0) || 0;
