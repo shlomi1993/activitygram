@@ -107,12 +107,12 @@
       "addImage": "שנה תמונת פרופיל",
       "firstName": "שם פרטי",
       "lastName": "שם משפחה",
-      "birthDate": "Birth date",
-      "city": "City",
-      "image": "Image",
-      "bio": "Bio",
-      "email": "Email",
-      "address": "Address",
-      "interests": "Interests"
+      "birthDate": "תאריך לידה",
+      "city": "עיר",
+      "image": "תמונה",
+      "bio": "ביו",
+      "email": "מייל",
+      "address": "כתובת",
+      "interests": "תחומי עניין"
     }
   }
