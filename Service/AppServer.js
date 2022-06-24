@@ -349,7 +349,7 @@ app.get('/getActivityPrediction', (req, res) => {
 				testSet: test
 			})
 				.then((response) => {
-					let ids = []
+					let ids = [];
 					for (const p of response.data) {
 						if (p.pred === 'Will-be-interested' || p.pred === 'Will-participate') { // Can be separated later to to options.
 							ids.push(p.aid);
@@ -367,7 +367,6 @@ app.get('/getActivityPrediction', (req, res) => {
 				})
 		});
 });
-
 
 async function refreshPredMatrix() {
 	let n = database.getCurrentRatingSize()
