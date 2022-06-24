@@ -97,8 +97,9 @@ app.get('/getUserByEmail', (req, res) => {
 
 app.post('/createUser', (req, res) => {
 	const newUser = JSON.parse(decodeURIComponent(req.query.user));
-	const newProfileImage = JSON.parse(decodeURIComponent(req.body.profileImage));
-	database.createUser(newUser, newProfileImage)
+	if(req.body.profileImage) {
+		const newProfileImage = JSON.parse(decodeURIComponent(req.body.profileImage));
+		database.createUserWithImage(newUser, newProfileImage)
 		.then((result) => {
 			res.status(200).send(result);
 			console.log('createUser request succeeded.');
@@ -109,6 +110,19 @@ app.post('/createUser', (req, res) => {
 			res.status(500).send(msg);
 			console.error(msg);
 		});
+	} else {
+		database.createUser(newUser)
+		.then((result) => {
+			res.status(200).send(result);
+			console.log('createUser request succeeded.');
+			database.fetchDataForCF();
+		})
+		.catch((error) => {
+			let msg = 'createUser request failed.';
+			res.status(500).send(msg);
+			console.error(msg);
+		});
+	}
 });
 
 /** ACTIVITIES */

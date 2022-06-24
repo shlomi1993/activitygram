@@ -70,7 +70,12 @@ module.exports.fetchDataForNN = async (uid) => {
 };
 
 // Create a user
-module.exports.createUser = async function (userObject, profileImage) {
+module.exports.createUser = async function (userObject) {
+    const user = {...userObject}
+    await users.insertOne(user);
+};
+
+module.exports.createUserWithImage = async function (userObject, profileImage) {
     const user = {...userObject, profileImage: profileImage}
     await users.insertOne(user);
 };

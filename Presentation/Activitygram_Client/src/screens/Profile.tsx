@@ -19,7 +19,7 @@ const Profile = () => {
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
   const [profile, setProfile] = useState<IUser>();
-  const [createdByUser, setCreatedByUser] = useState<IActivity[]>();
+  const [createdByUser, setCreatedByUser] = useState<IActivity[]>([]);
   const {t} = useTranslation();
   const { signOut } = React.useContext(AuthContext);
 
@@ -146,7 +146,7 @@ const Profile = () => {
 
           </Block>
           {/* participated in */}
-          {myActivities && (<Block row align="center" justify="space-between">
+          {(myActivities.length !== 0) && (<Block row align="center" justify="space-between">
             <Text h4 semibold marginBottom={sizes.s}>
             {t('profile.ParticipatedIn')}
             </Text>
@@ -164,7 +164,7 @@ const Profile = () => {
           </Block>
                     
           {/* Created by user */}
-          {createdByUser && (<Block row align="center" justify="space-between">
+          {(createdByUser.length !== 0) && (<Block row align="center" justify="space-between">
             <Text h4 semibold marginBottom={sizes.s}>
             {t('profile.createdByUser')}
             </Text>
