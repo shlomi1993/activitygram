@@ -79,7 +79,7 @@ async function updateActivityStatuses() {
 				activities.updateOne({ _id: a._id }, { $set: { status: 'passed' } });
 			}
 		} catch (err) {
-			console.err(`Database: could not update activity ${a.title} status`);
+			console.error(`Database: could not update activity ${a.title} status`);
 		}
 	}
 	console.log('Database: activity statuses updated.')

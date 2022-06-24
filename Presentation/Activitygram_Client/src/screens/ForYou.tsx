@@ -1,6 +1,7 @@
 import React, { useLayoutEffect, useState, useEffect } from 'react';
 import { FlatList, Platform } from 'react-native';
 import { useHeaderHeight } from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/native';
 import { useTheme, useData, useTranslation } from '../hooks';
 import { IBigCard, ICategory } from '../constants/types';
 import { Block, Image, Button, BigCard, Text } from '../components';
@@ -11,35 +12,34 @@ const ForYou = () => {
   const data = useData();
   const { assets, sizes, colors, gradients } = useTheme();
   const headerHeight = useHeaderHeight();
+  const navigation = useNavigation();
   const { t } = useTranslation();
   const { user } = useData();
-  const uid = user._id.toString();
+  
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [selected, setSelected] = useState<ICategory>();
   const [suggestions, setSuggestions] = useState<IBigCard[]>({}); // Gal - how to make it possible to assign dict?
 
   useEffect(() => {
-    fetch(BASE_URL + `getInterestPrediction?userId=${uid}&k=${10}&userbased=${1}`)
+    const uid = user._id.toString();
+    const uri = BASE_URL + `getInterestPrediction?uid=${uid}&k=${10}&userbased=${1}`
+    fetch(uri)
       .then((result) => result.json())
       .then((json) => {
         let adjucted = [];
+        let suggestionLists = {};
         for (const cat of json) {
           adjucted.push({
             id: cat.interest_id,
             name: cat.interest_name
           });
+          fetch(BASE_URL + `getActivityPrediction?uid=${uid}&interest=${cat.interest_name}`)
+            .then((result) => result.json())
+            .then((activities) => { suggestionLists[cat.interest_id] = activities; })
+            .catch(() => { console.error(`Could not fetch offers for ${cat.name} from DB.`); })
         }
         setCategories(adjucted);
-        let suggestionLists = {}
-        adjucted.forEach((cat) => {
-          fetch(BASE_URL + `getActivityPrediction?userId=${uid}&interest=${cat.name}`)
-            .then((result) => result.json())
-            .then((json) => {
-              suggestionLists[cat.id] = json;
-            })
-            .catch(() => { console.error(`Could not fetch offers for ${cat.name} from DB.`); })
-        })
-        setSuggestions(suggestionLists);
+        // setSuggestions(suggestionLists);
       })
       .catch(() => {
         data.setCategories([]);
