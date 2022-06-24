@@ -2,6 +2,7 @@ import React, { useEffect, useLayoutEffect, useState, useRef, useContext } from 
 import { FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useHeaderHeight } from '@react-navigation/stack';
+import _ from 'lodash';
 
 import { useData, useTheme, useTranslation } from '../hooks';
 import { Block, Image, Text, Input, Button, Switch, Modal } from '../components';
@@ -159,8 +160,16 @@ const Form = () => {
       });
   }, []);
 
+  useEffect(() => {
+    if( user && _.isEmpty(activity)) {
+      initActivity();
+      console.log('init')
+    }
+  })
+
   // Initialize Activity object
   const initActivity = () => {
+    
     let uid = user._id.toString();
     let fullName = user.firstName + ' ' + user.lastName;
     setActivity({
