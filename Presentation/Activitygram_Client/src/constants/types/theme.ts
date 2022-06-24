@@ -239,6 +239,7 @@ export interface ThemeIcons {
   heart: ImageSourcePropType;
   post: ImageSourcePropType;
   user: ImageSourcePropType;
+  activityBackground: ImageSourcePropType;
 }
 
 export interface ThemeAssets {
@@ -249,6 +250,7 @@ export interface ThemeAssets {
   OpenSansBold?: any;
 
   background: ImageSourcePropType;
+  activityBackground: ImageSourcePropType;
 
   card1: ImageSourcePropType;
 

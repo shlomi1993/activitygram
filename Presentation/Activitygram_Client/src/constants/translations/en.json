@@ -147,5 +147,9 @@
     "email": "Email",
     "address": "Address",
     "interests": "Interests"
+  },
+  "forYou": {
+    "interested": "INTERESTED",
+    "notInterested": "NOT INTERESTED"
   }
 }
