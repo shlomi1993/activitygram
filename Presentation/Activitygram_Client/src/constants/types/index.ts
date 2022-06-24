@@ -76,7 +76,7 @@ export interface IUser {
   email: string,
   birthDate: Date,
   city: string,
-  country: string;
+  country?: string;
   bio: string,
   interests?: string[],
   profileImage?: any,
