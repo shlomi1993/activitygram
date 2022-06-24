@@ -5,4 +5,5 @@ export {default as ForYou} from './ForYou';
 export {default as Post} from './Post';
 export {default as Search} from './Search';
 export {default as Activity} from './Activity';
+export {default as EditProfile} from './EditProfile';
 export {default as ActivityCreatedSuccessfully} from './ActivityCreatedSuccessfully';

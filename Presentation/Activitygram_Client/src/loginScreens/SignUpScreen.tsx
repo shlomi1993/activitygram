@@ -28,7 +28,14 @@ const SignUpScreen = () => {
     const callToSignUp = () => {
       const email = data.email;
       const password = data.password;
-      signUp({ email, password })
+      const confirm_password = data.confirm_password;
+      if(email === '' || password === '' || confirm_password === '') {
+        alert('Please fill email and password');
+    } else {
+        signUp({ email, password })
+        navigation.navigate('CreateProfile')
+    }
+
     };
   
     const textInputChange = (val) => {

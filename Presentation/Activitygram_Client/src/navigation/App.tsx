@@ -10,6 +10,7 @@ import {Block} from '../components';
 import {auth} from '../../firebase';
 import SignInScreen from '../loginScreens/SignInScreen'
 import SignUpScreen from '../loginScreens/SignUpScreen'
+import { EditProfile } from '../screens'
 
 export const AuthContext = React.createContext(undefined as any);
 
@@ -19,18 +20,24 @@ const RootStack = createStackNavigator();
 const RootStackScreen = () => {
   const {gradients} = useTheme();
 
+
   return (
     <Block gradient={gradients.light}>
         <RootStack.Navigator headerMode='none'>
             <RootStack.Screen name="SignInScreen" component={SignInScreen}/>
             <RootStack.Screen name="SignUpScreen" component={SignUpScreen}/>
+            <RootStack.Screen name="CreateProfile" component={EditProfile}/>
         </RootStack.Navigator>
     </Block>
   );
 };
 export default () => {
   const {isDark, theme, setTheme, userEmail, setUserEmail} = useData();
-  const [user, setUser] = React.useState('');
+  const [savedEmail, setSavedEmail] = React.useState();
+  const [token, setToken] = React.useState();
+  const [approved, setApproved] = React.useState(false);
+  const [logged, setLogged] = React.useState(false);
+  let storeUser, storeEmail;
 
   React.useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
@@ -53,14 +60,33 @@ export default () => {
     bootstrapAsync();
   }, []);
 
+  React.useEffect(() => {
+    const setAsyncItems = async () => {
+      if(!logged && approved && token && savedEmail) {
+        console.log('set items')
+        try {
+          await AsyncStorage.setItem('userToken', token);
+          await AsyncStorage.setItem('userEmail', savedEmail);
+        } catch (e) {
+          console.log(e)
+        }
+        setLogged(true);
+        dispatch({ type: 'SIGN_IN', token: token });
+      }
+    };
+    setAsyncItems();
+  });
+
   const handleSignIn = (email, password) => {
     const token = email.replace('@', '.')
     auth
       .signInWithEmailAndPassword(email, password)
       .then(userCredentials => {
         const user = userCredentials.user;
+        setToken(token)
+        setSavedEmail(email)
+        setApproved(true)
         console.log('Logged in with:', user.email);
-        setUser(user.uid)
         return user;
       })
       .catch(error => alert(error.message));
@@ -68,10 +94,14 @@ export default () => {
   };
   
   const handleSignUp = (email, password) => {
-    const token = email.replace('@', '.')
+    const token = email.replace('@', '.');
+    storeUser = token;
+    storeEmail = email;
     auth
       .createUserWithEmailAndPassword(email, password)
       .then(userCredentials => {
+        setToken(token)
+        setSavedEmail(email)
         const user = userCredentials.user;
         console.log(userCredentials.user.getIdToken)
         console.log('Registered with:', user.email);
@@ -94,6 +124,7 @@ export default () => {
             isLoading: false,
           };
         case 'SIGN_IN':
+          console.log('SIGN_IN')
           return {
             ...prevState,
             isSignout: false,
@@ -118,22 +149,17 @@ export default () => {
   const authContext = React.useMemo(
     () => ({
       signIn: async (data) => {
-        console.log('signed in')
-        const userToken = handleSignIn(data.email, data.password)
-        console.log('userEmail', userEmail)
-        try {
-          await AsyncStorage.setItem('userToken', userToken);
-          await AsyncStorage.setItem('userEmail', data.email);
-
-        } catch(e) {
-          console.log(e)
-        }
-        dispatch({ type: 'SIGN_IN', token: userToken });
+        handleSignIn(data.email, data.password)        
       },
       signOut: async () => {
         auth.signOut()
         .then(() => console.log('signed out'))
+        setLogged(false)
+        setApproved(false)
+        setSavedEmail(null)
+        setToken(null)
         try {
+          await AsyncStorage.removeItem('userEmail');
           await AsyncStorage.removeItem('userToken');
         } catch(e) {
           console.log(e)
@@ -141,15 +167,25 @@ export default () => {
         dispatch({ type: 'SIGN_OUT' })
       },
       signUp: async (data) => {
-        console.log('signed up')
-        const userToken = handleSignUp(data.email, data.password)
+        handleSignUp(data.email, data.password)
         try {
-          await AsyncStorage.setItem('userToken', userToken);
           await AsyncStorage.setItem('userEmail', data.email);
         } catch(e) {
           console.log(e)
         }
-        dispatch({ type: 'SIGN_IN', token: userToken });
+      },
+      completeSignUp: async () => {
+        console.log('signed up')
+        try {
+          console.log(storeUser);
+          setApproved(true)
+          setLogged(true);
+          await AsyncStorage.setItem('userToken', storeUser);
+          
+        } catch(e) {
+          console.log(e)
+        }
+        dispatch({ type: 'SIGN_IN', token: storeUser });
       },
     }),
     []

@@ -34,7 +34,6 @@
     "inProcess": "In process",
     "checkout": "Proceed to checkout",
     "accept": "Accept",
-    "more": "More",
     "guests": {
       "one": "1 guest",
       "other": "{{count}} guests",
@@ -87,17 +86,20 @@
     "bio": "Bio",
     "ParticipatedIn": "Participated in",
     "InterestsIn": "Interests in",
-    "logout": "Log Out"
+    "logout": "Log Out",
+    "createdByUser": "Created by user"
   },
   "activity": {
     "going": "Going",
     "left": "Left",
     "inTotal": "In total",
-    "time": "Time",
+    "startTime": "Start time",
+    "endTime": "End time",
     "createdBy": "Created by",
     "notes": "Notes",
     "join": "Join",
-    "joined": "You have joined successfully!"
+    "joined": "You have joined successfully!",
+    "cantJoin": "Participants limit exceeded"
   },
   "Post": {
       "PleaseFill": "Please fill activity details",
@@ -118,6 +120,32 @@
       "Create": "Create",
       "TryAgain": "Please fill the following fields and try again:",
       "SelectParticipant": "Select participants",
-      "SelectManagers": "Select managers"
+      "SelectManagers": "Select managers",
+      "LimitExceeded": "The number of invitees can not exceed the set limit.",
+      "NumberOfParticipants": "Max. participants:",
+      "UserIncluded": "Participant already selected.",
+      "ManagerIncluded": "Manager already selected.",
+      "Yourself": "Yourself",
+      "ParticipantsList": "Participants List",
+      "ManagersList": "Managers List",
+      "ActivityPosted": "Activity Posted! ☺",
+      "Okay": "Okay",
+      "Wrong": "Something went wrong 😕",
+      "Dismiss": "Dismiss"
+  },
+  "EditProfile": {
+    "PleaseFill": "Please fill profile details",
+    "save": "SAVE",
+    "addImage": "Change profile image",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "userName": "Username",
+    "birthDate": "Birth date",
+    "city": "City",
+    "image": "Image",
+    "bio": "Bio",
+    "email": "Email",
+    "address": "Address",
+    "interests": "Interests"
   }
 }

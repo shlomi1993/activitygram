@@ -1,6 +1,6 @@
 import i18n from 'i18n-js';
-import { ImageSourcePropType } from 'react-native';
-import { ITheme } from './theme';
+import {ImageSourcePropType} from 'react-native';
+import {ITheme} from './theme';
 
 export * from './components';
 export * from './theme';
@@ -9,28 +9,17 @@ export interface ICategory {
   id?: number;
   name?: string;
 }
-export interface IArticleOptions {
-  id?: number;
-  title?: string;
-  description?: string;
-  type?: 'celebrations' | 'sport' | 'other';
-  sleeping?: { total?: number; type?: 'adults' | 'kids' };
-  guests?: number;
-  price?: number;
-  user?: IUser;
-  image?: string;
-}
+
 export interface IBigCard {
   id?: number;
   title?: string;
   description?: string;
   category?: ICategory;
   image?: string;
-  location?: ILocation;
+  location?: any;
   rating?: number;
   user?: IUser;
   offers?: ICard[];
-  options?: IArticleOptions[];
   timestamp?: number;
   onPress?: (event?: any) => void;
 }
@@ -39,18 +28,16 @@ export interface ICard {
   id?: number;
   title?: string;
   description?: string;
-  image?: string;
+  images?: any[];
   timestamp?: number;
   linkLabel?: string;
   type: 'vertical' | 'horizontal';
   imageInRow?: number;
   _id?: string;
+  marginLeft?: string;
+  isProfile?: boolean;
 }
-export interface ILocation {
-  id?: number;
-  city?: string;
-  country?: string;
-}
+
 export interface IUseData {
   isDark: boolean;
   handleIsDark: (isDark?: boolean) => void;
@@ -64,10 +51,11 @@ export interface IUseData {
   setArticles: (data?: IBigCard[]) => void;
   allActivities: IActivity[];
   setAllActivities: (data?: IActivity[]) => void;
+  myActivities: IActivity[];
+  setMyActivities: (data?: IActivity[]) => void;
   userEmail: string;
   setUserEmail: (data?: string) => void;
   getUserEmail: () => string;
-
 }
 
 export interface ITranslate {
@@ -85,25 +73,30 @@ export interface IUser {
   _id: string,
   firstName: string,
   lastName: string,
-  username: string,
-  activityLog: any[],
-  age: number,
+  email: string,
+  birthDate: Date,
+  city: string,
+  country: string;
   bio: string,
-  country: string,
-  dateOfBirth: string,
-  friendsList?: string,
-  interests: string[],
-  profileImage?: any[],
+  interests?: string[],
+  profileImage?: any,
+  activityLog?: any[],
+  creationTime: string,
 }
 
 export interface IActivity {
   _id: string;
-  common_interest: string;
-  date: string;
-  description: string;
-  group_managers: any[];
-  is_done: boolean;
-  participants: any[];
   title: string;
-
+  initiator: string[];
+  category: string;
+  startDateTime: Date;
+  endDateTime: Date;
+  recurrent: boolean;
+  geolocation: object;
+  description: string;
+  images: any[];
+  managers: any[];
+  participants: any[];
+  participantLimit: number;
+  status: string;
 }

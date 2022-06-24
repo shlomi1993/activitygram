@@ -1,35 +1,13 @@
-import React, {useLayoutEffect, useState } from 'react';
+import React, {useLayoutEffect, useState, useCallback} from 'react';
 import { Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useHeaderHeight } from '@react-navigation/stack';
 import { useTheme, useTranslation } from '../hooks';
-import { Block, Image, Checkbox, Input, Text, Button } from '../components';
-import { IEventForm } from '../constants/types/forms';
+import { Block, Image, Checkbox, Input, Text, Button, Card} from '../components';
 import 'react-native-gesture-handler';
-import CheckboxList from 'rn-checkbox-list';
 export const url = Platform.OS === 'android' ? 'http://10.0.2.2:8080/' : 'http://127.0.0.1/8080/';
 
-async function sendNewSearch(params: object) {
-  console.log(`\nin onPressSearch(params)`)
-	let formBodyArray = [];
-  for (var property in params) {
-    var encodedKey = encodeURIComponent(property);
-    var encodedValue = encodeURIComponent(params[property]);
-    formBodyArray.push(encodedKey + '=' + encodedValue);
-  }
-	let formBody = formBodyArray.join('&');
-	fetch(url + 'search', {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-		body: formBody
-	})
-		.then((res) => {
-			console.log('sent request');
-		})
-		.catch((err) => {
-			console.log('error');
-		});
-}
+
 
 const Gallery = () => {
     const {assets, sizes} = useTheme();
@@ -41,7 +19,7 @@ const Gallery = () => {
       (sizes.width - (IMAGE_VERTICAL_SIZE + sizes.sm) * 2) / 2;
   
     return (
-      <Block marginTop={sizes.m} paddingHorizontal={sizes.padding}>
+      <Block paddingHorizontal={sizes.padding}>
         <Block>
           <Block row align="center" justify="space-between">
             <Text h5 semibold>
@@ -188,7 +166,11 @@ var boxData = { "Users": false,
                 "Groups": false}
 
 const Search = () => {
-  const {assets, sizes,gradients, colors } = useTheme();
+  const [allActivities, setAllActivities] = useState([]);
+  const [firstTime, setFirstTime] = useState(true);
+  const [renderedAct, setRenderedAct] = useState(allActivities);
+
+  const {assets, sizes, gradients, colors} = useTheme();
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
   const {t} = useTranslation();
@@ -197,17 +179,52 @@ const Search = () => {
   const [isCheckedGroups, setIsCheckedGroups] = useState(false);
   const [title, setTitle] = useState('')
 
-  const onPressSearch = () => {
-    console.log(`\nin const search`)
+  const sendNewSearch = (params: object) => {
+    console.log(`\nin sendNewSearch(params)`)
+    let formBodyArray = [];
+    for (var property in params) {
+      var encodedKey = encodeURIComponent(property);
+      var encodedValue = encodeURIComponent(params[property]);
+      formBodyArray.push(encodedKey + '=' + encodedValue);
+    }
+    let formBody = formBodyArray.join('&');
+    console.log(`firstTime = ${firstTime}`)
+    fetch(url + 'search', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+      body: formBody
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log(`allActivities BEFORE setAllActivities ${allActivities}`)
+        setAllActivities(responseJson[1])
+        console.log(`allActivities AFTER setAllActivities ${allActivities}`)
+        setFirstTime(false)
+        console.log(`responseJson[1] = ${JSON.stringify(responseJson[1])}`)
+      })
+      .catch((err) => {
+        console.log('error');
+      })
+  }
+
+  const handlerenderedAct = useCallback(() => {
+    console.log(`\nin handlerenderedAct`)
     let params = {
       title: title,
       searchUsers : boxData["Users"],
       searchActivities : boxData["Activities"],
       searchGroups : boxData["Groups"]
     }
-    sendNewSearch(params);
-  }
-  async function storeCheckData(boxName, state) {
+    console.log(`allActivities BEFORE sendNewSearch(params) ${allActivities}`)
+    sendNewSearch(params)
+    console.log(`allActivities AFTER sendNewSearch(params) ${allActivities}`)
+    setRenderedAct(allActivities);
+    console.log(`allActivities AFTER setRenderedAct(params) ${allActivities}`)
+  },
+  [allActivities, setRenderedAct],
+);
+
+  const storeCheckData = (boxName, state) => {
     boxData[boxName] = state
   }
 
@@ -235,35 +252,44 @@ const Search = () => {
   return (
     <Block safe>
     {/* search input and button*/}
-    <Block justify="space-between" marginBottom={sizes.xxl} color={colors.card} flex={0.8} padding={sizes.base}>
-
-        <Input search placeholder={t('common.search')} marginBottom={sizes.sm} 				
-          onChangeText={(newText) => { setTitle(newText) }}/>
-          
-        <Checkbox checked={isCheckedUsers} onPress={() => {setIsCheckedUsers(!isCheckedUsers), storeCheckData('Users', !isCheckedUsers)}}/>
-        <Text>Users</Text>
-        <Checkbox checked={isCheckedActivities} onPress={() => {setIsCheckedActivities(!isCheckedActivities), storeCheckData('Activities', !isCheckedActivities)}}/>
-        <Text>Activities</Text>
-        <Checkbox checked={isCheckedGroups} onPress={() => {setIsCheckedGroups(!isCheckedGroups), storeCheckData('Groups', !isCheckedGroups)}}/>
-        <Text>Groups</Text>
-
-        <Button flex={1} gradient={gradients.info} marginBottom={sizes.base} onPress={() => {onPressSearch()}}>
-          <Text white bold transform="uppercase">
-            search
-          </Text>
-        </Button>
-
+    <Block color={colors.card} flex={0}>
+      <Block color={colors.card} flex={0} padding={sizes.padding}>
+        <Input search placeholder={t('common.search')}				
+         onChangeText={(newText) => { setTitle(newText) }}/>
+      </Block>
+      <Block row marginLeft={sizes.sm} color={colors.card} flex={0} marginBottom={sizes.sm}>
+        <Block marginRight={sizes.s} row>
+          <Checkbox checked={isCheckedUsers} onPress={() => {setIsCheckedUsers(!isCheckedUsers), storeCheckData('Users', !isCheckedUsers)}}/>
+          <Text>Users</Text>
+        </Block>
+        <Block marginRight={sizes.s} row>
+          <Checkbox checked={isCheckedActivities} onPress={() => {setIsCheckedActivities(!isCheckedActivities), storeCheckData('Activities', !isCheckedActivities)}}/>
+          <Text>Activities</Text>
+        </Block>
+        <Block marginRight={sizes.s} row>
+          <Checkbox checked={isCheckedGroups} onPress={() => {setIsCheckedGroups(!isCheckedGroups), storeCheckData('Groups', !isCheckedGroups)}}/>
+          <Text>Groups</Text>
+        </Block>
+      </Block>
+      <Button gradient={gradients.info} onPress={() => {handlerenderedAct()}} margin={sizes.sm}>
+          <Text white bold transform="uppercase">search</Text>
+      </Button>
     </Block>
-
     {/* submit */}
     <Block
         scroll
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingVertical: sizes.padding}}>
+        <Block row wrap="wrap" justify="space-between" marginTop={sizes.sm}>
+          {renderedAct?.map((activity) => (
+            // need to change title to id
+            <Card {...activity} key={`card-${activity?._id}`} type="vertical" />
+          ))}
+        </Block>
         <Block>
           <Gallery/>
         </Block>
-      </Block>
+    </Block>
     </Block>
   );
 };
