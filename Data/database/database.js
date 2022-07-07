@@ -174,6 +174,7 @@ async function createNewTag(client, newTag) {
 // Search activities.
 module.exports.searchActivity = async function (keyword, userState, activitiesState, groupsState) {
 	console.log(`\nin searchActivity = async function(keyword, userState, activitiesState, groupsState)`)
+	console.log('aaaaaaaaaaaaaaaaaaaaa',keyword);
 	let usersFound = []
 	let activitiesFound = []
 	let groupsFound = []
