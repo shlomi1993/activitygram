@@ -151,6 +151,7 @@
   },
   "forYou": {
     "interested": "INTERESTED",
-    "notInterested": "NOT INTERESTED"
+    "notInterested": "NOT INTERESTED",
+    "noMoreSug": "No more suggestions to show"
   }
 }
