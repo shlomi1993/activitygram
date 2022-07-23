@@ -202,6 +202,20 @@ app.get('/getMyActivities', (req, res) => {
 	}
 });
 
+app.get('/getActivitiesByInterest', (req, res) => {
+	if (allActivities) {
+		const filtered =
+			allActivities.filter((act) => { return act.category === req.query.interest });
+		res.send(filtered)
+	} else {
+		database.getAllActivities().then((activities) => {
+			const filtered =
+				activities.filter((act) => { return act.category === req.query.interest });
+			res.send(filtered)
+		});
+	}
+});
+
 app.get('/getCreatedByUserActivities', (req, res) => {
 	if (allActivities) {
 		const filtered =

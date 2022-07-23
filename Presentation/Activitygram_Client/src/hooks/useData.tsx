@@ -12,9 +12,6 @@ import {
   IActivity,
 } from '../constants/types';
 
-import {
-  CATEGORIES,
-} from '../constants/mocks';
 import {light} from '../constants';
 import { BASE_URL } from '../constants/appConstants';
 
@@ -25,7 +22,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
   const [theme, setTheme] = useState<ITheme>(light);
   const [user, setUser] = useState<IUser>();
   const [joined, setJoined] = useState<boolean>(false);
-  const [categories, setCategories] = useState<ICategory[]>(CATEGORIES);
+  const [categories, setCategories] = useState<ICategory[]>();
   const [articles, setArticles] = useState<IBigCard[]>();
   const [article, setArticle] = useState<IBigCard>({});
   const [userEmail, setUserEmail] = useState<string>();
@@ -110,6 +107,19 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
       console.error(error + " detected");
    });
   }, [allActivities, setAllActivities]);
+
+  useEffect(() => {
+    fetch(BASE_URL + 'allInterests', {
+      method: 'GET'
+   })
+   .then((response) => response.json())
+   .then((responseJson) => {
+      setCategories(responseJson);
+   })
+   .catch((error) => {
+      console.error(error + " detected");
+   });
+  }, [categories, setCategories]);
 
   // change theme based on isDark updates
   useEffect(() => {
