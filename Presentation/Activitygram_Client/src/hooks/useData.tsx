@@ -13,11 +13,7 @@ import {
 } from '../constants/types';
 
 import {
-  USERS,
-  FOLLOWING,
-  TRENDING,
   CATEGORIES,
-  ARTICLES,
 } from '../constants/mocks';
 import {light} from '../constants';
 import { BASE_URL } from '../constants/appConstants';
@@ -28,8 +24,9 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
   const [isDark, setIsDark] = useState(false);
   const [theme, setTheme] = useState<ITheme>(light);
   const [user, setUser] = useState<IUser>();
+  const [joined, setJoined] = useState<boolean>(false);
   const [categories, setCategories] = useState<ICategory[]>(CATEGORIES);
-  const [articles, setArticles] = useState<IBigCard[]>(ARTICLES);
+  const [articles, setArticles] = useState<IBigCard[]>();
   const [article, setArticle] = useState<IBigCard>({});
   const [userEmail, setUserEmail] = useState<string>();
   const [allActivities, setAllActivities] = useState<IActivity[]>();
@@ -47,10 +44,10 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
   }, [setIsDark]);
 
   const getUserEmail = useCallback(async () => {
-    const userEmail = await Storage.getItem('userEmail');
-    if (userEmail !== null) {
-      setUserEmail(userEmail);
-      fetch(BASE_URL + 'getUserByEmail?user_email=' + userEmail, {
+    const currentEmail = await Storage.getItem('userEmail');
+    if (currentEmail !== userEmail || userEmail === null) {
+      setUserEmail(currentEmail);
+      fetch(BASE_URL + 'getUserByEmail?user_email=' + currentEmail.toString(), {
         method: 'GET'
       })
         .then((response) => response.json())
@@ -145,7 +142,9 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     allActivities,
     setAllActivities,
     myActivities,
-    setMyActivities
+    setMyActivities,
+    joined,
+    setJoined
   };
 
   return (

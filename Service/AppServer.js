@@ -97,8 +97,9 @@ app.get('/getUserByEmail', (req, res) => {
 
 app.post('/createUser', (req, res) => {
 	const newUser = JSON.parse(decodeURIComponent(req.query.user));
-	const newProfileImage = JSON.parse(decodeURIComponent(req.body.profileImage));
-	database.createUser(newUser, newProfileImage)
+	if(req.body.profileImage) {
+		const newProfileImage = JSON.parse(decodeURIComponent(req.body.profileImage));
+		database.createUserWithImage(newUser, newProfileImage)
 		.then((result) => {
 			res.status(200).send(result);
 			console.log('createUser request succeeded.');
@@ -109,12 +110,25 @@ app.post('/createUser', (req, res) => {
 			res.status(500).send(msg);
 			console.error(msg);
 		});
+	} else {
+		database.createUser(newUser)
+		.then((result) => {
+			res.status(200).send(result);
+			console.log('createUser request succeeded.');
+			database.fetchDataForCF();
+		})
+		.catch((error) => {
+			let msg = 'createUser request failed.';
+			res.status(500).send(msg);
+			console.error(msg);
+		});
+	}
 });
 
 /** ACTIVITIES */
 
 app.post('/createActivity', (req, res) => {
-    let newActivity = JSON.parse(decodeURIComponent(req.query.activity));
+	let newActivity = JSON.parse(decodeURIComponent(req.query.activity));
 	newActivity['images'] = JSON.parse(decodeURIComponent(req.body.images));
 	newActivity['creationTime'] = Date();
 	database.createNewActivity(newActivity)
@@ -155,19 +169,19 @@ app.post('/search', (req, res) => {
 	const activitiesState = req.body.searchActivities
 	const groupState = req.body.searchGroups
 
-    database.searchActivity(name_to_search, userState, activitiesState, groupState)
-        .then((result) => {
-            res.send(result);
-            console.log(`result = ${JSON.stringify(result)}`)
-            console.log('searchActivity request succeeded.');
-        })
-        .catch((error) => {
-            let msg = 'searchActivity request failed.';
-            res.status(500).send(msg);
-            console.error(msg);
-            console.error(error);
-        });
-    }
+	database.searchActivity(name_to_search, userState, activitiesState, groupState)
+		.then((result) => {
+			res.send(result);
+			console.log(`result = ${JSON.stringify(result)}`)
+			console.log('searchActivity request succeeded.');
+		})
+		.catch((error) => {
+			let msg = 'searchActivity request failed.';
+			res.status(500).send(msg);
+			console.error(msg);
+			console.error(error);
+		});
+}
 )
 
 
@@ -349,14 +363,24 @@ app.get('/getActivityPrediction', (req, res) => {
 				testSet: test
 			})
 				.then((response) => {
-					res.send(JSON.stringify(response.data))
-					console.log('predict_nn request succeed.');
+					let ids = [];
+					for (const p of response.data) {
+						if (p.pred === 'Will-be-interested' || p.pred === 'Will-participate') { // Can be separated later to to options.
+							ids.push(p.aid);
+						}
+					}
+					database.getActivitiesByPred(ids)
+						.then((fullActivities) => {
+							res.send(JSON.stringify(fullActivities));
+							console.log('predict_nn request succeed.');
+						}).catch((err) => {
+							console.log('predict_nn request failed.');
+						});
 				}).catch((err) => {
 					console.log('predict_nn request failed.');
 				})
 		});
 });
-
 
 async function refreshPredMatrix() {
 	let n = database.getCurrentRatingSize()

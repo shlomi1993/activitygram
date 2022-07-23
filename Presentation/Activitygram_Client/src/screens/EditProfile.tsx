@@ -10,7 +10,6 @@ import Moment from 'moment';
 import { TextInput } from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker'
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
 import Toast from 'react-native-toast-message'
 import { BASE_URL } from '../constants/appConstants';
 import { IUser } from '../constants/types';
@@ -94,18 +93,36 @@ const Form = () => {
   }
 
   const onPressSave = () => {
-    const imageArr = [];
-    imageArr.push(image['base64'])
-    fetch(BASE_URL + 'createUser?user=' + encodeURIComponent(JSON.stringify(profile)), {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-      },
-      body: `profileImage=${encodeURIComponent(JSON.stringify(image))}`
-    }).then(() => {
-      isNewUser && completeSignUp(); 
-      console.log('Success')
-    })
+    if(!profile.firstName || !profile.lastName || !profile.bio || profile.city) {
+      alert('name, bio and city are required')
+      return
+    }
+    console.log('here');
+    if(image) {
+      const imageArr = [];
+      imageArr.push(image['base64'])
+      fetch(BASE_URL + 'createUser?user=' + encodeURIComponent(JSON.stringify(profile)), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+        },
+        body: `profileImage=${encodeURIComponent(JSON.stringify(image))}`
+      }).then(() => {
+        isNewUser && completeSignUp(); 
+        console.log('Success')
+      })
+    } else {
+      console.log(profile)
+      fetch(BASE_URL + 'createUser?user=' + encodeURIComponent(JSON.stringify(profile)), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+        },
+      }).then(() => {
+        isNewUser && completeSignUp(); 
+        console.log('Success')
+      })
+    }
   }
 
   return (
@@ -150,6 +167,12 @@ const Form = () => {
           <TextInput label={t('EditProfile.city')} mode='outlined' autoComplete={false} multiline={true}
             numberOfLines={1} activeOutlineColor={colors.info}
             onChangeText={(newText) => { setProfile({...profile, city: newText}) }} />
+        </Block>
+
+        <Block marginBottom={sizes.sm}>
+          <TextInput label={t('EditProfile.country')} mode='outlined' autoComplete={false} multiline={true}
+            numberOfLines={1} activeOutlineColor={colors.info}
+            onChangeText={(newText) => { setProfile({...profile, country: newText}) }} />
         </Block>
 
         <Block marginBottom={sizes.sm}>
