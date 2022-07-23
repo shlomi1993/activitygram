@@ -76,6 +76,7 @@ export const ASSETS: ThemeAssets = {
 
   // backgrounds/logo
   background: require('../assets/images/background.png'),
+  activityBackground: require('../assets/images/activityBackground.jpg'),
   ios: require('../assets/images/ios.png'),
   android: require('../assets/images/android.png'),
 
