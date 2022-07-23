@@ -93,7 +93,7 @@ const Form = () => {
   }
 
   const onPressSave = () => {
-    if(!profile.firstName || !profile.lastName || !profile.bio || profile.city) {
+    if(!profile.firstName || !profile.lastName || !profile.bio || !profile.city) {
       alert('name, bio and city are required')
       return
     }
