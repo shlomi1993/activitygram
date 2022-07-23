@@ -24,6 +24,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
   const [isDark, setIsDark] = useState(false);
   const [theme, setTheme] = useState<ITheme>(light);
   const [user, setUser] = useState<IUser>();
+  const [joined, setJoined] = useState<boolean>(false);
   const [categories, setCategories] = useState<ICategory[]>(CATEGORIES);
   const [articles, setArticles] = useState<IBigCard[]>();
   const [article, setArticle] = useState<IBigCard>({});
@@ -141,7 +142,9 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     allActivities,
     setAllActivities,
     myActivities,
-    setMyActivities
+    setMyActivities,
+    joined,
+    setJoined
   };
 
   return (
