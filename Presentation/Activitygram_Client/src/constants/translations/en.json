@@ -142,6 +142,7 @@
     "userName": "Username",
     "birthDate": "Birth date",
     "city": "City",
+    "country": "Country",
     "image": "Image",
     "bio": "Bio",
     "email": "Email",

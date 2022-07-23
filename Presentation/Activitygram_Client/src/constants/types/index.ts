@@ -45,6 +45,8 @@ export interface IUseData {
   setTheme: (theme?: ITheme) => void;
   user: IUser;
   handleUser: (data?: IUser) => void;
+  joined: boolean;
+  setJoined: (joined?: boolean) => void;
   categories: ICategory[];
   setCategories: (data?: ICategory[]) => void;
   articles: IBigCard[];
@@ -76,7 +78,7 @@ export interface IUser {
   email: string,
   birthDate: Date,
   city: string,
-  country: string;
+  country?: string;
   bio: string,
   interests?: string[],
   profileImage?: any,
