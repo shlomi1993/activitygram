@@ -1,4 +1,4 @@
-import React, {useLayoutEffect, useState, useCallback} from 'react';
+import React, {useLayoutEffect, useState, useCallback, useEffect} from 'react';
 import { Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useHeaderHeight } from '@react-navigation/stack';
@@ -200,17 +200,27 @@ const Search = () => {
         setAllActivities(responseJson[1])
         console.log(`allActivities AFTER setAllActivities ${allActivities}`)
         setFirstTime(false)
-        console.log(`responseJson[1] = ${JSON.stringify(responseJson[1])}`)
+        console.log(`responseJson[1] = ${JSON.stringify(responseJson)}`)
       })
       .catch((err) => {
-        console.log('error');
+        console.log('error',err);
       })
   }
 
+  useEffect(() => {
+    setRenderedAct(allActivities);
+    console.log('~~~~~~~~~~~~~~~~',allActivities);
+    
+  },[allActivities]);
+  useEffect(() => {
+    console.log('~~~~~~~~~~~~~~~~',title);
+    
+  },[title]);
   const handlerenderedAct = useCallback(() => {
     console.log(`\nin handlerenderedAct`)
+    console.log('~~~~~~~~~~~~~~~~',title);
     let params = {
-      title: title,
+      title,
       searchUsers : boxData["Users"],
       searchActivities : boxData["Activities"],
       searchGroups : boxData["Groups"]
@@ -218,10 +228,8 @@ const Search = () => {
     console.log(`allActivities BEFORE sendNewSearch(params) ${allActivities}`)
     sendNewSearch(params)
     console.log(`allActivities AFTER sendNewSearch(params) ${allActivities}`)
-    setRenderedAct(allActivities);
-    console.log(`allActivities AFTER setRenderedAct(params) ${allActivities}`)
   },
-  [allActivities, setRenderedAct],
+  [allActivities, setRenderedAct,title],
 );
 
   const storeCheckData = (boxName, state) => {

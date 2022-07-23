@@ -8,10 +8,12 @@ import {useTheme, useData, useTranslation } from '../hooks';
 import {IBigCard, ICategory} from '../constants/types';
 import {Block, Image, Button, Text } from '../components';
 import 'react-native-gesture-handler';
+import { BASE_URL } from '../constants/appConstants';
 
 const ForYou = () => {
   const data = useData();
   const {t} = useTranslation();
+  const { user } = useData();
   // const [renderedActivity, setRenderedActivity] = useState<IActivity>();
   const [selected, setSelected] = useState<ICategory>();
   const [articles, setArticles] = useState<IBigCard[]>([]);
@@ -19,12 +21,48 @@ const ForYou = () => {
   const {assets, sizes, colors, gradients, icons } = useTheme();
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
+  const [suggestions, setSuggestions] = useState({});
 
   useEffect(() => {
     setArticles(data?.articles);
     setCategories(data?.categories);
     setSelected(data?.categories[0]);
   }, [data.articles, data.categories]);
+
+  useEffect(() => {
+    const uid = user._id.toString();
+    const uri = BASE_URL + `getInterestPrediction?uid=${uid}&k=${10}&userbased=${1}`
+    fetch(uri)
+      .then((result) => result.json())
+      .then((json) => {
+        let adjucted = [];
+        let suggestionLists = {};
+        for (const cat of json) {
+          adjucted.push({
+            id: cat.interest_id,
+            name: cat.interest_name
+          });
+          fetch(BASE_URL + `getActivityPrediction?uid=${uid}&interest=${cat.interest_name}`)
+            .then((result) => result.json())
+            .then((activities) => {
+              suggestionLists[cat.interest_id] = activities;
+              // Activities recieved proparly, the question is how to store them in a hook and use them later...
+              // Another question is how to show other random activities.
+              // And another task to do is to define the operations beehind the "interest" and "not interest buttons"
+            })
+            .catch(() => { console.error(`Could not fetch offers for ${cat.interest_name} from DB.`); })
+        }
+        setCategories(adjucted);
+      })
+      .catch(() => {
+        data.setCategories([]);
+        console.error('Could not fetch interests from DB.');
+      });
+  }, []);
+
+  useEffect(() => {
+    setSelected(data?.categories[0]);
+  }, []);
 
   useEffect(() => {
     const category = data?.categories?.find(
