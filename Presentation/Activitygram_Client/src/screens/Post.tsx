@@ -72,7 +72,7 @@ const Form = () => {
 
   // Theme & Context
   const navigation = useNavigation();
-  const { colors, sizes, gradients } = useTheme();
+  const { colors, sizes, gradients, assets } = useTheme();
   const { t } = useTranslation();
   const { user } = useData();
 
@@ -448,11 +448,17 @@ const Form = () => {
   return (
     <Block color={colors.card} paddingTop={sizes.m} paddingHorizontal={sizes.padding}>
       <Block row marginBottom={sizes.sm}>
-        <Image
+          {user.profileImage ? (<Image
           style={{ width: 60, height: 60 }}
           source={{ uri: 'data:image/png;base64,' + user.profileImage['base64'] }}
           marginRight={sizes.sm}
+        />) : (
+          <Image
+          style={{ width: 60, height: 60 }}
+          source={assets.card1}
+          marginRight={sizes.sm}
         />
+        )}
         <Text p semibold marginTop={sizes.sm} align='center'>
           {user.firstName}
         </Text>
@@ -736,7 +742,7 @@ const Form = () => {
         </Button>
       </Modal>
       <Modal visible={showFailureModal} onRequestClose={() => { setShowFailureModal(false); clearForm(); }}>
-        <Text marginTop={sizes.sm} marginBottom={sizes.sm} bold white center size={sizes.m}>
+        <Text marginTop={sizes.sm} marginBottom={sizes.sm} bold p white center>
           {t('Post.Wrong')}
         </Text>
         <Button marginTop={sizes.s} marginBottom={sizes.sm} gradient={gradients.primary}

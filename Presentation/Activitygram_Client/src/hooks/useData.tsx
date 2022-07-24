@@ -21,7 +21,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
   const [isDark, setIsDark] = useState(false);
   const [theme, setTheme] = useState<ITheme>(light);
   const [user, setUser] = useState<IUser>();
-  const [joined, setJoined] = useState<boolean>(false);
+  const [joined, setJoined] = useState<boolean>(true);
   const [categories, setCategories] = useState<ICategory[]>();
   const [articles, setArticles] = useState<IBigCard[]>();
   const [article, setArticle] = useState<IBigCard>({});
