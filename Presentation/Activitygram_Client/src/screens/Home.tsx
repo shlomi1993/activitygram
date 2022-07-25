@@ -12,7 +12,7 @@ import { BASE_URL } from '../constants/appConstants';
 
 
 const Home = () => {
-  const { user, allActivities, setMyActivities, getUserEmail } = useData()
+  const { user, allActivities, setMyActivities, getUserEmail, joined, setJoined } = useData()
   const {t} = useTranslation();
   const [tab, setTab] = useState<number>(0);
   const [myAllActivities, setMyAllActivities] = useState([]);
@@ -25,7 +25,7 @@ const Home = () => {
 
   const handleMyActivities = () => {
     if(user) {
-      return !firstTime ? myAllActivities : 
+      return !firstTime || !joined ? myAllActivities : 
       (fetch(BASE_URL + 'getMyActivities?user_id=' + (user._id).toString(), {
         method: 'GET'
      })
@@ -33,6 +33,7 @@ const Home = () => {
      .then((responseJson) => {
       setMyAllActivities(responseJson);
       setMyActivities(responseJson);
+      setJoined(false);
         setFirstTime(false)
      })
      .catch((error) => {

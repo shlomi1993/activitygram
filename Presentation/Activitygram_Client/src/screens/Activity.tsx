@@ -19,7 +19,7 @@ const formatDate = (date) => {
 
 const Activity = ({ route }) => {
   const { assets, sizes, colors, gradients } = useTheme();
-  const { user } = useData();
+  const { user, joined, setJoined } = useData();
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
   // const { user } = useData();
@@ -87,6 +87,7 @@ const Activity = ({ route }) => {
         },
       })
     .then(() => {
+      setJoined(true);
       setModal(true);
     })
     .catch((error) => {
