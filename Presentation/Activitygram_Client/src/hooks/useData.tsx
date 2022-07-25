@@ -12,9 +12,6 @@ import {
   IActivity,
 } from '../constants/types';
 
-import {
-  CATEGORIES,
-} from '../constants/mocks';
 import {light} from '../constants';
 import { BASE_URL } from '../constants/appConstants';
 
@@ -24,7 +21,8 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
   const [isDark, setIsDark] = useState(false);
   const [theme, setTheme] = useState<ITheme>(light);
   const [user, setUser] = useState<IUser>();
-  const [categories, setCategories] = useState<ICategory[]>(CATEGORIES);
+  const [joined, setJoined] = useState<boolean>(true);
+  const [categories, setCategories] = useState<ICategory[]>();
   const [articles, setArticles] = useState<IBigCard[]>();
   const [article, setArticle] = useState<IBigCard>({});
   const [userEmail, setUserEmail] = useState<string>();
@@ -110,6 +108,19 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
    });
   }, [allActivities, setAllActivities]);
 
+  useEffect(() => {
+    fetch(BASE_URL + 'allInterests', {
+      method: 'GET'
+   })
+   .then((response) => response.json())
+   .then((responseJson) => {
+      setCategories(responseJson);
+   })
+   .catch((error) => {
+      console.error(error + " detected");
+   });
+  }, [categories, setCategories]);
+
   // change theme based on isDark updates
   useEffect(() => {
     setTheme(isDark ? light : light);
@@ -141,7 +152,9 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     allActivities,
     setAllActivities,
     myActivities,
-    setMyActivities
+    setMyActivities,
+    joined,
+    setJoined
   };
 
   return (

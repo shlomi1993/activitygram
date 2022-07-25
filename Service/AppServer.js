@@ -195,27 +195,42 @@ app.post("/search", (req, res) => {
     });
 });
 
-app.get("/getMyActivities", (req, res) => {
+app.get("/getActivitiesByInterest", (req, res) => {
+  if (allActivities) {
+    const filtered = allActivities.filter((act) => {
+      return act.category === req.query.interest;
+    });
+    res.send(filtered);
+  } else {
+    database.getAllActivities().then((activities) => {
+      const filtered = activities.filter((act) => {
+        return act.category === req.query.interest;
+      });
+      res.send(filtered);
+    });
+  }
+});
+
+app.get("/getCreatedByUserActivities", (req, res) => {
   if (allActivities) {
     const filtered = allActivities
       .filter((act) => {
-        return act.participants && Array.isArray(act.participants);
+        return act.managers && Array.isArray(act.managers);
       })
       .filter((act) => {
-        return act.participants.find((p) => {
+        return act.managers.find((p) => {
           return p === req.query.user_id;
         });
       });
     res.send(filtered);
   } else {
     database.getAllActivities().then((activities) => {
-      const userId = req.query.user_id;
       const filtered = activities
         .filter((act) => {
-          return act.participants && Array.isArray(act.participants);
+          return act.managers && Array.isArray(act.managers);
         })
         .filter((act) => {
-          return act.participants.find((p) => {
+          return act.managers.find((p) => {
             return p === req.query.user_id;
           });
         });

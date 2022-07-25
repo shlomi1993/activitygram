@@ -14,6 +14,7 @@ import { AuthContext } from '../navigation/App';
 const isAndroid = Platform.OS === 'android';
 
 const Profile = () => {
+
   const {assets, sizes, colors } = useTheme();
   const { user, myActivities, allActivities } = useData();
   const navigation = useNavigation();
@@ -59,8 +60,8 @@ const Profile = () => {
   const interests = (user && user.interests);
 
   return (
-    <Block safe>
-      <Block
+  <Block safe>
+    <Block
         scroll
         paddingHorizontal={sizes.s}
         showsVerticalScrollIndicator={false}
@@ -126,27 +127,37 @@ const Profile = () => {
             </Text>
           </Block>)}
           <Block row justify="space-between" wrap="wrap">
-          {interests?.map((interest) => (
-            <Block key={`block-${interest}`}>
-              <Text key={`text-${interest}`} color={colors.secondary}>{interest}</Text>
-            <Image
-            key={`image-${interest}`}
-            resizeMode="cover"
-            source={assets?.[interest]}
-            marginBottom={IMAGE_MARGIN}
-            color={colors.secondary}
-            style={{
-              height: IMAGE_SIZE,
-              width: IMAGE_SIZE,
-              borderColor: 'black'
-            }}
-            />
-            </Block>
-          ))}
+          <Block
+          scroll
+          horizontal
+          renderToHardwareTextureAndroid
+          showsHorizontalScrollIndicator={false}
+          marginTop={sizes.sm}
+          contentOffset={{x: -sizes.padding, y: 0}}>
+          {interests?.map((interest) => {
+            return (
+              <Button
+                radius={sizes.m}
+                marginHorizontal={sizes.s}
+                key={`category-${interest}}`}
+                info
+                >
+                <Text
+                  h5
+                  bold
+                  white
+                  transform="capitalize"
+                  marginHorizontal={sizes.m}>
+                  {interest}
+                </Text>
+              </Button>
+            );
+          })}
+        </Block>
 
           </Block>
           {/* participated in */}
-          {(myActivities.length !== 0) && (<Block row align="center" justify="space-between">
+          {(myActivities && myActivities.length !== 0) && (<Block row align="center" justify="space-between" marginTop={sizes.sm}>
             <Text h4 semibold marginBottom={sizes.s}>
             {t('profile.ParticipatedIn')}
             </Text>
@@ -164,7 +175,7 @@ const Profile = () => {
           </Block>
                     
           {/* Created by user */}
-          {(createdByUser.length !== 0) && (<Block row align="center" justify="space-between">
+          {(createdByUser.length !== 0) && (<Block row align="center" justify="space-between" marginTop={sizes.sm}>
             <Text h4 semibold marginBottom={sizes.s}>
             {t('profile.createdByUser')}
             </Text>
