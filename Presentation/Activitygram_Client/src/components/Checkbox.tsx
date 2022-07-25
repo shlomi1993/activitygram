@@ -12,20 +12,30 @@ const Checkbox = ({
   onPress,
   haptic = true,
   id = 'Checkbox',
+  checked = false,
   ...props
 }: ICheckboxProps) => {
   const {colors, icons, sizes} = useTheme();
-  const [checked, setChecked] = useState(false);
+  //const [checked, setChecked] = useState(false);
 
-  const handlePress = useCallback(() => {
+  const handlePress = () => {
     onPress?.(!checked);
-    setChecked(!checked);
+    //setChecked(!checked);
 
     /* haptic feedback onPress */
     if (haptic) {
       Haptics.selectionAsync();
     }
-  }, [checked, haptic, setChecked, onPress]);
+  };
+  // const handlePress = useCallback(() => {
+  //   onPress?.(!checked);
+  //   setChecked(!checked);
+
+  //   /* haptic feedback onPress */
+  //   if (haptic) {
+  //     Haptics.selectionAsync();
+  //   }
+  // }, [checked, haptic, setChecked, onPress]);
 
   // generate component testID or accessibilityLabel based on Platform.OS
   const checkboxID =
