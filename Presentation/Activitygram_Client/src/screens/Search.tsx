@@ -182,14 +182,6 @@ const Search = () => {
   const [title, setTitle] = useState('');
 
   const sendNewSearch = () => {
-    // console.log(`\nin sendNewSearch(params)`);
-    // let formBodyArray = [];
-    // for (var property in params) {
-    //   var encodedKey = encodeURIComponent(property);
-    //   var encodedValue = encodeURIComponent(params[property]);
-    //   formBodyArray.push(encodedKey + '=' + encodedValue);
-    // }
-    // let formBody = formBodyArray.join('&');
     console.log(`firstTime = ${firstTime}`);
     let urn = '';
     switch (boxData) {
@@ -252,15 +244,6 @@ const Search = () => {
     console.log('~~~~~~~~~~~~~~~~', title);
   }, [title]);
   const handlerenderedAct = useCallback(() => {
-    // console.log(`\nin handlerenderedAct`);
-    // console.log('~~~~~~~~~~~~~~~~', title);
-    // let params = {
-    //   title,
-    //   searchUsers: boxData['Users'],
-    //   searchActivities: boxData['Activities'],
-    // };
-    // console.log(`allActivities BEFORE sendNewSearch(params) ${allActivities}`);
-    // console.log(`allActivities AFTER sendNewSearch(params) ${allActivities}`);
     if (boxData === undefined) {
       // show error msg
       return;
