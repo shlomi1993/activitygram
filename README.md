@@ -1,18 +1,38 @@
 # Activitygram
-Welcome to Activitygram App!
+<img src="https://user-images.githubusercontent.com/71548980/181102655-049be3f4-f343-498b-850c-63f5c2c17da0.jpeg"  width="680" height="300">
 
-This is an application that came to solve the problem that most of us encountered, finding non-virtual friends!
-In this application we want to give you a fun experience of going outside the box
-An opportunity to see people face to face and on the way to have a lot of fun!
-So... JOIN & ENJOY!
+### Welcome to Activitygram App!
 
-![WhatsApp Image 2022-07-26 at 9 51 10 PM](https://user-images.githubusercontent.com/71548980/181089607-c605e635-7998-4b80-aa0b-32b5d3428b3a.jpeg)
+This application is solving the problem that most of us encountered,  **finding non-virtual friends!**
+Out Activitygram team want to give you the opportunity to meet new poeple outside the screens, and have a lot of fun on the way!
+So... **JOIN & ENJOY!**
 
 ## SERVICES IN USE
-- Firebase
-- MongoDB
+<img src="https://user-images.githubusercontent.com/71548980/181099964-4f9a96bc-da03-4d00-8515-2f9b0c48e8fb.png" width="380" height="100">
+<img src="https://user-images.githubusercontent.com/71548980/181100225-810b1739-0b0f-432f-a6d7-64a254b8c3a6.png" width="400" height="110">
+<img src="https://user-images.githubusercontent.com/71548980/181100303-6ee01889-45c1-41f7-ba06-4eb09e50979f.png" width="400" height="180">
 
-## TECHNICAL INSTRUCTION
+## USER INSTRUCTIONS
+In order to use the app you should have your own account. Sign up/ Sign in and start the journy! 
+### *Sign up/ Sign in screens*
+<img src="https://user-images.githubusercontent.com/71548980/181105992-2a0c8ee0-ad44-46ce-ada6-52733a1f813f.gif" width="250" height="500">  |  <img src="https://user-images.githubusercontent.com/71548980/181106227-9e15dde2-9883-4b8a-9c03-51aa8cadd916.gif" width="250" height="500">
+
+You can use the search screen to find interesting activities/people:
+### *Search screen*
+<img src="https://user-images.githubusercontent.com/71548980/181107903-f78332bf-401f-426e-b45e-b50ace078b1a.gif" width="250" height="500" >
+
+You can create your own activity or join an existing activity:
+
+### *Create activity screen* / *Join activity screen*
+<img src="https://user-images.githubusercontent.com/71548980/181106495-a05467e0-e2f6-41e7-b06f-ab8eebf489f2.gif" width="250" height="500">  |  <img src="https://user-images.githubusercontent.com/71548980/181106693-df1e9363-68bc-4391-8955-ba2afae38456.gif" width="250" height="500">
+
+To see your activities list, go to My activity page:
+### *My activities screen*
+<img src="https://user-images.githubusercontent.com/71548980/181106923-fa039f9f-1d96-48fb-b1a0-872dad0883d0.gif" width="250" height="500">
+
+You can also find some activities wich are recommended for you here:  
+### *For you screen*
+<img src="https://user-images.githubusercontent.com/71548980/181107119-5aad10b1-ebaa-4791-962b-6dcf6aa36f9a.gif" width="250" height="500">
 
 ## Data Setup  
 Navigate to 'Data/recommender' directory and pip install:  
@@ -29,23 +49,14 @@ Navigate to 'Data/recommender' directory and pip install:
 ## Service Setup  
 Navigate to Service and yarn.  
 To start the backend use nodemon ./AppServer.js (or node).  
-This will starts the DB connections and the Recommender service automatically.
+This will start the DB connections and the Recommender service automatically.
 
 ## Client Setup  
 Navigate to 'Presentation/Activitygram_Client' and yarn.
 To strat the frontend use 'yarn start', wait... and press 'a'.
 
-## The App
-Sign up/ Sign in
-<img src="https://user-images.githubusercontent.com/71548980/181091409-9ad8abd6-8135-422a-9f1e-598c2bc16c28.png" width="250" height="500">
-Create activity
-<img src="https://user-images.githubusercontent.com/71548980/181091898-b8719443-d460-4da1-b233-8414baf8d1b6.png" width="250" height="500">
-Join activity
-![Screenshot 2022-07-26 215441](https://user-images.githubusercontent.com/71548980/181092189-9ef6bf06-d93b-42d3-abfb-ed4c176af00d.png)
-My activities
-![Screenshot 2022-07-26 215526](https://user-images.githubusercontent.com/71548980/181092298-9272ac8a-908d-405e-b27e-6e7ea01ef96b.png)
-For you
-![Screenshot 2022-07-26 215703](https://user-images.githubusercontent.com/71548980/181092493-810f9304-833b-4186-a80a-444dfabb0b0c.png)
-Search
-![Screenshot 2022-07-26 221938](https://user-images.githubusercontent.com/71548980/181093741-8b6a263f-3d07-479a-a54b-d68cde0433e2.png)
+## Architecture
+<img src="https://user-images.githubusercontent.com/71548980/181105587-88be34f5-6250-466e-b1eb-8601217fe0bb.png" width="800" height="500">
+
+## 📽️ Demonstration Video
 
