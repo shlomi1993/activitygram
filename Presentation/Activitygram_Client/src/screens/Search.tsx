@@ -331,9 +331,6 @@ const Search = () => {
             <Card {...entity} key={`card-${entity?._id}`} type="vertical" />
           ))}
         </Block>
-        <Block>
-          <Gallery />
-        </Block>
       </Block>
     </Block>
   );
