@@ -74,7 +74,6 @@ const DrawerContent = (
 
   const handleNavigation = useCallback(
     (to) => {
-      console.log('1111111111',to);
       
       setActive(to);
       navigation.navigate(to);

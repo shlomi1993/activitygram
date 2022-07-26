@@ -32,7 +32,6 @@ class Group {
                   history_of_events : history_of_events};
   }
   set set_id(val){
-    console.log("setting id")
     this.id = val;
   }
 }

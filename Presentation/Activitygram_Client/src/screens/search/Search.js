@@ -18,7 +18,6 @@ const Search = () => {
 			
 			<Button
 				onPress={() => {
-					console.log('search clicked!!');
 					onPressSearch(json);
 				}}
 				title="Search"
