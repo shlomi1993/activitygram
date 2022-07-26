@@ -318,7 +318,6 @@ app.get("/allInterests", (req, res) => {
     .getAllInterests()
     .then((result) => {
       res.status(200).send(result);
-      console.log("allInterests request succeeded.");
     })
     .catch((error) => {
       let msg = "allInterests request failed.";

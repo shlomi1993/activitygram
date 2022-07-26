@@ -16,7 +16,6 @@ class Tag {
                   similar_tags : similar_tags};
   }
   set set_id(val){
-    console.log("setting id")
     this.id = val;
   }
 }

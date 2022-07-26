@@ -97,7 +97,6 @@ const Form = () => {
       alert('name, bio and city are required')
       return
     }
-    console.log('here');
     if(image) {
       const imageArr = [];
       imageArr.push(image['base64'])
@@ -109,10 +108,8 @@ const Form = () => {
         body: `profileImage=${encodeURIComponent(JSON.stringify(image))}`
       }).then(() => {
         isNewUser && completeSignUp(); 
-        console.log('Success')
       })
     } else {
-      console.log(profile)
       fetch(BASE_URL + 'createUser?user=' + encodeURIComponent(JSON.stringify(profile)), {
         method: 'POST',
         headers: {
@@ -120,7 +117,6 @@ const Form = () => {
         },
       }).then(() => {
         isNewUser && completeSignUp(); 
-        console.log('Success')
       })
     }
   }

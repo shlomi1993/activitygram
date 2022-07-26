@@ -63,7 +63,6 @@ export default () => {
   React.useEffect(() => {
     const setAsyncItems = async () => {
       if(!logged && approved && token && savedEmail) {
-        console.log('set items')
         try {
           await AsyncStorage.setItem('userToken', token);
           await AsyncStorage.setItem('userEmail', savedEmail);
@@ -103,7 +102,6 @@ export default () => {
         setToken(token)
         setSavedEmail(email)
         const user = userCredentials.user;
-        console.log(userCredentials.user.getIdToken)
         console.log('Registered with:', user.email);
         return user.uid
       })
@@ -124,7 +122,6 @@ export default () => {
             isLoading: false,
           };
         case 'SIGN_IN':
-          console.log('SIGN_IN')
           return {
             ...prevState,
             isSignout: false,
@@ -175,7 +172,6 @@ export default () => {
         }
       },
       completeSignUp: async () => {
-        console.log('signed up')
         try {
           console.log(storeUser);
           setApproved(true)
