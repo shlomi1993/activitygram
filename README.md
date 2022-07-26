@@ -37,11 +37,9 @@ To strat the frontend use 'yarn start', wait... and press 'a'.
 
 ## The App
 Sign up/ Sign in
-
 <img src="https://user-images.githubusercontent.com/71548980/181091409-9ad8abd6-8135-422a-9f1e-598c2bc16c28.png" width="250" height="500">
-![Screenshot 2022-07-26 215003](https://user-images.githubusercontent.com/71548980/181091409-9ad8abd6-8135-422a-9f1e-598c2bc16c28.png)
 Create activity
-![Screenshot 2022-07-26 215303](https://user-images.githubusercontent.com/71548980/181091898-b8719443-d460-4da1-b233-8414baf8d1b6.png)
+<img src="https://user-images.githubusercontent.com/71548980/181091898-b8719443-d460-4da1-b233-8414baf8d1b6.png" width="250" height="500">
 Join activity
 ![Screenshot 2022-07-26 215441](https://user-images.githubusercontent.com/71548980/181092189-9ef6bf06-d93b-42d3-abfb-ed4c176af00d.png)
 My activities
