@@ -107,7 +107,6 @@ const ForYou = () => {
    })
    .then((response) => response.json())
    .then((responseJson) => {
-    //  console.log(responseJson)
     setSuggestions(responseJson);
     if(responseJson.length !== 0) {
       const counter = counters[`${selected?.title}`];
@@ -153,15 +152,11 @@ const ForYou = () => {
   const onPressInterested = () => {
     const counter = raiseCounter();
     setCurrentSuggestion(suggestions[counter]);
-    // TODO: save that user interests on the activity log
-    console.log('interested');
   }
 
   const onPressNotInterested = () => {
     const counter = raiseCounter();
     setCurrentSuggestion(suggestions[counter])
-    // TODO: save that user interests on the activity log
-    console.log('not interested');
   }
 
   const renderBigCard = () => {

@@ -32,7 +32,6 @@ class Event {
                   is_done : is_done};
   }
   set set_id(val){
-    console.log("setting id")
     this.id = val;
   }
 }
