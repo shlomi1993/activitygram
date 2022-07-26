@@ -24,7 +24,6 @@ class Interest {
                   tags : tags};
   }
   set set_id(val){
-    console.log("setting id")
     this.id = val;
   }
 }

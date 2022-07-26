@@ -182,7 +182,6 @@ const Search = () => {
   const [title, setTitle] = useState('');
 
   const sendNewSearch = () => {
-    console.log(`firstTime = ${firstTime}`);
     let urn = '';
     switch (boxData) {
       case BoxData.Activities:
@@ -204,8 +203,6 @@ const Search = () => {
     })
       .then(response => response.json())
       .then(responseJson => {
-        console.log(responseJson, boxData);
-
         switch (boxData) {
           case BoxData.Activities:
             setAllActivities(responseJson);
@@ -225,10 +222,8 @@ const Search = () => {
 
   useEffect(() => {
     setRenderedAct(allActivities);
-    console.log('~~~~~~~~~~~~~~~~', allActivities);
   }, [allActivities]);
   useEffect(() => {
-    console.log('~~~~~~~~~~~~~~~~', allUsers);
     setRenderedAct(
       allUsers.map(user => ({
         title: `${user.firstName} ${user.lastName}`,
@@ -238,10 +233,8 @@ const Search = () => {
     );
   }, [allUsers]);
   useEffect(() => {
-    console.log('~~~~~~~~~~~~~~~~', boxData);
   }, [boxData]);
   useEffect(() => {
-    console.log('~~~~~~~~~~~~~~~~', title);
   }, [title]);
   const handlerenderedAct = useCallback(() => {
     if (boxData === undefined) {
