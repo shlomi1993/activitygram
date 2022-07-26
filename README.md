@@ -6,8 +6,7 @@ In this application we want to give you a fun experience of going outside the bo
 An opportunity to see people face to face and on the way to have a lot of fun!
 So... JOIN & ENJOY!
 
-
-![WhatsApp Image 2022-06-14 at 5 13 34 PM](https://user-images.githubusercontent.com/72906989/180659882-fbf2a54c-716b-4d3d-b32c-3101298bc858.jpeg)
+![WhatsApp Image 2022-07-26 at 9 51 10 PM](https://user-images.githubusercontent.com/71548980/181089607-c605e635-7998-4b80-aa0b-32b5d3428b3a.jpeg)
 
 ## SERVICES IN USE
 - Firebase
@@ -35,3 +34,19 @@ This will starts the DB connections and the Recommender service automatically.
 ## Client Setup  
 Navigate to 'Presentation/Activitygram_Client' and yarn.
 To strat the frontend use 'yarn start', wait... and press 'a'.
+
+## The App
+Sign up
+![Screenshot 2022-07-26 215003](https://user-images.githubusercontent.com/71548980/181091409-9ad8abd6-8135-422a-9f1e-598c2bc16c28.png)
+Sign in
+![Screenshot 2022-07-26 215231](https://user-images.githubusercontent.com/71548980/181091681-df743ec3-bc8b-47bf-b881-8079fdd26034.png)
+Create activity
+![Screenshot 2022-07-26 215303](https://user-images.githubusercontent.com/71548980/181091898-b8719443-d460-4da1-b233-8414baf8d1b6.png)
+Join activity
+![Screenshot 2022-07-26 215441](https://user-images.githubusercontent.com/71548980/181092189-9ef6bf06-d93b-42d3-abfb-ed4c176af00d.png)
+My activities
+![Screenshot 2022-07-26 215526](https://user-images.githubusercontent.com/71548980/181092298-9272ac8a-908d-405e-b27e-6e7ea01ef96b.png)
+For you
+![Screenshot 2022-07-26 215703](https://user-images.githubusercontent.com/71548980/181092493-810f9304-833b-4186-a80a-444dfabb0b0c.png)
+Search
+
