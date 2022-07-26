@@ -274,6 +274,23 @@ app.get("/getAllActivities", (req, res) => {
   });
 });
 
+app.get('/getMyActivities', (req, res) => {
+	if (allActivities) {
+		const filtered =
+			allActivities.filter((act) => { return act.participants && Array.isArray(act.participants) })
+				.filter((act) => { return act.participants.find((p) => { return p === req.query.user_id }) });
+		res.send(filtered)
+	} else {
+		database.getAllActivities().then((activities) => {
+			const userId = req.query.user_id;
+			const filtered =
+				activities.filter((act) => { return act.participants && Array.isArray(act.participants) })
+					.filter((act) => { return act.participants.find((p) => { return p === req.query.user_id }) });
+			res.send(filtered)
+		});
+	}
+});
+
 /** GROUPS */
 
 app.post("/createGroup", (req, res) => {
