@@ -1,0 +1,19 @@
+[
+	{
+		"activity_id": 200,
+		"activity_name": "Basketball for lovers",
+		"description": "This is an event for basketball lovers!"
+	},
+	{
+		"activity_id": 201,
+		"activity_name": "Soccer for lovers",
+		"description": "An event in which people watch soccer togather."
+	},
+	{
+		"activity_id": 202,
+		"activity_name": "AirShow",
+		"description": "Come watch an air show with us! Many planes will fly."
+	}
+]
+
+

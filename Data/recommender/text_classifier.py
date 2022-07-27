@@ -41,10 +41,12 @@ def create_linear_layer(in_features, out_features):
 
 
 def preprocess_train_set(train_json):
+    
     vectors, labels = [], []
     for example in train_json:
         vectors.append(nlp(example['description']).vector)
         labels.append(int(example['label']))
+    
     n_train = len(vectors)
     indexes = [int(i) for i in list(range(n_train))]
     np.random.shuffle(indexes)
@@ -56,8 +58,6 @@ def preprocess_train_set(train_json):
     train_y = np.array([labels[i] for i in train_idx])
     valid_x = np.array([vectors[i] for i in valid_idx])
     valid_y = np.array([labels[i] for i in valid_idx])
-
-    print(train_y)
 
     train_x_t = torch.from_numpy(train_x).float()
     train_y_t = torch.from_numpy(train_y).long()

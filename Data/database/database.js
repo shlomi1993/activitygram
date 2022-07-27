@@ -56,8 +56,7 @@ module.exports.fetchDataForNN = async (uid) => {
     let activityLog = user[0].activityLog;
     for (const log of activityLog) {
       let aid = log.activity_id;
-      let activity = await activities.find({ _id: ObjectId(aid) }).toArray();
-      let description = activity[0].description;
+      let description = log.description;
       let label = log.label;
       train.push({
         activity_id: aid,
@@ -94,11 +93,27 @@ setTimeout(updateActivityStatuses, interval);
 module.exports.createUser = async function (userObject) {
   const user = { ...userObject };
   await users.insertOne(user);
+  for (const int of user.interests) {
+    let rating = {
+      userId: user._id,
+      interestId: int,
+      rating: 10
+    }
+    ratings.insertOne(rating);
+  }
 };
 
 module.exports.createUserWithImage = async function (userObject, profileImage) {
   const user = { ...userObject, profileImage: profileImage };
   await users.insertOne(user);
+  for (const int of user.interests) {
+    let rating = {
+      userId: user._id,
+      interestId: int,
+      rating: 10
+    }
+    ratings.insertOne(rating);
+  }
 };
 
 // Get User by ID.
@@ -185,14 +200,12 @@ async function changeUserActivityLog(curr_user, activityLog) {
   return result;
 }
 
-module.exports.updateActivityParticipants = async function (
-  activityId,
-  participantsArr
-) {
+module.exports.updateActivityParticipants = async function (activityId, participantsArr) {
   const result = await activities.updateOne(
     { _id: ObjectId(activityId) },
     { $set: { participants: participantsArr } }
   );
+  // Here we should update activity logs.
   return result;
 };
 
