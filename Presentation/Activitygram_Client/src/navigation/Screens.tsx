@@ -59,6 +59,7 @@ function ForYouStackScreen() {
   return (
     <ForYouStack.Navigator>
       <ForYouStack.Screen name="For You " component={ForYou} />
+      <ForYouStack.Screen name="Activity" component={Activity} />
     </ForYouStack.Navigator>
   )
 }
