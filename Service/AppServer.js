@@ -107,7 +107,6 @@ app.post("/createUser", (req, res) => {
       .then((result) => {
         res.status(200).send(result);
         console.log("createUser request succeeded.");
-        database.fetchDataForCF();
       })
       .catch((error) => {
         let msg = "createUser request failed.";
@@ -120,7 +119,6 @@ app.post("/createUser", (req, res) => {
       .then((result) => {
         res.status(200).send(result);
         console.log("createUser request succeeded.");
-        database.fetchDataForCF();
       })
       .catch((error) => {
         let msg = "createUser request failed.";

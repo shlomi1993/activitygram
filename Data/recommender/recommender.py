@@ -34,7 +34,7 @@ def train_cf():
         f.write(ratings)
     cf.create_pred_matrix(RATINGS_PATH, INTERESTS_PATH)
     return jsonify({'result': 'Collaborative Filtering prediction matrix is up-to-date.'})
-# cf.create_pred_matrix('./datasets/ratings.csv', './datasets/interests.csv') # debug!
+
 
 @app.route('/predict_cf', methods=['GET'])
 def predict_cf():
