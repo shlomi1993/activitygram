@@ -150,8 +150,9 @@ const ForYou = () => {
   }
 
   const onPressInterested = () => {
-    const counter = raiseCounter();
-    setCurrentSuggestion(suggestions[counter]);
+    const suggestion = suggestions[counters[`${selected.title}`]];
+    setCurrentSuggestion(suggestion);
+    navigation.navigate('Activity', { activityId: suggestion._id });
   }
 
   const onPressNotInterested = () => {
