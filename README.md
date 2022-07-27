@@ -56,7 +56,7 @@ Navigate to 'Presentation/Activitygram_Client' and yarn.
 To strat the frontend use 'yarn start', wait... and press 'a'.
 
 ## Architecture
-<img src="https://user-images.githubusercontent.com/71548980/181105587-88be34f5-6250-466e-b1eb-8601217fe0bb.png" width="800" height="500">
+<img src="https://user-images.githubusercontent.com/71548980/181105587-88be34f5-6250-466e-b1eb-8601217fe0bb.png" width="700" height="500">
 
 ## 📽️ Demonstration Video
 
