@@ -191,7 +191,6 @@ const Search = () => {
         urn = 'users';
         break;
       default:
-        // show error msg
         break;
     }
     const query = `?name=${title}`;
@@ -232,10 +231,8 @@ const Search = () => {
       })),
     );
   }, [allUsers]);
-  useEffect(() => {
-  }, [boxData]);
-  useEffect(() => {
-  }, [title]);
+  useEffect(() => {}, [boxData]);
+  useEffect(() => {}, [title]);
   const handlerenderedAct = useCallback(() => {
     if (boxData === undefined) {
       // show error msg
