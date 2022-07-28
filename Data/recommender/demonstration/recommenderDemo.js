@@ -11,10 +11,10 @@ function train_cf() {
   axios.post(`${uri}train_cf`, { interests: interests, ratings: ratings, })
     .then(
       (result) => {
-        console.log("train_cf request succeed.");
+        console.log("✅ train_cf request succeed.");
       },
       (err) => {
-        console.log("train_cf request failed.");
+        console.log("⛔️ train_cf request failed.");
       }
     );
 }
@@ -27,12 +27,12 @@ function predict_cf() {
   axios
     .get(`${uri}predict_cf?uid=${uid}&k=${k}&userbased=${userbased}`)
     .then((result) => {
-      console.log("getInterestPrediction request succeeded.");
+      console.log("✅ getInterestPrediction request succeeded.");
       console.log("results:");
       console.log(result.data);
     })
     .catch((err) => {
-      console.error("getInterestPrediction request failed.");
+      console.error("⛔️ getInterestPrediction request failed.");
     });
 }
 
@@ -43,10 +43,10 @@ function train_nn(uid) {
     .post(`${uri}/train_nn`, { uid: uid, train: JSON.parse(dataset), })
     .then(
       (result) => {
-        console.log("train_nn request succeed.");
+        console.log("✅ train_nn request succeed.");
       },
       (err) => {
-        console.log("train_nn request failed.");
+        console.log("⛔️ train_nn request failed.");
       }
     );
 }
@@ -58,12 +58,12 @@ function predict_nn(uid) {
   .post(`${uri}/predict_nn`, { uid: uid, testSet: JSON.parse(test), })
   .then(
     (result) => {
-      console.log("predict_nn request succeed.");
+      console.log("✅ predict_nn request succeed.");
       console.log("results:");
       console.log(result.data);
     },
     (err) => {
-      console.log("predict_nn request failed.");
+      console.log("⛔️ predict_nn request failed.");
     }
   );
 
