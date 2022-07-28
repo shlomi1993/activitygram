@@ -272,21 +272,33 @@ app.get("/getAllActivities", (req, res) => {
   });
 });
 
-app.get('/getMyActivities', (req, res) => {
-	if (allActivities) {
-		const filtered =
-			allActivities.filter((act) => { return act.participants && Array.isArray(act.participants) })
-				.filter((act) => { return act.participants.find((p) => { return p === req.query.user_id }) });
-		res.send(filtered)
-	} else {
-		database.getAllActivities().then((activities) => {
-			const userId = req.query.user_id;
-			const filtered =
-				activities.filter((act) => { return act.participants && Array.isArray(act.participants) })
-					.filter((act) => { return act.participants.find((p) => { return p === req.query.user_id }) });
-			res.send(filtered)
-		});
-	}
+app.get("/getMyActivities", (req, res) => {
+  if (allActivities) {
+    const filtered = allActivities
+      .filter((act) => {
+        return act.participants && Array.isArray(act.participants);
+      })
+      .filter((act) => {
+        return act.participants.find((p) => {
+          return p === req.query.user_id;
+        });
+      });
+    res.send(filtered);
+  } else {
+    database.getAllActivities().then((activities) => {
+      const userId = req.query.user_id;
+      const filtered = activities
+        .filter((act) => {
+          return act.participants && Array.isArray(act.participants);
+        })
+        .filter((act) => {
+          return act.participants.find((p) => {
+            return p === req.query.user_id;
+          });
+        });
+      res.send(filtered);
+    });
+  }
 });
 
 /** GROUPS */
@@ -325,32 +337,6 @@ app.get("/allInterests", (req, res) => {
 });
 
 /** Search */
-
-app.post("/search", (req, res) => {
-  console.log(`\nin app.post('/search', (req, res)`);
-  console.log(`req.body ${JSON.stringify(req.body)}`);
-  const name_to_search = req.body.title;
-  const userState = req.body.searchUsers;
-  const activitiesState = req.body.searchActivities;
-  const groupState = req.body.searchGroups;
-
-  database
-    .searchActivity(name_to_search, userState, activitiesState, groupState)
-    .then((result) => {
-      res.status(200).send(result);
-      // console.log
-      console.log("searchActivity request succeeded.");
-    })
-    .catch((error) => {
-      let msg = "searchActivity request failed.";
-      res.status(500).send(msg);
-      console.error(msg);
-      console.error(error);
-    });
-  // let result = database.searchActivity(name_to_search, userState, activitiesState, groupState)
-  // console.log(`result is ${result}`)
-  // res.send(result);
-});
 app.get("/activities", (req, res) => {
   const { name } = req.query;
   database
@@ -373,7 +359,6 @@ app.get("/users", (req, res) => {
     .searchUsers(name)
     .then((result) => {
       res.status(200).send(result);
-      // console.log
       console.log("searchUsers request succeeded.");
     })
     .catch((error) => {

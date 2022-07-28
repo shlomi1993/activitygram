@@ -97,8 +97,8 @@ module.exports.createUser = async function (userObject) {
     let rating = {
       userId: user._id,
       interestId: int,
-      rating: 10
-    }
+      rating: 10,
+    };
     ratings.insertOne(rating);
   }
 };
@@ -110,8 +110,8 @@ module.exports.createUserWithImage = async function (userObject, profileImage) {
     let rating = {
       userId: user._id,
       interestId: int,
-      rating: 10
-    }
+      rating: 10,
+    };
     ratings.insertOne(rating);
   }
 };
@@ -200,7 +200,10 @@ async function changeUserActivityLog(curr_user, activityLog) {
   return result;
 }
 
-module.exports.updateActivityParticipants = async function (activityId, participantsArr) {
+module.exports.updateActivityParticipants = async function (
+  activityId,
+  participantsArr
+) {
   const result = await activities.updateOne(
     { _id: ObjectId(activityId) },
     { $set: { participants: participantsArr } }
@@ -229,33 +232,33 @@ async function createNewTag(client, newTag) {
   return result;
 }
 
+// searchActivity
+
 module.exports.searchActivity = async function (name) {
   const keyword = name ? name : "";
   console.log(keyword, name);
   const options = {
     $or: [
-      { description: keyword },
+      { description: { $regex: keyword } },
+      { title: { $regex: keyword } },
       { conditions: keyword },
       { group_managers: keyword },
       { participants: keyword },
       { tags: keyword },
-      { title: keyword },
     ],
   };
   activitiesFound = await activities.find(options).toArray();
   console.log(`found ${activitiesFound.length} activities`);
-  console.log(`activitiesFound = ${JSON.stringify(activitiesFound)}`);
   return activitiesFound;
 };
-// searchUsers
 
+// searchUsers
 module.exports.searchUsers = async function (name) {
   const keyword = name ? name : "";
-  console.log(keyword, name);
   const options = {
     $or: [
-      { firstName: keyword },
-      { lastName: keyword },
+      { firstName: { $regex: keyword } },
+      { lastName: { $regex: keyword } },
       { bio: keyword },
       { city: keyword },
       { state: keyword },
@@ -264,9 +267,9 @@ module.exports.searchUsers = async function (name) {
       { country: keyword },
     ],
   };
+  //the search on the relevant collection
   usersFound = await users.find(options).toArray();
   console.log(`found ${usersFound.length} Users`);
-  console.log(`usersFound = ${JSON.stringify(usersFound)}`);
   return usersFound;
 };
 // Create an activity.
