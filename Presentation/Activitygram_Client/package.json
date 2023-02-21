@@ -44,7 +44,7 @@
     "i18n-js": "^3.8.0",
     "lodash": "^4.17.21",
     "mobx": "^6.3.8",
-    "moment": "^2.29.3",
+    "moment": "^2.29.4",
     "multiselect-react-dropdown": "^2.0.22",
     "native-base": "^3.3.7",
     "prop-types": "^15.7.2",
