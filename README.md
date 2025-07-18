@@ -1,4 +1,5 @@
 # Activitygram
+
 <img src="https://user-images.githubusercontent.com/71548980/181102655-049be3f4-f343-498b-850c-63f5c2c17da0.jpeg"  width="680" height="300">
 
 ### Welcome to Activitygram App!
