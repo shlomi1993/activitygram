@@ -48,13 +48,13 @@ Navigate to 'Data/recommender' directory and pip install:
 - matplotlib
 
 ## Service Setup  
-Navigate to Service and yarn.  
-To start the backend use nodemon ./AppServer.js (or node).  
+Navigate to Service and run `npm ci`.
+To start the backend use `npm start`; use `npm run dev` on Node.js 22 for automatic restarts.
 This will start the DB connections and the Recommender service automatically.
 
 ## Client Setup  
-Navigate to 'Presentation/Activitygram_Client' and yarn.
-To strat the frontend use 'yarn start', wait... and press 'a'.
+Navigate to `Presentation/Activitygram_Client` and run `npm ci`.
+To strat the frontend use `npm start`, wait... and press 'a'.
 
 ## Architecture
 <img src="https://user-images.githubusercontent.com/71548980/181105587-88be34f5-6250-466e-b1eb-8601217fe0bb.png" width="700" height="500">

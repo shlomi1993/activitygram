@@ -1,15 +1,20 @@
 {
   "dependencies": {
     "@react-native-community/checkbox": "^0.5.12",
-    "axios": "^0.27.2",
-    "crypto": "^1.0.1",
-    "firebase": "^9.8.2",
+    "axios": "^1.20.0",
+    "firebase": "10.14.1",
     "json2csv": "^5.0.7",
     "mongodb": "^4.5.0",
     "native-base": "^3.3.7",
     "react-native-bing-maps": "^0.1.1",
     "react-native-dialog-input": "^1.0.8",
     "react-native-push-notification": "^8.1.1",
-    "rn-checkbox-list": "^1.1.0"
+    "rn-checkbox-list": "1.1.0",
+    "react": "18.2.0",
+    "react-native": "0.71.19",
+    "react-dom": "18.2.0"
+  },
+  "overrides": {
+    "protobufjs": "^7.6.6"
   }
 }
