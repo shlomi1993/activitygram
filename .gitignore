@@ -110,3 +110,14 @@ Presentation/Activitygram_Client/.expo/packager-info.json
 Data/recommender/__pycache__/collaborative_filtering.cpython-310.pyc
 Data/recommender/__pycache__/text_classifier.cpython-310.pyc
 Presentation/Activitygram_Client/.expo/packager-info.json
+
+# Generated development state and machine-local IDE settings
+__pycache__/
+*.pyc
+*.pyo
+.expo/
+**/.idea/workspace.xml
+**/.idea/tasks.xml
+**/.idea/shelf/
+# Unused historical Android credential configuration
+Presentation/Activitygram_Client/android/app/secrets.gradle

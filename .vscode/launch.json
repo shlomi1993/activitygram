@@ -8,7 +8,7 @@
             "name":"Debug Android",
             "request":"launch",
             "type":"reactnative",
-            "cwd":"${workspaceFolder}\\Presentation\\Home",
+            "cwd":"${workspaceFolder}/Presentation/Activitygram_Client",
             "platform":"android"
         },
         {
@@ -18,7 +18,8 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\Presentation\\Home\\App.js"
+            "program": "${workspaceFolder}/Service/AppServer.js",
+            "cwd": "${workspaceFolder}/Service"
         }
     ]
 }
